@@ -1,0 +1,21 @@
+{
+  "name": "Novaskol",
+  "short_name": "Novaskol",
+  "description": "Gestion scolaire moderne pour les etablissements.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#07111d",
+  "theme_color": "#00c853",
+  "icons": [
+    {
+      "src": "/novaskol-icon.png",
+      "sizes": "256x256",
+      "type": "image/png"
+    },
+    {
+      "src": "/favicon.ico",
+      "sizes": "64x64 48x48 32x32 16x16",
+      "type": "image/x-icon"
+    }
+  ]
+}

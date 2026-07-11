@@ -1,0 +1,3 @@
+-- Novaskol - dump demo
+-- Reserve aux donnees fictives.
+-- Ne pas copier les donnees reelles d'une ecole ici.

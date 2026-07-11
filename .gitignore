@@ -1,0 +1,43 @@
+/vendor
+/node_modules
+/.env
+/.android-sdk
+/.jdk21
+/.vscode
+/.agents
+
+/storage/app/distribution
+/storage/app/desktop-connecte-dist
+/storage/app/desktop-dist
+/storage/app/Last version Desktop
+/storage/app/FINAL_DELIVERABLES
+/storage/app/install_*
+/storage/app/installer
+/storage/app/release
+/storage/app/visual-audit
+/storage/app/prêt à héberger
+/storage/framework/cache/data/*
+/storage/framework/sessions/*
+/storage/framework/views/*
+/storage/logs/*
+/storage/runtime
+/storage/app/private
+/storage/app/public
+
+/tools
+/desktop
+/apps
+
+/Last version Desktop
+/backup-icons
+/docs
+/scripts
+/image-classeanddefauldusage
+
+*.exe
+*.zip
+*.7z
+*.tar.gz
+
+!public/**/*.exe
+!public/**/*.zip

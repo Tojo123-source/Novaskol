@@ -1,0 +1,11 @@
+Tâche today:
+
+SPRINT finition:
+
+Ajouter la même succes animaiton sur les codes qui en ont besoin.
+Mettre le hook et le style, juste jeux de couleur, le nav et le nav activ, et le header sans toucher les padding, margin, etc
+Remplacer les couleurs background pour être compatible avec le mode clair et ajout de cette fonctionnalité.
+
+Délai de ce Sprint jusqu'à la fin de cette semaine au max.
+
+Semaine prochaine, intégration de l'IA.
