@@ -27,15 +27,24 @@
         @media (max-width: 900px) { .acc-stats-grid { grid-template-columns: 1fr 1fr; } }
         @media (max-width: 600px) { .acc-stats-grid { grid-template-columns: 1fr; } .acc-stat strong { font-size: 1.3rem; } }
         @media print {
-            @page { size: A4 landscape; margin: 8mm; }
+            @page { size: A4 landscape; margin: 6mm; }
             *, *::before, *::after { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-            html, body { background: #fff !important; color: #111 !important; }
+            html, body { background: #fff !important; margin: 0 !important; padding: 0 !important; color: #111 !important; }
             nav, header, footer, .no-print { display: none !important; }
-            main { margin: 0 !important; padding: 0 !important; }
-            .acc-stat { background: #f8fafc !important; border-color: #cbd5e1 !important; box-shadow: none !important; }
-            .acc-stat strong { color: #111 !important; }
-            .chart-card { background: #fff !important; border: 1px solid #cbd5e1 !important; break-inside: avoid; }
-            .chart-grid { grid-template-columns: 1fr 1fr !important; }
+            main { margin: 0 !important; padding: 0 !important; max-width: none !important; }
+            .acc-stats-grid { grid-template-columns: repeat(3, 1fr) !important; gap: 6px !important; margin: 0 0 8px !important; }
+            .acc-stat { background: #f8fafc !important; border: 1px solid #cbd5e1 !important; box-shadow: none !important; padding: 10px !important; border-radius: 0 !important; break-inside: avoid; }
+            .acc-stat strong { color: #111 !important; font-size: 1.2rem !important; }
+            .acc-stat span { font-size: 0.65rem !important; }
+            .acc-stat .acc-icon { display: none !important; }
+            .section-title { margin: 14px 0 8px !important; font-size: 0.95rem !important; }
+            .section-title i { display: none !important; }
+            .chart-card { background: #fff !important; border: 1px solid #cbd5e1 !important; break-inside: avoid; padding: 8px !important; border-radius: 0 !important; }
+            .chart-card h2 { font-size: 9pt !important; margin: 0 0 6px !important; }
+            .chart-grid { grid-template-columns: 1fr 1fr !important; gap: 6px !important; }
+            .chart-grid .chart-card:nth-child(1),
+            .chart-grid .chart-card:nth-child(2) { break-inside: avoid; }
+            .report-panel:not(.no-print) { border: 0 !important; padding: 0 !important; margin: 0 !important; }
         }
     </style>
 </head>

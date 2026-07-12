@@ -66,7 +66,7 @@
         @page{size:A4 landscape;margin:10mm 12mm;}
         *,*::before,*::after{ -webkit-print-color-adjust:exact!important; print-color-adjust:exact!important; }
         html,body{background:white!important;color:#111!important;margin:0!important;padding:0!important;}
-        nav,header,footer,.burger-menu,#fullscreen-btn,.btn-ajouter,.features-grid,.form-container>.io,.action-buttons,.kaly,.novaskol-global-actions,.global-dropdown,.novaskol-loader,#app { display:none!important; }
+        nav,header,footer,.burger-menu,#fullscreen-btn,.btn-ajouter,.features-grid,.form-container>.io,.action-buttons,.kaly,.novaskol-global-actions,.global-dropdown,.novaskol-loader { display:none!important; }
         main { margin:0!important; padding:0!important; background:white!important; width:100%!important; }
         #eleves-modal{position:absolute!important;left:0!important;top:0!important;width:100%!important;height:auto!important;display:block!important;background:white!important;visibility:visible!important;}
         .eleves-modal-content{background:white!important;color:black!important;box-shadow:none!important;border:none!important;padding:0!important;margin:0!important;width:100%!important;visibility:visible!important;}

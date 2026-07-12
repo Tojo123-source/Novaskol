@@ -157,10 +157,10 @@
     body.payslip-report .payslip-head{border-bottom:2px solid #065f46!important}
     body.payslip-report .payslip-head strong,body.payslip-report .pm-item strong,body.payslip-report .payslip-table td,body.payslip-report .payslip-signatures div,body.payslip-report .pstat strong{color:#111!important}
     body.payslip-report .payslip-head span,body.payslip-report .pm-item span,body.payslip-report .pstat{color:#475569!important}
-    body.payslip-report .payslip-meta{display:grid!important;grid-template-columns:repeat(4,1fr)!important;gap:3mm!important;margin-bottom:3mm!important}
-    body.payslip-report .pm-item{padding:2mm!important;font-size:7pt!important;background:#f1f5f9!important;border:1px solid #cbd5e1!important}
-    body.payslip-report .pm-item strong{font-size:8pt!important}
-    body.payslip-report .pm-item span{font-size:6pt!important}
+body.payslip-report .payslip-meta{display:grid!important;grid-template-columns:repeat(2,1fr)!important;gap:2mm!important;margin-bottom:3mm!important}
+body.payslip-report .pm-item{padding:2mm!important;font-size:6pt!important;background:#f1f5f9!important;border:1px solid #cbd5e1!important}
+body.payslip-report .pm-item strong{font-size:7pt!important}
+body.payslip-report .pm-item span{font-size:5.5pt!important}
     body.payslip-report .payslip-table th{background:#065f46!important;color:#fff!important;border-color:#065f46!important}
     body.payslip-report .payslip-table td{border-color:#cbd5e1!important}
     body.payslip-report .payslip-total{background:linear-gradient(135deg,#065f46,#047857)!important;color:#fff!important}

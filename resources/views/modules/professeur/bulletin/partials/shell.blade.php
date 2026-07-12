@@ -1,5 +1,5 @@
 @php
-    $legacyBase = 'http://localhost/novaskol/';
+    $legacyBase = (config('app.env') === 'production' ? url('/') : 'http://localhost/novaskol').'/';
     $logo = $ecole->logo ?? 'logo.png';
     $logoPath = str_starts_with($logo, 'images/') ? substr($logo, 7) : $logo;
     $currentUserId = (int) session('utilisateur.id', 0);

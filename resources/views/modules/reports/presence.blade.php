@@ -97,9 +97,12 @@
         }
         .payslip-meta {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: repeat(2, 1fr);
             gap: 10px;
             margin-bottom: 22px;
+        }
+        @media (max-width: 600px) {
+            .payslip-meta { grid-template-columns: 1fr; }
         }
         .pm-item {
             background: #f8fafc;
@@ -477,13 +480,13 @@
             .payslip-card.payslip-global { background: #fff !important; }
             .payslip-meta {
                 display: grid !important;
-                grid-template-columns: repeat(4, 1fr) !important;
-                gap: 3mm !important;
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 2mm !important;
                 margin-bottom: 3mm !important;
             }
-            .pm-item { padding: 2mm !important; font-size: 7pt !important; }
-            .pm-item strong { font-size: 8pt !important; }
-            .pm-item span { font-size: 6pt !important; }
+            .pm-item { padding: 2mm !important; font-size: 6pt !important; }
+            .pm-item strong { font-size: 7pt !important; }
+            .pm-item span { font-size: 5.5pt !important; }
             .payslip-signatures { display: grid !important; grid-template-columns: repeat(3, 1fr) !important; gap: 5mm !important; margin-top: 5mm !important; }
             .payslip-signatures div { border-top: none !important; border-bottom: 2px dashed #94a3b8 !important; padding-bottom: 6mm !important; font-size: 8pt !important; color: #475569 !important; min-height: 10mm !important; }
             .global-mode-hint { display: none !important; }

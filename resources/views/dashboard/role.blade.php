@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="{{ asset('legacy/fa/css/font-awesome.min.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="{{ asset('legacy/vendor/qrcode.min.js') }}"></script>
+    <script src="{{ asset('legacy/js/html2canvas.min.js') }}"></script>
     @include('modules.professeur.bulletin.partials.styles')
     <style>
         .connecte-header-actions{display:flex;gap:10px;flex-wrap:wrap}.connecte-btn{padding:10px 20px;border-radius:999px;border:1px solid var(--border);background:var(--card);color:var(--text);cursor:pointer;font-size:.9rem;font-weight:600;display:flex;align-items:center;gap:8px;box-shadow:0 4px 14px var(--shadow-soft);transition:all .2s ease}.connecte-btn-sync{color:var(--primary);border-color:rgba(0,200,83,.3)}.connecte-btn-sync:hover{background:rgba(0,200,83,.12);transform:translateY(-1px)}.connecte-btn-compte:hover{background:rgba(255,255,255,.06);transform:translateY(-1px)}
@@ -89,6 +90,8 @@
         }
         .id-qr-box canvas,.id-qr-box img {width:96px!important;height:96px!important;}
         .id-expiry {font-size:.5rem;color:var(--nv-muted);text-align:center;margin-top:2px;}
+        .badge-dl-btn {display:block;width:100%;margin-top:4px;padding:4px 6px;border:1px solid #e2e8f0;border-radius:4px;background:#f8fafc;color:var(--nv-primary);font-size:.6rem;cursor:pointer;text-align:center;transition:all .15s;}
+        .badge-dl-btn:hover {background:var(--nv-primary);color:#fff;border-color:var(--nv-primary);}
 
         @media(max-width:1180px){.role-hero,.role-grid,.workspace,.espace-cards{margin-left:16px;margin-right:16px}.role-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.workspace{grid-template-columns:1fr}.role-hero{margin-top:98px}.module-list{grid-template-columns:1fr}.espace-cards{grid-template-columns:1fr}}
         @media(max-width:700px){.role-grid{grid-template-columns:1fr}.role-hero{margin-top:122px;padding:18px}.role-hero h1{font-size:1.3rem}.role-card{padding:16px}}
@@ -139,6 +142,7 @@
                         <div>
                             <div class="id-qr-box" id="qr-{{ $card['id'] }}" data-qr="novaskol:qr:v1:{{ $card['qr_token'] }}"></div>
                             <div class="id-expiry">Exp: {{ now()->addYear()->format('d/m/Y') }}</div>
+                            <button class="badge-dl-btn" onclick="downloadBadge(this)" data-card-id="{{ $card['id'] }}" title="Telecharger le badge"><i class="fa fa-download"></i></button>
                         </div>
                     @endif
                 </div>
@@ -219,6 +223,22 @@ document.addEventListener('DOMContentLoaded',()=>{
         if(u&&window.QRCode)new QRCode(q,{text:u,width:96,height:96,colorDark:'#0f2942',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.H})
     })
 })
+function downloadBadge(btn){
+    const card=btn.closest('.id-card');
+    if(!card)return;
+    btn.disabled=true;btn.innerHTML='<i class="fa fa-spinner fa-spin"></i>';
+    const name=card.querySelector('.id-name')?.textContent?.trim()||'badge';
+    html2canvas(card,{scale:3,backgroundColor:'#ffffff',useCORS:true,logging:false,width:card.scrollWidth,height:card.scrollHeight}).then(function(canvas){
+        const link=document.createElement('a');
+        link.download=name.replace(/\s+/g,'_')+'_badge.png';
+        link.href=canvas.toDataURL('image/png');
+        link.click();
+        btn.disabled=false;btn.innerHTML='<i class="fa fa-download"></i>';
+    }).catch(function(){
+        btn.disabled=false;btn.innerHTML='<i class="fa fa-download"></i>';
+        Swal.fire({icon:'error',title:'Erreur',text:'Impossible de telecharger le badge',confirmButtonColor:'#00c853'});
+    });
+}
 @if(config('app.connected_mode'))
 function showToast(msg,ok){
     var t=document.createElement('div');

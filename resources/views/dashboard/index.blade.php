@@ -112,11 +112,12 @@
             gap: 12px;
             border-radius: 10px;
             transition: all 0.25s ease;
+            cursor: pointer;
+            position: relative;
+            z-index: 1001;
         }
-        nav a:hover, nav a.active, .parent-menu:hover {
-            background: var(--nav-hover);
-            color: var(--text);
-        }
+        nav a { cursor: pointer !important; }
+        nav a:hover, nav a.active { background: var(--nav-hover); color: var(--text); }
         nav a.active {
             background: var(--nav-active);
             color: var(--text);
@@ -886,7 +887,7 @@
 </head>
 <body>
 @php
-    $legacyBase = 'http://localhost/novaskol/';
+    $legacyBase = (config('app.env') === 'production' ? url('/') : 'http://localhost/novaskol').'/';
     $logo = $ecole->logo ?? 'logo.png';
     $logoPath = str_starts_with($logo, 'images/') ? substr($logo, 7) : $logo;
     $currentUserId = (int) session('utilisateur.id', 0);
@@ -933,7 +934,7 @@
             @php($openSub = true)
         @else
             @php($href = $module === 'dashboard' ? route('dashboard') : (! empty($info['migrated']) && ! empty($info['route']) ? route($info['route']) : $legacyBase.($info['legacy_url'] ?? $info['url'] ?? '#')))
-            <a href="{{ $href }}" @class(['active' => $module === 'dashboard'])>
+            <a href="{{ $href }}" @class(['active' => $module === 'dashboard' || (! empty($info['route']) && request()->routeIs($info['route']))])>
                 <i class="fa {{ $info['icon'] }}"></i> <span>{{ $info['label'] }}</span>
             </a>
         @endif
