@@ -11,16 +11,22 @@
     <script src="{{ asset('legacy/js/html2canvas.min.js') }}"></script>
     @include('modules.professeur.bulletin.partials.styles')
     <style>
+        :root{--sidebar-width:240px;}
+        nav#sidebar{width:var(--sidebar-width);position:fixed;left:0;top:0;bottom:0;z-index:1000;overflow-y:auto;transition:transform .28s ease}
+        header{position:fixed;top:0;left:var(--sidebar-width);right:0;height:70px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;z-index:999;padding:0 1.8rem;border-bottom:1px solid var(--border);background:var(--header-bg);box-shadow:0 4px 20px var(--shadow-strong)}
+        header .header-left{display:flex;align-items:center;gap:1.3rem}
+        header h1{flex:1;font-size:1.35rem;font-weight:700;padding:0;margin:0;min-width:0}
+        main{margin:90px 0 0 264px;padding:20px 24px;min-height:100vh}
         .connecte-header-actions{display:flex;gap:10px;flex-wrap:wrap}.connecte-btn{padding:10px 20px;border-radius:999px;border:1px solid var(--border);background:var(--card);color:var(--text);cursor:pointer;font-size:.9rem;font-weight:600;display:flex;align-items:center;gap:8px;box-shadow:0 4px 14px var(--shadow-soft);transition:all .2s ease}.connecte-btn-sync{color:var(--primary);border-color:rgba(0,200,83,.3)}.connecte-btn-sync:hover{background:rgba(0,200,83,.12);transform:translateY(-1px)}.connecte-btn-compte:hover{background:rgba(255,255,255,.06);transform:translateY(-1px)}
-        .role-hero{margin:96px 24px 24px 264px;padding:26px;border:1px solid var(--border);background:linear-gradient(135deg,var(--card),var(--surface));border-radius:8px;box-shadow:0 16px 36px var(--shadow-soft)}
+        .role-hero{margin:0 0 24px 0;padding:26px;border:1px solid var(--border);background:linear-gradient(135deg,var(--card),var(--surface));border-radius:8px;box-shadow:0 16px 36px var(--shadow-soft)}
         .role-hero h1{margin:0 0 8px;color:var(--primary);font-size:1.65rem}
         .role-hero p{margin:0;color:var(--text-sec)}
-        .role-grid{margin:0 24px 24px 264px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+        .role-grid{margin:0 0 24px 0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
         .role-card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:18px;box-shadow:0 10px 26px var(--shadow-soft)}
         .role-card i{width:38px;height:38px;border-radius:8px;display:grid;place-items:center;background:var(--primary-glow);color:var(--primary);font-size:1.1rem;margin-bottom:12px}
         .role-card strong{display:block;color:var(--text);font-size:1.2rem;line-height:1.25;word-break:break-word}
         .role-card span{display:block;color:var(--text-sec);font-size:.88rem;margin-top:5px}
-        .workspace{margin:0 24px 30px 264px;display:grid;grid-template-columns:minmax(0,1.5fr) minmax(300px,.8fr);gap:16px}
+        .workspace{margin:0 0 30px 0;display:grid;grid-template-columns:minmax(0,1.5fr) minmax(300px,.8fr);gap:16px}
         .panel{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:18px;box-shadow:0 10px 26px var(--shadow-soft)}
         .panel h2{margin:0 0 14px;color:var(--primary);font-size:1.05rem}
         .module-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
@@ -37,7 +43,7 @@
         .empty-state{padding:18px;border:1px dashed var(--border);border-radius:8px;color:var(--text-sec);text-align:center}
 
         :root { --nv-primary: #0f2942; --nv-gold: #c9a84c; --nv-white: #ffffff; --nv-text: #1e293b; --nv-muted: #64748b; }
-        .espace-cards {margin:0 24px 18px 264px;display:grid;grid-template-columns:repeat(auto-fill,minmax(380px,1fr));gap:14px}
+        .espace-cards {margin:0 0 18px 0;display:grid;grid-template-columns:repeat(auto-fill,minmax(380px,1fr));gap:14px}
         .id-card {
             position:relative;display:flex;background:var(--nv-white);color:var(--nv-text);
             border-radius:12px;overflow:hidden;border:1px solid #e2e8f0;
@@ -93,18 +99,19 @@
         .badge-dl-btn {display:block;width:100%;margin-top:4px;padding:4px 6px;border:1px solid #e2e8f0;border-radius:4px;background:#f8fafc;color:var(--nv-primary);font-size:.6rem;cursor:pointer;text-align:center;transition:all .15s;}
         .badge-dl-btn:hover {background:var(--nv-primary);color:#fff;border-color:var(--nv-primary);}
 
-        @media(max-width:1180px){.role-hero,.role-grid,.workspace,.espace-cards{margin-left:16px;margin-right:16px}.role-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.workspace{grid-template-columns:1fr}.role-hero{margin-top:98px}.module-list{grid-template-columns:1fr}.espace-cards{grid-template-columns:1fr}}
-        @media(max-width:700px){.role-grid{grid-template-columns:1fr}.role-hero{margin-top:122px;padding:18px}.role-hero h1{font-size:1.3rem}.role-card{padding:16px}}
+        @media(max-width:1100px){nav#sidebar{transform:translateX(-100%)}nav#sidebar.active{transform:translateX(0)}header{left:0!important;width:100%!important}main{margin-left:0!important}}
+        @media(max-width:1180px){.role-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.workspace{grid-template-columns:1fr}.module-list{grid-template-columns:1fr}.espace-cards{grid-template-columns:1fr}}
+        @media(max-width:700px){.role-grid{grid-template-columns:1fr}.role-hero{padding:18px}.role-hero h1{font-size:1.3rem}.role-card{padding:16px}}
     </style>
 </head>
 <body>
 @include('modules.professeur.bulletin.partials.shell', ['activeModule' => 'role_dashboard'])
-<header style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+<header>
     <div class="header-left">
         <button class="burger-menu" onclick="toggleSidebar()"><i class="fa fa-bars"></i></button>
         <button id="fullscreen-btn" onclick="toggleFullscreen()"><i class="fa fa-expand"></i></button>
     </div>
-    <h1 style="flex:1">Mon espace</h1>
+    <h1>Mon espace</h1>
 </header>
 
 <section class="role-hero">
@@ -217,6 +224,8 @@
     </aside>
 </main>
 <script>
+function toggleSidebar(){const s=document.getElementById('sidebar');if(!s)return;if(window.innerWidth<=1100){s.classList.toggle('active')}else{s.classList.toggle('hidden')}}
+function toggleFullscreen(){document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen()}
 document.addEventListener('DOMContentLoaded',()=>{
     document.querySelectorAll('.id-qr-box').forEach(function(q){
         const u=q.getAttribute('data-qr');

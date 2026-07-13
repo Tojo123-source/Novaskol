@@ -66,11 +66,13 @@
         @page{size:A4 landscape;margin:10mm 12mm;}
         *,*::before,*::after{ -webkit-print-color-adjust:exact!important; print-color-adjust:exact!important; }
         html,body{background:white!important;color:#111!important;margin:0!important;padding:0!important;}
-        nav,header,footer,.burger-menu,#fullscreen-btn,.btn-ajouter,.features-grid,.form-container>.io,.action-buttons,.kaly,.novaskol-global-actions,.global-dropdown,.novaskol-loader { display:none!important; }
+        nav,header,footer,.burger-menu,#fullscreen-btn,.btn-ajouter,.features-grid,.form-container>.io,.action-buttons,.kaly,.novaskol-global-actions,.global-dropdown,.novaskol-loader,.btn-imprimer,.efenina,.form-container,.kanto { display:none!important; }
+        #app>main>*, #app>main>.form-container { display:none!important; }
         main { margin:0!important; padding:0!important; background:white!important; width:100%!important; }
+        #app { display:block!important; }
         #eleves-modal{position:absolute!important;left:0!important;top:0!important;width:100%!important;height:auto!important;display:block!important;background:white!important;visibility:visible!important;}
-        .eleves-modal-content{background:white!important;color:black!important;box-shadow:none!important;border:none!important;padding:0!important;margin:0!important;width:100%!important;visibility:visible!important;}
-        .close,.btn-imprimer,.efenina,.annee-scolaire-print{display:none!important;}
+        .eleves-modal-content{background:white!important;color:black!important;box-shadow:none!important;border:none!important;padding:0!important;margin:0!important;width:100%!important;}
+        .close,.annee-scolaire-print{display:none!important;}
         .print-header{text-align:center;margin-bottom:10px;padding-bottom:8px;border-bottom:2px solid #0f70c0;} .print-header img{max-width:65px!important;height:auto;margin:0 auto 6px;display:block;} .print-header h1{font-size:17pt;margin:4px 0 2px;color:#0f70c0;font-weight:bold;}
         #eleves-modal-title{text-align:center;font-size:14pt;color:#111;margin:10px 0;}
         .eleves-table{width:100%;border-collapse:collapse;font-size:9pt;margin-top:6px;}
@@ -84,7 +86,7 @@
 <body>
 @php
     $legacyBase = 'http://localhost/novaskol/';
-    $logo = $ecole->logo ?? 'logo.png';
+    $logo = $ecole->logo ?? 'novaskol.png';
     $logoPath = str_starts_with($logo, 'images/') ? substr($logo, 7) : $logo;
 @endphp
 @include('partials.global-actions')

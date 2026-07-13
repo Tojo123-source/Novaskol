@@ -116,7 +116,8 @@
             position: relative;
             z-index: 1001;
         }
-        nav a { cursor: pointer !important; }
+        nav a, nav a *, nav .parent-menu, nav .parent-menu * { cursor: pointer !important; pointer-events: auto !important; }
+        .header-right, .header-right * { pointer-events: auto !important; }
         nav a:hover, nav a.active { background: var(--nav-hover); color: var(--text); }
         nav a.active {
             background: var(--nav-active);
@@ -888,7 +889,7 @@
 <body>
 @php
     $legacyBase = (config('app.env') === 'production' ? url('/') : 'http://localhost/novaskol').'/';
-    $logo = $ecole->logo ?? 'logo.png';
+    $logo = $ecole->logo ?? 'novaskol.png';
     $logoPath = str_starts_with($logo, 'images/') ? substr($logo, 7) : $logo;
     $currentUserId = (int) session('utilisateur.id', 0);
     $currentUser = $currentUserId && Schema::hasTable('utilisateurs') ? DB::table('utilisateurs')->where('id', $currentUserId)->first() : null;

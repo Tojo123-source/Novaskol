@@ -25,7 +25,11 @@
             .report-table-wrap { overflow: visible !important; }
             .report-table { width: 100% !important; border-collapse: collapse !important; font-size: 8pt !important; }
             .report-table th { background: #ecfdf5 !important; color: #065f46 !important; border: 1px solid #94a3b8 !important; padding: 4px 6px !important; font-size: 7.5pt !important; }
-            .report-table td { color: #111 !important; border: 1px solid #cbd5e1 !important; padding: 3px 6px !important; }
+            .report-table td { color: #111 !important; background:#fff !important; border: 1px solid #cbd5e1 !important; padding: 3px 6px !important; }
+            .report-table th { background: #ecfdf5 !important; color: #065f46 !important; }
+            .report-table tr:nth-child(even) td { background: #f8fafc !important; }
+            .kpi { background: #f8fafc !important; }
+            .kpi strong, .kpi span { background: transparent !important; }
             .report-table tr:nth-child(even) td { background: #f8fafc !important; }
             .money { color: #065f46 !important; }
             .muted { color: #64748b !important; }
