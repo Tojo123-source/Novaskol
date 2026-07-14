@@ -349,7 +349,7 @@ class ExamBlankController extends Controller
     {
         return DB::table('ecole')->select('nom', 'logo')->first() ?: (object) [
             'nom' => 'Ecole',
-            'logo' => 'logo.png',
+            'logo' => 'novaskol.png',
         ];
     }
 }

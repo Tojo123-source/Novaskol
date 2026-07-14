@@ -74,7 +74,7 @@
 <body>
 @php
     $legacyBase = 'http://localhost/novaskol/';
-    $logo = $ecole->logo ?? 'logo.png';
+    $logo = $ecole->logo ?? 'novaskol.png';
     $logoPath = str_starts_with($logo, 'images/') ? substr($logo, 7) : $logo;
 @endphp
 @include('partials.global-actions')

@@ -38,7 +38,7 @@ class SchoolController extends Controller
         ]);
 
         $school = DB::table('ecole')->select('id', 'nom', 'logo')->first();
-        $logoPath = $school->logo ?? 'logo.png';
+        $logoPath = $school->logo ?? 'novaskol.png';
 
         if ($request->hasFile('logo')) {
             $file = $request->file('logo');
@@ -49,7 +49,7 @@ class SchoolController extends Controller
             $file->move($destination, $logoPath);
 
             $oldLogo = $school->logo ?? null;
-            if ($oldLogo && $oldLogo !== 'logo.png') {
+            if ($oldLogo && $oldLogo !== 'novaskol.png') {
                 $oldPath = public_path('legacy/images/'.$oldLogo);
                 if (File::exists($oldPath)) {
                     File::delete($oldPath);
@@ -95,7 +95,7 @@ class SchoolController extends Controller
         return DB::table('ecole')->select('id', 'nom', 'logo')->first() ?: (object) [
             'id' => 1,
             'nom' => 'Ecole',
-            'logo' => 'logo.png',
+            'logo' => 'novaskol.png',
         ];
     }
 }

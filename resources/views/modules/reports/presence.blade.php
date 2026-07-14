@@ -619,7 +619,7 @@
                 <div class="payslip-head">
                     <div class="payslip-brand">
                         <div class="payslip-logo">
-                            <img src="{{ asset('legacy/images/'.(str_starts_with($ecole->logo ?? '', 'images/') ? substr($ecole->logo, 7) : ($ecole->logo ?? 'logo.png'))) }}" alt="">
+                            <img src="{{ asset('legacy/images/'.(str_starts_with($ecole->logo ?? '', 'images/') ? substr($ecole->logo, 7) : ($ecole->logo ?? 'novaskol.png'))) }}" alt="">
                         </div>
                         <div>
                             <span class="payslip-school">{{ $ecole->nom ?? 'Ecole' }}</span>
@@ -701,7 +701,7 @@
                 <div class="payslip-head">
                     <div class="payslip-brand">
                         <div class="payslip-logo">
-                            <img src="{{ asset('legacy/images/'.(str_starts_with($ecole->logo ?? '', 'images/') ? substr($ecole->logo, 7) : ($ecole->logo ?? 'logo.png'))) }}" alt="">
+                            <img src="{{ asset('legacy/images/'.(str_starts_with($ecole->logo ?? '', 'images/') ? substr($ecole->logo, 7) : ($ecole->logo ?? 'novaskol.png'))) }}" alt="">
                         </div>
                         <div>
                             <span class="payslip-school">{{ $ecole->nom ?? 'Ecole' }}</span>

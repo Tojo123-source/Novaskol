@@ -75,7 +75,7 @@
 </head>
 <body class="result-report">
 @php
-    $logo = $ecole->logo ?? 'logo.png';
+    $logo = $ecole->logo ?? 'novaskol.png';
     $logoPath = str_starts_with($logo, 'images/') ? substr($logo, 7) : $logo;
 @endphp
 @include('modules.professeur.bulletin.partials.shell', ['activeModule' => 'resultats'])

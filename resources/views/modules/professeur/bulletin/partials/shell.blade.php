@@ -1,5 +1,5 @@
 @php
-    $legacyBase = (config('app.env') === 'production' ? url('/') : 'http://localhost/novaskol').'/';
+    $legacyBase = 'http://localhost/novaskol/';
     $logo = $ecole->logo ?? 'novaskol.png';
     $logoPath = str_starts_with($logo, 'images/') ? substr($logo, 7) : $logo;
     $currentUserId = (int) session('utilisateur.id', 0);
@@ -96,7 +96,7 @@
     html.light *::-webkit-scrollbar-thumb:hover{background:#94a3b8!important}
     .swal2-container{z-index:250000!important}
     .swal2-popup{z-index:250001!important}
-    header{position:fixed;top:0;left:var(--sidebar-width,240px);right:0;height:70px;z-index:998;padding-left:96px!important;padding-right:220px!important;display:flex;align-items:center;background:var(--header-bg);border-bottom:1px solid var(--border,#1f1f2e);box-shadow:0 4px 20px var(--shadow-strong, rgba(0,0,0,.6))}
+    header{padding-left:96px!important;padding-right:220px!important}
     header h1{max-width:100%!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important}
     header .header-left{position:absolute!important;left:20px!important;top:50%!important;transform:translateY(-50%)!important;display:flex!important;align-items:center!important;gap:14px!important}
     header .header-left,.burger-menu,#fullscreen-btn{z-index:2801!important;pointer-events:auto!important}
@@ -113,10 +113,6 @@
     .global-dropdown{position:fixed;top:66px;right:22px;width:min(370px,calc(100vw - 24px));max-height:72vh;overflow:auto;background:var(--card,#14141a);border:1px solid var(--border,#1f1f2e);border-radius:8px;box-shadow:0 18px 55px #0009;z-index:11100;display:none;padding:14px;color:var(--text,#e5e7eb)}
     .global-dropdown.active{display:block}.global-drop-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}.global-drop-head h3{margin:0;color:var(--primary,#00c853);font-size:1rem}.global-item{padding:11px;border-bottom:1px solid var(--border,#1f1f2e);color:var(--text,#e5e7eb)}.global-item:last-child{border-bottom:0}.global-item small{display:block;color:var(--text-sec,#9ca3af);margin-top:4px}.profile-card{text-align:center}.profile-card img{width:82px;height:82px;border-radius:999px;object-fit:cover;border:2px solid var(--primary,#00c853);margin-bottom:10px}.profile-tabs{display:flex;gap:8px;margin:12px 0}.profile-tabs button{flex:1;padding:9px;border-radius:8px;border:1px solid var(--border,#1f1f2e);background:var(--surface,#111827);color:var(--text,#e5e7eb);cursor:pointer}.profile-pane{display:none;text-align:left}.profile-pane.active{display:block}.profile-pane label{display:block;margin:10px 0 6px;color:var(--text-sec,#9ca3af)}.profile-pane input{width:100%;padding:10px;background:var(--surface,#111827);color:var(--text,#e5e7eb);border:1px solid var(--border,#1f1f2e);border-radius:8px}.profile-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:12px}.global-primary{background:var(--primary,#00c853);color:#062b1d;border:0;border-radius:8px;padding:10px 12px;font-weight:800;cursor:pointer}.global-danger{background:#ef4444;color:white;border:0;border-radius:8px;padding:10px 12px;font-weight:800;cursor:pointer}.global-link{color:var(--primary,#00c853);text-decoration:none}.novaskol-loader{position:fixed;inset:0;background:rgba(0,0,0,.58);z-index:5000;display:none;align-items:center;justify-content:center;backdrop-filter:blur(4px)}.novaskol-loader.active{display:flex}.loader-box{background:var(--card,#14141a);border:1px solid var(--border,#1f1f2e);border-radius:8px;padding:24px 30px;text-align:center;color:var(--text,#e5e7eb);box-shadow:0 20px 60px #0008}.loader-ring{width:48px;height:48px;border-radius:50%;border:4px solid rgba(0,200,83,.18);border-top-color:var(--primary,#00c853);animation:novaspin .8s linear infinite;margin:0 auto 12px}@keyframes novaspin{to{transform:rotate(360deg)}}@media(max-width:900px){header{padding-left:82px!important;padding-right:150px!important;z-index:10040!important}header .header-left{position:fixed!important;left:14px!important;top:14px!important;transform:none!important;z-index:10050!important}.burger-menu,#fullscreen-btn,.fullscreen-btn{z-index:10051!important}.novaskol-global-actions{right:12px;top:14px}.global-icon-btn,.profile-trigger{width:36px;height:36px}.global-dropdown{right:12px;top:60px}}
     .global-item-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:10px}.global-mini{border:0;border-radius:8px;padding:7px 10px;color:white;font-weight:800;cursor:pointer}.global-mini.success{background:#00a843}.global-mini.danger{background:#ef4444}@media(max-width:1100px){nav#sidebar{z-index:10040!important;padding-top:76px!important;box-shadow:18px 0 48px rgba(0,0,0,.28)!important}nav#sidebar .logo{padding:14px 0 18px!important}body.novaskol-sidebar-open{overflow:hidden!important}}@media(max-width:700px){nav#sidebar{padding-top:78px!important}}@media print{.novaskol-global-actions,.global-dropdown,.novaskol-loader{display:none!important}}
-</style>
-<style>
-    nav#sidebar{width:var(--sidebar-width,240px);position:fixed;left:0;top:0;bottom:0;z-index:999;overflow-y:auto;border-right:1px solid var(--border,#1f1f2e);transition:transform .28s ease}
-    nav#sidebar.hidden{transform:translateX(-100%)}
 </style>
 <nav id="sidebar">
     <div class="logo">

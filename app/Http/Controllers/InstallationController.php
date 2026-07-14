@@ -67,7 +67,7 @@ class InstallationController extends Controller
         DB::transaction(function () use ($data) {
             DB::table('ecole')->updateOrInsert(['id' => 1], [
                 'nom' => trim($data['nom_ecole']),
-                'logo' => DB::table('ecole')->where('id', 1)->value('logo') ?: 'logo.png',
+                'logo' => DB::table('ecole')->where('id', 1)->value('logo') ?: 'novaskol.png',
             ]);
 
             foreach ([

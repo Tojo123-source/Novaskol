@@ -48,7 +48,7 @@
                     <div class="field"><label>Adresse</label><input name="adresse_ecole" value="{{ old('adresse_ecole', $params['adresse_ecole'] ?? '') }}"></div>
                     <div class="field"><label>Telephone</label><input name="telephone_ecole" value="{{ old('telephone_ecole', $params['telephone_ecole'] ?? '') }}"></div>
                     <div class="field"><label>Email</label><input type="email" name="email_ecole" value="{{ old('email_ecole', $params['email_ecole'] ?? '') }}"></div>
-                    <div class="field"><label>Logo de l'ecole</label><input type="file" name="logo_ecole" accept="image/*">@if(($params['logo_ecole'] ?? '') || ($ecole->logo ?? ''))<img class="logo-preview" src="{{ asset('legacy/images/'.basename($params['logo_ecole'] ?? ($ecole->logo ?? 'logo.png'))) }}" alt="Logo actuel">@endif</div>
+                    <div class="field"><label>Logo de l'ecole</label><input type="file" name="logo_ecole" accept="image/*">@if(($params['logo_ecole'] ?? '') || ($ecole->logo ?? ''))<img class="logo-preview" src="{{ asset('legacy/images/'.basename($params['logo_ecole'] ?? ($ecole->logo ?? 'novaskol.png'))) }}" alt="Logo actuel">@endif</div>
                 </div>
             </div>
             <div class="settings-section">

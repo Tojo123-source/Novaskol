@@ -1594,6 +1594,6 @@ HTML, 200)->header('Content-Type', 'text/html; charset=UTF-8');
 
     private function school(): object
     {
-        return DB::table('ecole')->select('nom', 'logo')->first() ?: (object) ['nom' => 'Ecole', 'logo' => 'logo.png'];
+        return DB::table('ecole')->select('nom', 'logo')->first() ?: (object) ['nom' => 'Ecole', 'logo' => 'novaskol.png'];
     }
 }

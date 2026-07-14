@@ -61,7 +61,7 @@ class ConnectedInitController extends Controller
                     ['id' => $paired['school']['id'] ?? 1],
                     [
                         'nom' => $paired['school']['nom'] ?? 'Ecole',
-                        'logo' => $paired['school']['logo'] ?? 'logo.png',
+                        'logo' => $paired['school']['logo'] ?? 'novaskol.png',
                     ]
                 );
             }

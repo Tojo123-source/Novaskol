@@ -255,12 +255,12 @@ class DashboardController extends Controller
     private function school(): object
     {
         if (! Schema::hasTable('ecole')) {
-            return (object) ['nom' => 'Ecole', 'logo' => 'logo.png'];
+            return (object) ['nom' => 'Ecole', 'logo' => 'novaskol.png'];
         }
 
         return DB::table('ecole')->select('nom', 'logo')->first() ?: (object) [
             'nom' => 'Ecole',
-            'logo' => 'logo.png',
+            'logo' => 'novaskol.png',
         ];
     }
 

@@ -440,6 +440,6 @@ class AccountingController extends Controller
 
     private function school(): object
     {
-        return DB::table('ecole')->select('nom', 'logo')->first() ?: (object) ['nom' => 'Ecole', 'logo' => 'logo.png'];
+        return DB::table('ecole')->select('nom', 'logo')->first() ?: (object) ['nom' => 'Ecole', 'logo' => 'novaskol.png'];
     }
 }

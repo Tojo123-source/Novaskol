@@ -154,6 +154,6 @@ class UserAccountController extends Controller
 
     private function school(): object
     {
-        return DB::table('ecole')->select('id', 'nom', 'logo')->first() ?: (object) ['id' => 1, 'nom' => 'Ecole', 'logo' => 'logo.png'];
+        return DB::table('ecole')->select('id', 'nom', 'logo')->first() ?: (object) ['id' => 1, 'nom' => 'Ecole', 'logo' => 'novaskol.png'];
     }
 }

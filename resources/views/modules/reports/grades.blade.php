@@ -8,39 +8,6 @@
     @include('modules.professeur.bulletin.partials.styles')
     @include('modules.reports.partials.styles')
     <script src="{{ asset('legacy/js/chart.min.js') }}"></script>
-    <style>
-        @media print {
-            @page { size: A4 landscape; margin: 8mm; }
-            *, *::before, *::after { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; box-shadow: none !important; text-shadow: none !important; }
-            html, body { background: #fff !important; margin: 0 !important; padding: 0 !important; color: #111 !important; }
-            nav, header, footer, .no-print, .novaskol-global-actions, .global-dropdown, .novaskol-loader { display: none !important; }
-            main { margin: 0 !important; padding: 0 !important; background: #fff !important; width: 100% !important; }
-            .report-panel { background: #fff !important; border: 1px solid #cbd5e1 !important; box-shadow: none !important; break-inside: avoid; border-radius: 0 !important; padding: 8px !important; margin: 0 0 8px !important; }
-            .report-panel h2 { font-size: 11pt !important; color: #065f46 !important; margin: 0 0 6px !important; }
-            .kpis { display: grid !important; grid-template-columns: repeat(5, 1fr) !important; gap: 6px !important; margin: 0 0 8px !important; }
-            .kpi { background: #f8fafc !important; border: 1px solid #cbd5e1 !important; padding: 6px !important; border-radius: 0 !important; box-shadow: none !important; }
-            .kpi span { color: #475569 !important; font-size: 7pt !important; }
-            .kpi strong { color: #111 !important; font-size: 8pt !important; }
-            .chart-grid { display: none !important; }
-            .report-table-wrap { overflow: visible !important; }
-            .report-table { width: 100% !important; border-collapse: collapse !important; font-size: 8pt !important; }
-            .report-table th { background: #ecfdf5 !important; color: #065f46 !important; border: 1px solid #94a3b8 !important; padding: 4px 6px !important; font-size: 7.5pt !important; }
-            .report-table td { color: #111 !important; background:#fff !important; border: 1px solid #cbd5e1 !important; padding: 3px 6px !important; }
-            .report-table th { background: #ecfdf5 !important; color: #065f46 !important; }
-            .report-table tr:nth-child(even) td { background: #f8fafc !important; }
-            .kpi { background: #f8fafc !important; }
-            .kpi strong, .kpi span { background: transparent !important; }
-            .report-table tr:nth-child(even) td { background: #f8fafc !important; }
-            .money { color: #065f46 !important; }
-            .muted { color: #64748b !important; }
-            .rank-card { background: #fff !important; border: 1px solid #cbd5e1 !important; border-radius: 0 !important; padding: 8px !important; break-inside: avoid; }
-            .rank-card h3 { color: #065f46 !important; font-size: 9pt !important; }
-            .rank-card p { color: #111 !important; font-size: 7.5pt !important; }
-            .rank-card strong { color: #111 !important; }
-            footer { display: none !important; }
-            .top-class-grid { display: grid !important; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)) !important; gap: 6px !important; }
-        }
-    </style>
 </head>
 <body>
 @php
