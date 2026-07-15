@@ -31,7 +31,7 @@
     .parent-menu span { display:flex; align-items:center; gap:10px; } .sub-menu a { padding-left:48px; font-size:.95rem; }
     header { position:fixed; top:0; left:var(--sidebar-width); right:0; min-height:72px; background:linear-gradient(135deg,var(--surface),var(--card)); display:flex; align-items:center; justify-content:center; z-index:999; box-shadow:0 4px 20px rgba(0,0,0,.6); border-bottom:1px solid var(--border); transition:left .3s,width .3s; padding:10px 18px; }
     header.full-width { left:0; width:100%; } .header-left { position:absolute; left:20px; display:flex; gap:16px; align-items:center; }
-    h1 { font-size:1.5em; font-weight:bold; line-height:1.15; margin:0; min-width:0; max-width:100%; padding:0 170px 0 84px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; text-align:center; } .burger-menu,#fullscreen-btn { background:none; border:none; color:var(--text); font-size:1.45rem; cursor:pointer; transition:all .2s; }
+    h1,.header-center { font-size:1.5em; font-weight:bold; line-height:1.15; margin:0; min-width:0; max-width:100%; padding:0 170px 0 84px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; text-align:center; } .burger-menu,#fullscreen-btn { background:none; border:none; color:var(--text); font-size:1.45rem; cursor:pointer; transition:all .2s; }
     .burger-menu:hover,#fullscreen-btn:hover { color:var(--primary); transform:scale(1.12); }
     main { margin-left:240px; padding:90px 20px 40px; min-height:100vh; background:var(--bg); transition:margin-left .3s; }
     main.full-width { margin-left:0; }
@@ -59,24 +59,39 @@
     .btn-imprimer { background:#f59e0b; color:white; padding:12px 24px; border:none; border-radius:8px; font-weight:600; cursor:pointer; margin:16px 0; }
     .kaly { padding:5px; background:#034a3b; color:white; border:none; border-radius:6px; font-weight:600; cursor:pointer; text-decoration:none !important; margin:0 24px 18px; display:inline-block; }
     footer { text-align:center; padding:2.5rem 1rem 1.5rem; color:var(--text-sec); font-size:.92rem; border-top:1px solid var(--border); margin-top:3rem; }
-    @media (max-width:1100px) { nav{transform:translateX(-250px);} nav.active{transform:translateX(0);} header{left:0!important;width:100%!important;min-height:86px!important;padding:10px 164px 10px 84px!important;} .header-left{left:18px!important;} header h1{font-size:1.18rem!important;padding:0!important;} main{margin-left:0!important;padding:118px 16px 40px!important;} }
-    @media (max-width:760px) { header{min-height:126px!important;padding:58px 12px 12px!important;align-items:flex-start!important;justify-content:flex-start!important;} .header-left{position:fixed!important;left:14px!important;top:12px!important;z-index:10050!important;} header h1{font-size:1.06rem!important;text-align:left!important;white-space:normal!important;display:-webkit-box!important;-webkit-line-clamp:2!important;-webkit-box-orient:vertical!important;overflow:hidden!important;} main{padding:154px 12px 44px!important;} .form-container{padding:16px!important;margin:0 0 20px!important;} .feature-text{padding:18px 18px 14px!important;} .feature-text h3{font-size:1.2rem!important;} .btn-ajouter{width:100%;justify-content:center;} .action-buttons button{min-width:52px;} .features-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:14px!important;} .feature-item{height:100%;} }
+    @media (max-width:1100px) { nav{transform:translateX(-250px);} nav.active{transform:translateX(0);} header{left:0!important;width:100%!important;min-height:86px!important;padding:10px 164px 10px 84px!important;} .header-left{left:18px!important;} header h1,header .header-center{font-size:1.18rem!important;padding:0!important;} main{margin-left:0!important;padding:118px 16px 40px!important;} }
+    @media (max-width:760px) { header{min-height:126px!important;padding:58px 12px 12px!important;align-items:flex-start!important;justify-content:flex-start!important;} .header-left{position:fixed!important;left:14px!important;top:12px!important;z-index:10050!important;} header h1,header .header-center{font-size:1.06rem!important;text-align:left!important;white-space:normal!important;display:-webkit-box!important;-webkit-line-clamp:2!important;-webkit-box-orient:vertical!important;overflow:hidden!important;} main{padding:154px 12px 44px!important;} .form-container{padding:16px!important;margin:0 0 20px!important;} .feature-text{padding:18px 18px 14px!important;} .feature-text h3{font-size:1.2rem!important;} .btn-ajouter{width:100%;justify-content:center;} .action-buttons button{min-width:52px;} .features-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:14px!important;} .feature-item{height:100%;} }
     @media (max-width:520px) { .features-grid{grid-template-columns:1fr!important;} .feature-item img{height:160px!important;} select#annee_scolaire_filter,#annee_scolaire_modal{width:100%;min-width:0;} .modal-content,.eleves-modal-content{width:min(96vw,1100px);padding:20px;} }
     @media print {
         @page{size:A4 landscape;margin:10mm 12mm;}
         *,*::before,*::after{ -webkit-print-color-adjust:exact!important; print-color-adjust:exact!important; }
         html,body{background:white!important;color:#111!important;margin:0!important;padding:0!important;}
-        #app > nav, #app > main, #app > #modal { display:none!important; }
-        #eleves-modal{display:block!important;position:static!important;width:100%!important;height:auto!important;background:white!important;border:none!important;box-shadow:none!important;backdrop-filter:none!important;}
-        .eleves-modal-content{background:white!important;color:black!important;box-shadow:none!important;border:none!important;padding:0!important;margin:0!important;width:100%!important;}
-        .close,.btn-imprimer,.efenina,.annee-scolaire-print{display:none!important;}
-        .print-header{text-align:center;margin-bottom:10px;padding-bottom:8px;border-bottom:2px solid #0f70c0;} .print-header img{max-width:65px!important;height:auto;margin:0 auto 6px;display:block;} .print-header h1{font-size:17pt;margin:4px 0 2px;color:#0f70c0;font-weight:bold;}
-        #eleves-modal-title{text-align:center;font-size:14pt;color:#111;margin:10px 0;}
-        .eleves-table{width:100%;border-collapse:collapse;font-size:9pt;margin-top:6px;}
-        .eleves-table th,.eleves-table td{border:1px solid #555!important;padding:4px 6px!important;text-align:left;color:#111!important;}
+        body > *:not(#app) { display:none!important; }
+        #app { display:block!important; background:white!important; }
+        #app > *:not(#eleves-modal) { display:none!important; }
+        #eleves-modal {
+            display:flex!important; position:static!important; width:auto!important; max-width:100%!important;
+            height:auto!important; background:white!important; border:none!important;
+            box-shadow:none!important; backdrop-filter:none!important; z-index:auto!important;
+        }
+        #eleves-modal .eleves-modal-content {
+            display:block!important; background:white!important; color:black!important;
+            box-shadow:none!important; border:none!important; padding:0!important; margin:0!important;
+            width:auto!important; max-width:100%!important;
+        }
+        .print-header{display:block!important;text-align:center;margin-bottom:10px;padding-bottom:8px;border-bottom:2px solid #0f70c0;}
+        .print-header img{display:block!important;max-width:65px!important;height:auto;margin:0 auto 6px;}
+        .print-header h1{display:block!important;font-size:17pt;margin:4px 0 2px;color:#0f70c0;font-weight:bold;}
+        #eleves-modal-title{display:block!important;text-align:center;font-size:14pt;color:#111;margin:10px 0;}
+        .eleves-table{display:table!important;width:100%!important;border-collapse:collapse;font-size:9pt;margin-top:6px;}
+        .eleves-table thead{display:table-header-group!important;}
+        .eleves-table tbody{display:table-row-group!important;}
+        .eleves-table tr{display:table-row!important;}
+        .eleves-table th,.eleves-table td{display:table-cell!important;border:1px solid #555!important;padding:4px 6px!important;text-align:left;color:#111!important;}
         .eleves-table th{background:#0f70c0!important;color:white!important;font-weight:bold;font-size:8.5pt;}
         .eleves-table td{background:white!important;}
         .eleves-table tr:nth-child(even) td{background:#f5f8fc!important;}
+        .close,.btn-imprimer,.efenina,.annee-scolaire-print{display:none!important;}
     }
 </style>
 </head>
@@ -129,7 +144,7 @@
                 <button title="Cacher les modules" class="burger-menu" onclick="toggleSidebar()"><i class="fa fa-bars"></i></button>
                 <button title="Plein ecran" id="fullscreen-btn" onclick="toggleFullscreen()"><i id="fullscreen-icon" class="fa fa-expand"></i></button>
             </div>
-            <h1><i class="fa fa-list"></i> Liste des eleves par classe</h1>
+            <div class="header-center"><i class="fa fa-list"></i> Liste des eleves par classe</div>
         </header>
         <div class="form-container">
             <div class="io" style="padding-top: 10px; padding-bottom: 30px;">

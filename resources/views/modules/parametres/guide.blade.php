@@ -16,7 +16,7 @@
         .guide-flow{display:grid;gap:10px}.flow-step{display:flex;gap:12px;align-items:flex-start;padding:12px;border:1px solid var(--border);border-radius:8px;background:var(--surface)}.flow-step b{display:grid;place-items:center;min-width:30px;height:30px;border-radius:999px;background:var(--primary);color:#062b1d}
         @media(max-width:760px){
             main{padding-left:12px!important;padding-right:12px!important;overflow-x:hidden}
-            header h1{font-size:1.05rem;line-height:1.2;text-align:center}
+            header h1,.header-center{font-size:1.05rem;line-height:1.2;text-align:center}
             .guide-hero{padding:16px;margin-bottom:12px}
             .guide-hero h2{font-size:1.18rem;line-height:1.25}
             .guide-hero p,.guide-card li,.warning-box{font-size:.9rem;line-height:1.5}
@@ -31,7 +31,7 @@
 </head>
 <body>
 @include('modules.professeur.bulletin.partials.shell')
-<header><div class="header-left"><button class="burger-menu" onclick="toggleSidebar()"><i class="fa fa-bars"></i></button><button id="fullscreen-btn" onclick="toggleFullscreen()"><i class="fa fa-expand"></i></button></div><h1><i class="fa fa-life-ring"></i> Guide d'utilisation</h1></header>
+<header><div class="header-left"><button class="burger-menu" onclick="toggleSidebar()"><i class="fa fa-bars"></i></button><button id="fullscreen-btn" onclick="toggleFullscreen()"><i class="fa fa-expand"></i></button></div><div class="header-center"><i class="fa fa-life-ring"></i> Guide d'utilisation</div></header>
 <main>
     <section class="guide-hero">
         <h2>Guide complet Novaskol</h2>

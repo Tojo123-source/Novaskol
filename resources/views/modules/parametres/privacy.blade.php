@@ -18,7 +18,7 @@
 </head>
 <body>
 @include('modules.professeur.bulletin.partials.shell')
-<header><div class="header-left"><button class="burger-menu" onclick="toggleSidebar()"><i class="fa fa-bars"></i></button><button id="fullscreen-btn" onclick="toggleFullscreen()"><i class="fa fa-expand"></i></button></div><h1><i class="fa fa-shield"></i> Politique de confidentialite</h1></header>
+<header><div class="header-left"><button class="burger-menu" onclick="toggleSidebar()"><i class="fa fa-bars"></i></button><button id="fullscreen-btn" onclick="toggleFullscreen()"><i class="fa fa-expand"></i></button></div><div class="header-center"><i class="fa fa-shield"></i> Politique de confidentialite</div></header>
 <main>
     <section class="legal-wrap">
         <article class="legal-hero">

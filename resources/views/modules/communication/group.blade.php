@@ -194,7 +194,7 @@
         <button class="burger-menu" onclick="toggleSidebar()"><i class="fa fa-bars"></i></button>
         <button id="fullscreen-btn" onclick="toggleFullscreen()"><i class="fa fa-expand"></i></button>
     </div>
-    <h1>Chat groupe</h1>
+    <div class="header-center">Chat groupe</div>
 </header>
 <main>
     <section class="group-shell">

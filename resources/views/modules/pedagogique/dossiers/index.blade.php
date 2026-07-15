@@ -13,7 +13,7 @@
 </head>
 <body>
 @include('modules.professeur.bulletin.partials.shell', ['activeModule'=>$activeModule])
-<header><div class="header-left"><button class="burger-menu" onclick="toggleSidebar()"><i class="fa fa-bars"></i></button><button id="fullscreen-btn" onclick="toggleFullscreen()"><i id="fullscreen-icon" class="fa fa-expand"></i></button></div><h1><i class="fa fa-download"></i> Depot dossier</h1></header>
+<header><div class="header-left"><button class="burger-menu" onclick="toggleSidebar()"><i class="fa fa-bars"></i></button><button id="fullscreen-btn" onclick="toggleFullscreen()"><i id="fullscreen-icon" class="fa fa-expand"></i></button></div><div class="header-center"><i class="fa fa-download"></i> Depot dossier</div></header>
 <main>
 <div class="form-container">
     <div class="dossier-layout">

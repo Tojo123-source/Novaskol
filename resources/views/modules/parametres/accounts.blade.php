@@ -28,7 +28,7 @@
 </head>
 <body>
 @include('modules.professeur.bulletin.partials.shell')
-<header><div class="header-left"><button class="burger-menu" onclick="toggleSidebar()"><i class="fa fa-bars"></i></button><button id="fullscreen-btn" onclick="toggleFullscreen()"><i class="fa fa-expand"></i></button></div><h1><i class="fa fa-id-card"></i> Comptes utilisateurs</h1></header>
+<header><div class="header-left"><button class="burger-menu" onclick="toggleSidebar()"><i class="fa fa-bars"></i></button><button id="fullscreen-btn" onclick="toggleFullscreen()"><i class="fa fa-expand"></i></button></div><div class="header-center"><i class="fa fa-id-card"></i> Comptes utilisateurs</div></header>
 <main>
     <section class="settings-panel">
         <div class="settings-section">

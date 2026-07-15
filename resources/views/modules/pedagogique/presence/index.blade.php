@@ -24,7 +24,7 @@
 <body>
 @include('modules.professeur.bulletin.partials.shell', ['activeModule'=>$activeModule])
 <main>
-<header><div class="header-left"><button class="burger-menu" onclick="toggleSidebar()"><i class="fa fa-bars"></i></button><button id="fullscreen-btn" onclick="toggleFullscreen()"><i id="fullscreen-icon" class="fa fa-expand"></i></button></div><h1><i class="fa fa-check-circle-o"></i> Fiche de Presence</h1></header>
+<header><div class="header-left"><button class="burger-menu" onclick="toggleSidebar()"><i class="fa fa-bars"></i></button><button id="fullscreen-btn" onclick="toggleFullscreen()"><i id="fullscreen-icon" class="fa fa-expand"></i></button></div><div class="header-center"><i class="fa fa-check-circle-o"></i> Fiche de Presence</div></header>
 <div class="form-container">
     <form class="no-print" method="GET" action="{{ route('modules.presence-etudiant') }}">
         <input type="hidden" name="generer" value="1">

@@ -114,7 +114,7 @@
         gap: 16px;
         align-items: center;
     }
-    h2 {
+    h2,.header-center {
         font-size: 1.5rem;
         font-weight: bold;
         line-height: 1.15;
@@ -226,7 +226,7 @@
         main, header { margin-left: 0 !important; left: 0 !important; width: 100%; }
         header { min-height: 86px; padding: 10px 164px 10px 84px; }
         .header-left { left: 18px; }
-        h2 { font-size: 1.18rem; padding: 0; }
+        h2,.header-center { font-size: 1.18rem; padding: 0; }
         main { padding-top: 118px; }
     }
     @media (max-width: 760px) {
@@ -242,7 +242,7 @@
             top: 12px;
             z-index: 10050;
         }
-        h2 {
+        h2,.header-center {
             font-size: 1.08rem;
             white-space: normal;
             text-align: left;
@@ -256,7 +256,7 @@
         .ecole-form img { max-width: 180px; margin: 1.2rem auto; }
     }
     @media (max-width: 520px) {
-        h2 { font-size: 1rem; }
+        h2,.header-center { font-size: 1rem; }
     }
 </style>
 </head>
@@ -308,7 +308,7 @@
                 <button title="Cacher les modules" class="burger-menu" onclick="toggleSidebar()"><i class="fa fa-bars"></i></button>
                 <button title="Plein ecran" id="fullscreen-btn" onclick="toggleFullscreen()"><i id="fullscreen-icon" class="fa fa-expand"></i></button>
             </div>
-            <h2><i class="fa fa-building"></i> Details de l'ecole</h2>
+            <div class="header-center"><i class="fa fa-building"></i> Details de l'ecole</div>
         </header>
 
         <div class="form-container">

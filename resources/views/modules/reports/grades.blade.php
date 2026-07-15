@@ -23,7 +23,7 @@
         <button class="burger-menu" onclick="toggleSidebar()"><i class="fa fa-bars"></i></button>
         <button id="fullscreen-btn" onclick="toggleFullscreen()"><i class="fa fa-expand"></i></button>
     </div>
-    <h1>Evaluation des notes</h1>
+    <div class="header-center">Evaluation des notes</div>
 </header>
 <main>
     <section class="report-panel no-print">

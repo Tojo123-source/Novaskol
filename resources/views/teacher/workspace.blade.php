@@ -86,7 +86,7 @@
         <button id="fullscreen-btn" onclick="toggleFullscreen()"><i class="fa fa-expand"></i></button>
         <a class="btn-home" href="{{ route('role.dashboard') }}"><i class="fa fa-arrow-left"></i> Accueil</a>
     </div>
-    <h1>Espace enseignant</h1>
+    <div class="header-center">Espace enseignant</div>
 </header>
 
 <section class="teacher-hero">

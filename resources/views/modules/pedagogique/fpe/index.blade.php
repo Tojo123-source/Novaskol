@@ -21,7 +21,7 @@
 <body>
 @include('modules.professeur.bulletin.partials.shell', ['activeModule' => $activeModule])
 <main>
-<header><div class="header-left"><button class="burger-menu" onclick="toggleSidebar()"><i class="fa fa-bars"></i></button><button id="fullscreen-btn" onclick="toggleFullscreen()"><i id="fullscreen-icon" class="fa fa-expand"></i></button></div><h1><i class="fa fa-table"></i> FPE - Effectifs des Eleves</h1></header>
+<header><div class="header-left"><button class="burger-menu" onclick="toggleSidebar()"><i class="fa fa-bars"></i></button><button id="fullscreen-btn" onclick="toggleFullscreen()"><i id="fullscreen-icon" class="fa fa-expand"></i></button></div><div class="header-center"><i class="fa fa-table"></i> FPE - Effectifs des Eleves</div></header>
 <div class="form-container"><div class="app">
 <div class="header"><div class="school-info"><div>{{ $params['nom_ecole'] ?? ($ecole->nom ?? 'Ecole') }}</div><div class="code">RECOPIER LE CODE DE L'ETABLISSEMENT: {{ $params['code_etablissement'] ?? 'N/A' }}</div></div></div>
 <div class="table-container">

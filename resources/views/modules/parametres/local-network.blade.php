@@ -81,7 +81,7 @@
         }
         @media(max-width:760px){
             main{padding-left:12px!important;padding-right:12px!important;overflow-x:hidden}
-            header h1{font-size:1.05rem;line-height:1.2;text-align:center}
+            header h1,.header-center{font-size:1.05rem;line-height:1.2;text-align:center}
             .form-container{padding:0!important}
             .network-hero{gap:12px;margin-bottom:12px}
             .network-panel,.network-card,.network-qr,.network-help,.network-follow{padding:14px;border-radius:10px}
@@ -129,7 +129,7 @@
         <button class="burger-menu" onclick="toggleSidebar()"><i class="fa fa-bars"></i></button>
         <button id="fullscreen-btn" onclick="toggleFullscreen()"><i class="fa fa-expand"></i></button>
     </div>
-    <h1><i class="fa fa-wifi"></i> Reseau local</h1>
+    <div class="header-center"><i class="fa fa-wifi"></i> Reseau local</div>
 </header>
 <main>
     <section class="network-hero">

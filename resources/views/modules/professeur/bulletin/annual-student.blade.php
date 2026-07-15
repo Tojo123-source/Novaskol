@@ -39,7 +39,7 @@
         <button class="burger-menu" onclick="toggleSidebar()"><i class="fa fa-bars"></i></button>
         <button id="fullscreen-btn" onclick="toggleFullscreen()"><i id="fullscreen-icon" class="fa fa-expand"></i></button>
     </div>
-    <h1><i class="fa fa-calendar-check"></i> Bulletin annuel de {{ $student->prenom }} {{ $student->nom }}</h1>
+    <div class="header-center"><i class="fa fa-calendar-check"></i> Bulletin annuel de {{ $student->prenom }} {{ $student->nom }}</div>
 </header>
 <main>
     <div class="print-actions">

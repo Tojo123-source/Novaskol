@@ -30,7 +30,7 @@
         <button class="burger-menu" onclick="toggleSidebar()"><i class="fa fa-bars"></i></button>
         <button id="fullscreen-btn" onclick="toggleFullscreen()"><i class="fa fa-expand"></i></button>
     </div>
-    <h1><i class="fa fa-info-circle"></i> A propos Novaskol</h1>
+    <div class="header-center"><i class="fa fa-info-circle"></i> A propos Novaskol</div>
 </header>
 <main>
     <section class="settings-panel">

@@ -36,7 +36,7 @@
         <button class="burger-menu" onclick="toggleSidebar()"><i class="fa fa-bars"></i></button>
         <button id="fullscreen-btn" onclick="toggleFullscreen()"><i class="fa fa-expand"></i></button>
     </div>
-    <h1>Contacter le responsable</h1>
+    <div class="header-center">Contacter le responsable</div>
 </header>
 <main class="parent-chat">
     <aside class="chat-card responsible">

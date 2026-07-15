@@ -75,7 +75,7 @@
         <button class="burger-menu" onclick="toggleSidebar()"><i class="fa fa-bars"></i></button>
         <button id="fullscreen-btn" onclick="toggleFullscreen()"><i id="fullscreen-icon" class="fa fa-expand"></i></button>
     </div>
-    <h1><i class="fa fa-line-chart"></i> Resultat en un clic</h1>
+    <div class="header-center"><i class="fa fa-line-chart"></i> Resultat en un clic</div>
 </header>
 <main>
     <div class="form-container">

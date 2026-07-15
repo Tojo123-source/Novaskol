@@ -1,6 +1,6 @@
 <!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Comptable</title><link rel="stylesheet" href="{{ asset('legacy/assets/fontawesome/css/all.min.css') }}">@include('modules.professeur.bulletin.partials.styles')@include('modules.accounting.partials.styles')</head><body>
 @include('modules.professeur.bulletin.partials.shell')
-<header><div class="header-left"><button class="burger-menu" onclick="toggleSidebar()"><i class="fa fa-bars"></i></button><button id="fullscreen-btn" onclick="toggleFullscreen()"><i class="fa fa-expand"></i></button></div><h1>Comptable</h1></header>
+<header><div class="header-left"><button class="burger-menu" onclick="toggleSidebar()"><i class="fa fa-bars"></i></button><button id="fullscreen-btn" onclick="toggleFullscreen()"><i class="fa fa-expand"></i></button></div><div class="header-center">Comptable</div></header>
 <main>
 <section class="acc-panel no-print"><form method="GET" class="acc-grid"><div><label>Annee scolaire</label><select name="annee_scolaire" onchange="this.form.submit()">@foreach($annees as $annee)<option value="{{ $annee }}" @selected($selectedAnnee===$annee)>{{ $annee }}</option>@endforeach</select></div></form></section>
 <div class="tabs"><a class="tab-link active" href="#ecolage">Ecolage</a><a class="tab-link" href="#salaire">Salaire</a><a class="tab-link" href="#manuel">Operation manuelle</a></div>

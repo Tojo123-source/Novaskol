@@ -42,7 +42,7 @@
         <button class="burger-menu" onclick="toggleSidebar()"><i class="fa fa-bars"></i></button>
         <button id="fullscreen-btn" onclick="toggleFullscreen()"><i class="fa fa-expand"></i></button>
     </div>
-    <h1>Gestion des permissions</h1>
+    <div class="header-center">Gestion des permissions</div>
 </header>
 <main>
     <section class="rh-panel">
