@@ -22,7 +22,7 @@ class InjectBrandingAssets
         }
 
         $branding = "\n    <meta name=\"theme-color\" content=\"#00c853\">\n"
-            . '    <link rel="icon" href="'.asset('favicon.ico').'" sizes="any">'
+            . '    <link rel="icon" type="image/png" href="'.asset('novaskol-icon.png').'" sizes="any">'
             . "\n" . '    <link rel="manifest" href="'.asset('novaskol.webmanifest').'">'
             . "\n";
 

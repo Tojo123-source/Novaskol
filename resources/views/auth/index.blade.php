@@ -7,7 +7,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Novaskol - Un systeme de gestion scolaire pour chaque ecole</title>
-    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
     <link rel="icon" type="image/png" href="{{ asset('novaskol-icon.png') }}">
 <link rel="stylesheet" href="{{ asset('legacy/assets/fontawesome/css/all.min.css') }}">
     <script src="{{ asset('legacy/js/jquery-3.6.0.min.js') }}"></script>
