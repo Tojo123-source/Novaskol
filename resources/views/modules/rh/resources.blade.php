@@ -24,6 +24,7 @@
         .alert.success { background:rgba(16,185,129,.12); color:#a7f3d0; }
         .alert.error { background:rgba(239,68,68,.12); color:#fecaca; }
         details summary { cursor:pointer; color:var(--primary); font-weight:700; }
+        @media(max-width:1100px){.rh-columns{grid-template-columns:1fr}}@media(max-width:760px){.rh-grid{grid-template-columns:1fr}.rh-table{font-size:.82rem}.rh-table th,.rh-table td{padding:8px 6px}}
     </style>
 </head>
 <body>

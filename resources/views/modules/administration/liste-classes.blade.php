@@ -66,9 +66,8 @@
         @page{size:A4 landscape;margin:10mm 12mm;}
         *,*::before,*::after{ -webkit-print-color-adjust:exact!important; print-color-adjust:exact!important; }
         html,body{background:white!important;color:#111!important;margin:0!important;padding:0!important;}
-        #app { display:block!important; background:white!important; }
-        #app > :not(#eleves-modal) { display:none!important; }
-        #eleves-modal{display:block!important;position:static!important;width:100%!important;height:auto!important;background:white!important;}
+        #app > nav, #app > main, #app > #modal { display:none!important; }
+        #eleves-modal{display:block!important;position:static!important;width:100%!important;height:auto!important;background:white!important;border:none!important;box-shadow:none!important;backdrop-filter:none!important;}
         .eleves-modal-content{background:white!important;color:black!important;box-shadow:none!important;border:none!important;padding:0!important;margin:0!important;width:100%!important;}
         .close,.btn-imprimer,.efenina,.annee-scolaire-print{display:none!important;}
         .print-header{text-align:center;margin-bottom:10px;padding-bottom:8px;border-bottom:2px solid #0f70c0;} .print-header img{max-width:65px!important;height:auto;margin:0 auto 6px;display:block;} .print-header h1{font-size:17pt;margin:4px 0 2px;color:#0f70c0;font-weight:bold;}

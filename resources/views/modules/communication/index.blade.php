@@ -15,6 +15,7 @@
         .communication-card h2 { font-size:1.35rem; margin-bottom:10px; }
         .communication-card p { color:var(--text-sec); line-height:1.6; min-height:78px; }
         .communication-card span { display:inline-flex; align-items:center; gap:8px; margin-top:20px; padding:11px 18px; background:var(--primary); color:white; border-radius:8px; font-weight:800; }
+        @media(max-width:760px){.communication-grid{grid-template-columns:1fr;gap:14px}.communication-card{padding:20px}.communication-card i{font-size:2rem}.communication-card h2{font-size:1.1rem}.communication-card p{font-size:.9rem;min-height:auto}}
     </style>
 </head>
 <body>
