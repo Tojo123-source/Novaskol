@@ -30,6 +30,11 @@ use App\Http\Controllers\TeacherWorkspaceController;
 use App\Http\Controllers\UserAccountController;
 use Illuminate\Support\Facades\Route;
 
+Route::view('/mentions-legales', 'auth.mentions-legales')->name('public.mentions-legales');
+Route::view('/confidentialite', 'auth.confidentialite')->name('public.confidentialite');
+Route::view('/cgu', 'auth.cgu')->name('public.cgu');
+Route::view('/cookies', 'auth.cookies')->name('public.cookies');
+
 Route::get('/installation', [InstallationController::class, 'show'])->name('installation.show');
 Route::post('/installation', [InstallationController::class, 'store'])->name('installation.store');
 Route::post('/installation/reset-demo', [InstallationController::class, 'resetDemo'])->name('installation.reset-demo');

@@ -1,2 +1,8 @@
 User-agent: *
-Disallow:
+Allow: /
+Disallow: /parametres/
+Disallow: /comptes-utilisateurs/
+Disallow: /diagnostic-systeme/
+Disallow: /sauvegardes/
+
+Sitemap: https://novaskol.alwaysdata.net/sitemap.xml

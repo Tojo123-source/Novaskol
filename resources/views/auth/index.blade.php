@@ -490,7 +490,14 @@
 </main>
 
 <footer>
-        &copy; {{ date('Y') }} Novaskol - Solution scolaire moderne - Tous droits réservés
+  <div style="display:flex;justify-content:center;gap:2rem;flex-wrap:wrap;margin-bottom:1.2rem;font-size:0.82rem;">
+    <a href="{{ route('public.mentions-legales') }}" style="color:#555;text-decoration:none;">Mentions légales</a>
+    <a href="{{ route('public.confidentialite') }}" style="color:#555;text-decoration:none;">Confidentialité</a>
+    <a href="{{ route('public.cgu') }}" style="color:#555;text-decoration:none;">CGU</a>
+    <a href="{{ route('public.cookies') }}" style="color:#555;text-decoration:none;">Cookies</a>
+    <a href="#contact" style="color:#555;text-decoration:none;">Contact</a>
+  </div>
+  &copy; {{ date('Y') }} Novaskol - Solution scolaire moderne - Tous droits réservés
 </footer>
 
 <script>
