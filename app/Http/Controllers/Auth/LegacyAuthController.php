@@ -37,8 +37,31 @@ class LegacyAuthController extends Controller
         $credentials = $request->validate([
             'email' => ['required', 'email'],
             'password' => ['required', 'string'],
-            'role' => ['required', 'in:admin,enseignant,staff,parent'],
+            'role' => ['required', 'in:admin,enseignant,staff,parent,eleve'],
         ]);
+
+        if ($credentials['role'] === 'eleve') {
+            $eleve = DB::table('eleves')
+                ->where('email', $credentials['email'])
+                ->first();
+
+            if (! $eleve || ! Hash::check($credentials['password'], $eleve->mot_de_passe)) {
+                return back()
+                    ->withErrors(['email' => 'Email ou mot de passe incorrect.'])
+                    ->onlyInput('email', 'role');
+            }
+
+            DB::table('eleves')->where('id', $eleve->id)->update(['last_activity' => now()]);
+
+            $request->session()->put('utilisateur', [
+                'id' => $eleve->id,
+                'nom' => $eleve->nom . ' ' . $eleve->prenom,
+                'email' => $eleve->email,
+                'role' => 'eleve',
+            ]);
+
+            return redirect()->route('role.dashboard');
+        }
 
         $user = DB::table('utilisateurs')
             ->where('email', $credentials['email'])
@@ -80,10 +103,17 @@ class LegacyAuthController extends Controller
             'email' => ['required', 'email', 'max:255'],
             'password' => ['required', 'string'],
             'password_confirm' => ['required', 'same:password'],
-            'role' => ['required', 'in:admin,enseignant,staff,parent'],
+            'role' => ['required', 'in:admin,enseignant,staff,parent,eleve'],
         ], [
             'password_confirm.same' => 'Les mots de passe ne correspondent pas.',
         ]);
+
+        if ($data['role'] === 'eleve') {
+            return back()
+                ->withErrors(['register' => 'Les eleves ne peuvent pas creer de compte. Contactez un administrateur.'])
+                ->withInput($request->except('password', 'password_confirm'))
+                ->with('auth_box', 'register');
+        }
 
         $exists = DB::table('utilisateurs')->where('email', $data['email'])->exists();
 

@@ -313,6 +313,18 @@ function loadParents(nom_pere,nom_mere,annee,callback){$.get(parentsUrl,{nom_per
 $(document).ready(function(){
     const active=document.querySelector('nav a.active');if(active){const sub=active.closest('.sub-menu');if(sub){sub.style.display='block';const parent=sub.previousElementSibling;if(parent){const arrow=parent.querySelector('.arrow');if(arrow)arrow.classList.add('open');}}}
     $('#btn-rechercher').on('click', refreshStudents);
+    let searchTimer = null;
+    $('#search').on('input', function() {
+        clearTimeout(searchTimer);
+        const val = $(this).val().trim();
+        if (val.length >= 2 || val.length === 0) {
+            searchTimer = setTimeout(refreshStudents, 300);
+        }
+    });
+    $('#filter-classe, #filter-annee').on('change input', function() {
+        clearTimeout(searchTimer);
+        searchTimer = setTimeout(refreshStudents, 300);
+    });
     $('#btn-toggle-form').on('click', function(){$('.form-container').toggleClass('hidden');$(this).toggleClass('active');$(this).html($('.form-container').hasClass('hidden')?'<i class="fa fa-plus"></i> Ajouter':'<i class="fa fa-minus"></i> Masquer');});
     $('#btn-importer').on('click', function(){$('#modal-import').addClass('show').show();$('#import-file').val('');});
     $('.modal .close').on('click', function(){$(this).closest('.modal').removeClass('show').hide();});

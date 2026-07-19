@@ -198,15 +198,16 @@
     .form-group label{display:block;font-size:0.85rem;font-weight:600;color:var(--text-sec);margin-bottom:0.4rem}
     input,select,textarea{
       width:100%;padding:0.9rem 1.2rem;
-      background:rgba(255,255,255,0.04);
+      background:rgba(0,0,0,0.6);
       border:1px solid var(--border);border-radius:var(--radius-sm);
       color:white;font-size:0.95rem;font-family:inherit;transition:all 0.3s;
     }
     input:focus,select:focus,textarea:focus{
       outline:none;border-color:var(--primary);
-      box-shadow:0 0 0 3px rgba(0,200,83,0.12);background:rgba(255,255,255,0.06);
+      box-shadow:0 0 0 3px rgba(0,200,83,0.12);background:rgba(0,0,0,0.75);
     }
-    input::placeholder{color:#555}
+    input::placeholder{color:#888}
+    select option{background:#0d1117;color:white;padding:8px}
     .auth-section .btn{width:100%;justify-content:center;margin-top:0.5rem}
     .error-msg{
       background:rgba(255,80,80,0.12);color:#ff8080;
@@ -513,6 +514,7 @@
             <option value="enseignant">Enseignant</option>
             <option value="staff">Personnel</option>
             <option value="parent">Parent</option>
+            <option value="eleve">Eleve</option>
           </select>
         </div>
         <div class="form-group"><input type="password" name="password" placeholder="Mot de passe" required></div>
