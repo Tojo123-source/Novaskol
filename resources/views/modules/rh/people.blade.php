@@ -183,7 +183,9 @@
         </div>
         <div class="people-cards">
             @forelse ($people as $person)
-                @php($photoPath = $person->photo ? asset('legacy/'.ltrim($person->photo, '/')) : null)
+                @php
+                    $photoPath = $person->photo ? asset('legacy/'.ltrim($person->photo, '/')) : null;
+                @endphp
                 <article class="person-card">
                     <div class="person-head">
                         @if($photoPath)<img class="photo" src="{{ $photoPath }}" alt="">@else<div class="photo"></div>@endif
@@ -244,7 +246,9 @@
                                         <label style="margin-top:12px;">Classes</label>
                                         <div class="checks">
                                             @foreach ($classes as $classe)
-                                                @php($assignment = ($person->classes_assignments ?? collect())->get($classe->id))
+                                                @php
+                                                    $assignment = ($person->classes_assignments ?? collect())->get($classe->id);
+                                                @endphp
                                                 <div class="class-assignment">
                                                     <input type="checkbox" name="classes_ids[]" value="{{ $classe->id }}" @checked(in_array((int)$classe->id, $person->classes_ids ?? [], true))>
                                                     <div>

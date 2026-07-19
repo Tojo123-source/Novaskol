@@ -1,4 +1,6 @@
-@php($contactStatus = request('contact'))
+@php
+    $contactStatus = request('contact');
+@endphp
 
 @if ($contactStatus === 'success')
     <div class="success-msg">Message envoye ! Merci, on vous repond tres vite.</div>

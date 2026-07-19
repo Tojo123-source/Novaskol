@@ -93,7 +93,9 @@
         <section class="report-panel">
             <h2>Detail eleve - {{ $selectedStudent->nom }} {{ $selectedStudent->prenom }}</h2>
             <div class="kpis">
-                @php($studentPresence = $attendanceByStudent->first())
+                @php
+                    $studentPresence = $attendanceByStudent->first();
+                @endphp
                 <div class="kpi"><span>Classe</span><strong>{{ $selectedStudent->classe ?? '-' }}</strong></div>
                 <div class="kpi"><span>Presents</span><strong>{{ $studentPresence->presents ?? 0 }}</strong></div>
                 <div class="kpi"><span>Absences</span><strong>{{ $studentPresence->absents ?? 0 }}</strong></div>

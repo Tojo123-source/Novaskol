@@ -202,7 +202,9 @@
     @endif
 </nav>
 <div class="novaskol-global-actions">
-    @php($isConnectedMode = config('novaskol.edition', 'principal') === 'connecte' || Illuminate\Support\Facades\File::exists(env('CONNECTED_PAIRED_PATH', storage_path('app/connected/paired.json'))))
+    @php
+        $isConnectedMode = config('novaskol.edition', 'principal') === 'connecte' || Illuminate\Support\Facades\File::exists(env('CONNECTED_PAIRED_PATH', storage_path('app/connected/paired.json')));
+    @endphp
     @if($isConnectedMode)
     <button class="global-icon-btn" type="button" title="Synchronisation" data-action="sync" onclick="novaskolManualSync()" style="color:var(--primary);">
         <i class="fa fa-refresh"></i><span class="global-badge" id="novaskolSyncBadge" style="display:none;background:var(--primary);color:#000;">!</span>

@@ -89,7 +89,9 @@
             <div class="parent-menu" onclick="toggleSub(this)"><span><i class="fa {{ $info['section_icon'] ?? 'fa-folder-open' }}"></i> {{ preg_replace('/^\s*\|\s*--\s*/', '', $info['label']) }}</span> <i class="fa fa-chevron-down arrow"></i></div>
             <div class="sub-menu" style="display:none;"> @php($openSub = true)
         @else
-            @php($href = $module === 'dashboard' ? route('dashboard') : (! empty($info['migrated']) && ! empty($info['route']) ? route($info['route']) : $legacyBase.($info['legacy_url'] ?? $info['url'] ?? '#')))
+            @php
+                $href = $module === 'dashboard' ? route('dashboard') : (! empty($info['migrated']) && ! empty($info['route']) ? route($info['route']) : $legacyBase.($info['legacy_url'] ?? $info['url'] ?? '#'));
+            @endphp
             <a href="{{ $href }}" @class(['active' => $module === 'notes'])><i class="fa {{ $info['icon'] }}"></i> <span>{{ $info['label'] }}</span></a>
         @endif
     @endforeach

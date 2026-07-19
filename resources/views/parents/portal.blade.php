@@ -151,7 +151,9 @@
             <div class="portal-card portal-full">
                 <h2><i class="fa fa-book"></i> Dernieres notes</h2>
                 @if($notes->isNotEmpty())
-                    @php($grouped = $notes->groupBy('periode'))
+                    @php
+                        $grouped = $notes->groupBy('periode');
+                    @endphp
                     <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px">
                         @foreach($grouped as $periode => $periodeNotes)
                             <div>

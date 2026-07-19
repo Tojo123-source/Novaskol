@@ -943,7 +943,9 @@
             <div class="sub-menu" style="display:none;">
             @php($openSub = true)
         @else
-            @php($href = $module === 'dashboard' ? route('dashboard') : (! empty($info['migrated']) && ! empty($info['route']) ? route($info['route']) : $legacyBase.($info['legacy_url'] ?? $info['url'] ?? '#')))
+            @php
+                $href = $module === 'dashboard' ? route('dashboard') : (! empty($info['migrated']) && ! empty($info['route']) ? route($info['route']) : $legacyBase.($info['legacy_url'] ?? $info['url'] ?? '#'));
+            @endphp
             <a href="{{ $href }}" @class(['active' => $module === 'dashboard'])>
                 <i class="fa {{ $info['icon'] }}"></i> <span>{{ $info['label'] }}</span>
             </a>

@@ -570,7 +570,9 @@
     <section class="printable-fiche">
         <div class="table-wrapper">
         @if($generated && $students->isNotEmpty() && !empty($dayGroups))
-            @php($elevesPages=$students->map(fn($e)=>$e->nom.' '.$e->prenom)->chunk(28))
+            @php
+                $elevesPages = $students->map(fn($e) => $e->nom.' '.$e->prenom)->chunk(28);
+            @endphp
             @foreach($dayGroups as $groupIndex=>$jours)
                 @foreach($elevesPages as $pageIndex=>$pageEleves)
                     <div class="school-header"><img src="{{ asset('legacy/images/'.($ecole->logo ?? 'novaskol.png')) }}" alt="Logo"><h1>{{ $ecole->nom ?? 'Ecole' }}</h1><p>FICHE DE PRESENCE - {{ $monthLabels[$selectedMonth-1] ?? '' }} {{ $selectedAnnee }}</p><p>Classe : {{ $classeNom }}</p><p>Jours {{ $groupIndex*4+1 }} a {{ min(($groupIndex+1)*4, count($days)) }}</p></div>

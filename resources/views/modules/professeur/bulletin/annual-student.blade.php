@@ -99,16 +99,24 @@
                         <tr class="moyenne-row">
                             <td colspan="2">Moyenne periode</td>
                             @foreach (['B1', 'B2', 'T1', 'T2', 'T3'] as $period)
-                                @php($avg = $combinedAverages[$period][$student->id] ?? null)
+                                @php
+                                    $avg = $combinedAverages[$period][$student->id] ?? null;
+                                @endphp
                                 <td colspan="2">{{ is_numeric($avg) ? number_format($avg, 2, ',', ' ') : '-' }}</td>
                             @endforeach
                         </tr>
                         <tr class="moyenne-row">
                             <td colspan="2">Rang periode</td>
                             @foreach (['B1', 'B2', 'T1', 'T2', 'T3'] as $period)
-                                @php($periodRanks = $calculator->ranks($combinedAverages[$period] ?? []))
-                                @php($currentPeriodRank = $periodRanks[$student->id] ?? null)
-                                @php($periodCount = count(array_filter($combinedAverages[$period] ?? [], fn ($value) => is_numeric($value))))
+                                @php
+                                    $periodRanks = $calculator->ranks($combinedAverages[$period] ?? []);
+                                @endphp
+                                @php
+                                    $currentPeriodRank = $periodRanks[$student->id] ?? null;
+                                @endphp
+                                @php
+                                    $periodCount = count(array_filter($combinedAverages[$period] ?? [], fn ($value) => is_numeric($value)));
+                                @endphp
                                 <td colspan="2">{{ is_numeric($currentPeriodRank) ? $currentPeriodRank.' / '.$periodCount : '-' }}</td>
                             @endforeach
                         </tr>

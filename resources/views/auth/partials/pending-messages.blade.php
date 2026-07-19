@@ -1,4 +1,6 @@
-@php($pendingFile = storage_path('app/messages_en_attente.txt'))
+@php
+    $pendingFile = storage_path('app/messages_en_attente.txt');
+@endphp
 
 @if (file_exists($pendingFile) && filesize($pendingFile) > 0)
     <p style="color:#ffc107; font-weight:600; margin-bottom:1.2rem;">
