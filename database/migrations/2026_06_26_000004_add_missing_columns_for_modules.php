@@ -234,7 +234,7 @@ return new class extends Migration
             }
             if (!Schema::hasColumn('revenus', 'mode_paiement')) {
                 Schema::table('revenus', function (Blueprint $t) {
-                    $t->string('mode_paiement', 50)->nullable()->after('statut');
+                    $t->string('mode_paiement', 50)->nullable();
                 });
             }
             if (!Schema::hasColumn('revenus', 'categorie')) {
