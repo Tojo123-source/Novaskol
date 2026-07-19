@@ -50,6 +50,14 @@ class StudentController extends Controller
         $data['photo'] = $this->storePhoto($request) ?: 'uploads/eleves/default.jpg';
         $data['qr_token'] = app(QrCodeService::class)->generateUniqueToken();
 
+        if ($data['mot_de_passe']) {
+            $data['mot_de_passe'] = Hash::make($data['mot_de_passe']);
+        }
+
+        if (! empty($data['email']) && DB::table('eleves')->where('email', strtolower(trim($data['email'])))->exists()) {
+            return response()->json(['status' => 'error', 'message' => 'Cet email est deja utilise par un autre eleve.'], 422);
+        }
+
         DB::transaction(function () use ($data) {
             $studentId = DB::table('eleves')->insertGetId($this->studentPayload($data));
             $this->upsertParents($data);
@@ -78,6 +86,23 @@ class StudentController extends Controller
         if ($newPhoto = $this->storePhoto($request)) {
             $this->deletePhoto($student->photo);
             $data['photo'] = $newPhoto;
+        }
+
+        if ($data['mot_de_passe']) {
+            $data['mot_de_passe'] = Hash::make($data['mot_de_passe']);
+        } else {
+            unset($data['mot_de_passe']);
+        }
+
+        if (! empty($data['email'])) {
+            $email = strtolower(trim($data['email']));
+            $existing = DB::table('eleves')->where('email', $email)->where('id', '!=', $id)->exists();
+            if ($existing) {
+                return response()->json(['status' => 'error', 'message' => 'Cet email est deja utilise par un autre eleve.'], 422);
+            }
+            $data['email'] = $email;
+        } else {
+            unset($data['email']);
         }
 
         DB::transaction(function () use ($id, $data) {
@@ -167,6 +192,10 @@ class StudentController extends Controller
                 $data['matricule'] = $this->generateMatricule($data['annee_scolaire']);
                 $data['photo'] = 'uploads/eleves/default.jpg';
 
+                if ($data['mot_de_passe']) {
+                    $data['mot_de_passe'] = Hash::make($data['mot_de_passe']);
+                }
+
                 DB::table('eleves')->insert($this->studentPayload($data));
                 $this->upsertParents($data);
                 $inserted++;
@@ -215,6 +244,8 @@ class StudentController extends Controller
             'Nom compte parent',
             'Email compte parent',
             'Mot de passe parent',
+            'Email eleve',
+            'Mot de passe eleve',
         ];
         $sample = [[
             'Jean',
@@ -246,6 +277,8 @@ class StudentController extends Controller
             'Paul Dupont',
             'parent@example.com',
             '123456789',
+            'jean.dupont@example.com',
+            'password123',
         ]];
 
         $sheet->fromArray($headers, null, 'A1');
@@ -329,6 +362,8 @@ class StudentController extends Controller
             'parent_nom_compte' => ['nullable', 'string', 'max:150'],
             'parent_email_compte' => ['nullable', 'email', 'max:100'],
             'parent_mot_de_passe' => ['nullable', 'string', 'min:6', 'max:100'],
+            'email' => ['nullable', 'email', 'max:100'],
+            'mot_de_passe' => ['nullable', 'string', 'min:6', 'max:100'],
             'classe_id' => ['required', 'integer', 'exists:classes,id'],
             'annee_scolaire' => ['required', 'string', 'max:20'],
             'genre' => ['required', 'in:F,G'],
@@ -387,6 +422,8 @@ class StudentController extends Controller
             'parent_nom_compte' => trim((string) ($row[26] ?? '')),
             'parent_email_compte' => trim((string) ($row[27] ?? '')),
             'parent_mot_de_passe' => trim((string) ($row[28] ?? '')),
+            'email' => trim((string) ($row[29] ?? '')),
+            'mot_de_passe' => trim((string) ($row[30] ?? '')),
         ];
 
         $required = ['prenom', 'nom', 'date_naissance', 'lieu_naissance', 'telephone', 'adresse', 'numero_acte', 'fonkotany', 'commune', 'annee_scolaire'];
@@ -415,7 +452,7 @@ class StudentController extends Controller
 
     private function studentPayload(array $data): array
     {
-        return [
+        $payload = [
             'matricule' => $data['matricule'],
             'nom' => trim($data['nom']),
             'prenom' => trim($data['prenom']),
@@ -437,6 +474,16 @@ class StudentController extends Controller
             'statut' => $data['statut'],
             'est_handicap' => (int) $data['est_handicap'],
         ];
+
+        if (! empty($data['email'])) {
+            $payload['email'] = strtolower(trim($data['email']));
+        }
+
+        if (! empty($data['mot_de_passe'])) {
+            $payload['mot_de_passe'] = $data['mot_de_passe'];
+        }
+
+        return $payload;
     }
 
     private function upsertParents(array $data): void
@@ -727,6 +774,7 @@ HTML;
             'statut' => $student->statut,
             'handicap' => $student->est_handicap,
             'photo' => $this->photoUrl($student->photo),
+            'email' => $student->email,
         ];
 
         return collect($fields)

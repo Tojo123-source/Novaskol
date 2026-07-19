@@ -61,6 +61,20 @@
     </div>
 </div>
 
+<div class="form-section">
+    <h3>Compte eleve en ligne</h3>
+    <div class="form-grid">
+        <div>
+            <label for="{{ $prefix }}email">Email de connexion eleve :</label>
+            <input type="email" name="email" id="{{ $prefix }}email" placeholder="eleve@email.com">
+        </div>
+        <div>
+            <label for="{{ $prefix }}mot_de_passe">Mot de passe eleve :</label>
+            <input type="password" name="mot_de_passe" id="{{ $prefix }}mot_de_passe" placeholder="{{ $includeMatricule ? 'Vide = garder' : 'Min 6 caracteres' }}">
+        </div>
+    </div>
+</div>
+
 <div class="form-section parent-account-section">
     <h3>Compte parent en ligne</h3>
     <div class="form-grid">
