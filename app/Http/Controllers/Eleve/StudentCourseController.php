@@ -21,7 +21,7 @@ class StudentCourseController extends Controller
     public function portal()
     {
         $eleve = $this->student();
-        $classe = DB::table('classes')->where('id', $eleve->classe_id)->first();
+        $classe = DB::table('classes')->where('id', $eleve->id_classe)->first();
 
         $courses = DB::table('courses')
             ->where('statut', 'publie')

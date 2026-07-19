@@ -372,7 +372,7 @@ class CommunicationController extends Controller
             ->where('c.type', 'group')
             ->where('cp.user_id', $this->userId())
             ->where('cp.user_type', $this->userRole())
-            ->groupBy('c.id', 'c.name', 'c.creator_id', 'c.avatar', 'c.is_announcement', 'c.updated_at')
+            ->groupBy('c.id', 'c.name', 'c.creator_id', 'c.avatar', 'c.type', 'c.is_announcement', 'c.created_at', 'c.updated_at')
             ->select('c.*', DB::raw('COUNT(m.id) as unread_count'))
             ->orderByDesc('c.is_announcement')
             ->orderByDesc('c.updated_at')
