@@ -352,7 +352,7 @@ return new class extends Migration
                 $table->timestamp('joined_at')->useCurrent();
                 $table->timestamps();
 
-                $table->unique(['conversation_id', 'user_type', 'user_id']);
+                $table->unique(['conversation_id', 'user_type', 'user_id'], 'conv_participants_cu_unique');
                 $table->foreign('conversation_id')->references('id')->on('conversations')->onDelete('cascade');
             });
         }
