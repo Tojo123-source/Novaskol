@@ -163,7 +163,7 @@ class StudentCourseController extends Controller
         $evolution = DB::table('exercice_soumissions')
             ->where('eleve_id', $eleve->id)
             ->where('created_at', '>=', now()->subMonths(6))
-            ->select(DB::raw("strftime('%Y-%m', created_at) as mois"), DB::raw('AVG(score) as score_moyen'))
+            ->select(DB::raw("DATE_FORMAT(created_at, '%Y-%m') as mois"), DB::raw('AVG(score) as score_moyen'))
             ->groupBy('mois')
             ->orderBy('mois')
             ->get();

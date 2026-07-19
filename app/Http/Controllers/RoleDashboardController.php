@@ -20,10 +20,6 @@ class RoleDashboardController extends Controller
             return redirect()->route('dashboard');
         }
 
-        if (($user['role'] ?? '') === 'eleve') {
-            return redirect()->route('eleve.portal');
-        }
-
         $permissions = $this->permissions((int) $user['id']);
         $availableModules = collect($modules->all())
             ->filter(fn (array $module, string $key) => ! empty($module['icon']) && in_array($permissions[$key] ?? null, ['lecture', 'ecriture'], true))
@@ -63,6 +59,7 @@ class RoleDashboardController extends Controller
                 'enseignant' => $this->teacherCardData($user, $ecole),
                 'staff' => $this->staffCardData($user, $ecole),
                 'parent' => $this->parentChildrenCards((int) $user['id'], $ecole),
+                'eleve' => $this->studentCardData($user, $ecole),
                 default => null,
             },
             'calMonth' => $calMonth,
@@ -291,6 +288,36 @@ class RoleDashboardController extends Controller
             'badge_type' => 'staff',
             'dept_label' => $staff->nom_departement ? 'Departement' : 'Fonction',
             'dept_info' => $staff->nom_departement ?? $staff->poste ?? 'Staff',
+            'annee_scolaire' => $annee,
+            'ecole_nom' => $ecole->nom ?? 'NOVASKOL',
+        ];
+    }
+
+    private function studentCardData(array $user, object $ecole): ?array
+    {
+        $eleve = DB::table('eleves')
+            ->leftJoin('classes', 'classes.id', '=', 'eleves.id_classe')
+            ->where('eleves.email', $user['email'] ?? '')
+            ->select('eleves.*', 'classes.nom as nom_classe')
+            ->first();
+
+        if (! $eleve) {
+            return null;
+        }
+
+        $annee = session('annee_scolaire') ?? now()->year;
+
+        return [
+            'id' => $eleve->id,
+            'nom' => $eleve->nom,
+            'prenom' => $eleve->prenom,
+            'photo' => $eleve->photo ?: 'Uploads/default.jpg',
+            'qr_token' => $eleve->qr_token ?? '',
+            'matricule' => $eleve->matricule ?? $eleve->id,
+            'badge' => 'Eleve',
+            'badge_type' => 'etudiant',
+            'dept_label' => 'Classe',
+            'dept_info' => $eleve->nom_classe ?? '',
             'annee_scolaire' => $annee,
             'ecole_nom' => $ecole->nom ?? 'NOVASKOL',
         ];

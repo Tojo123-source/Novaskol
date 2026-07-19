@@ -898,12 +898,13 @@ class HumanResourceController extends Controller
             ];
 
         foreach (array_keys(config('novaskol.modules')) as $module) {
-            DB::table('permissions')->insert([
-                'utilisateur_id' => $userId,
-                'role' => $role,
-                'module' => $module,
-                'acces' => $defaults[$module] ?? 'masquer',
-            ]);
+            DB::table('permissions')->updateOrInsert(
+                ['utilisateur_id' => $userId, 'module' => $module],
+                [
+                    'role' => $role,
+                    'acces' => $defaults[$module] ?? 'masquer',
+                ]
+            );
         }
     }
 
