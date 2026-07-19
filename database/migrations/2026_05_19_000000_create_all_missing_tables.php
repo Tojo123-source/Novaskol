@@ -90,7 +90,7 @@ return new class extends Migration
                 $table->string('commentaire', 255)->nullable();
                 $table->timestamps();
 
-                $table->unique(['professeur_id', 'classe_id', 'matiere_id', 'annee_scolaire']);
+                $table->unique(['professeur_id', 'classe_id', 'matiere_id', 'annee_scolaire'], 'prof_classes_unique');
                 $table->foreign('professeur_id')->references('id')->on('professeurs')->onDelete('cascade');
                 $table->foreign('classe_id')->references('id')->on('classes')->onDelete('cascade');
                 $table->foreign('matiere_id')->references('id')->on('matieres')->onDelete('set null');
