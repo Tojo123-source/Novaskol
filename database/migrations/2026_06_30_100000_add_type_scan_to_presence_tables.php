@@ -10,22 +10,22 @@ return new class extends Migration
     {
         if (Schema::hasTable('presence_personnels') && !Schema::hasColumn('presence_personnels', 'type_scan')) {
             Schema::table('presence_personnels', function (Blueprint $t) {
-                $t->string('type_scan', 20)->nullable()->after('session_jour');
+                $t->string('type_scan', 20)->nullable();
             });
         }
 
         if (Schema::hasTable('presence_staff') && !Schema::hasColumn('presence_staff', 'type_scan')) {
             Schema::table('presence_staff', function (Blueprint $t) {
-                $t->string('type_scan', 20)->nullable()->after('session_jour');
-                $t->string('heure_entree', 10)->nullable()->after('type_scan');
-                $t->string('heure_sortie', 10)->nullable()->after('heure_entree');
+                $t->string('type_scan', 20)->nullable();
+                $t->string('heure_entree', 10)->nullable();
+                $t->string('heure_sortie', 10)->nullable();
             });
         }
 
         if (Schema::hasTable('presence_personnels') && !Schema::hasColumn('presence_personnels', 'heure_entree')) {
             Schema::table('presence_personnels', function (Blueprint $t) {
-                $t->string('heure_entree', 10)->nullable()->after('type_scan');
-                $t->string('heure_sortie', 10)->nullable()->after('heure_entree');
+                $t->string('heure_entree', 10)->nullable();
+                $t->string('heure_sortie', 10)->nullable();
             });
         }
     }
