@@ -140,6 +140,11 @@
             <i class="fa fa-child"></i> <span>Suivi des enfants</span>
         </a>
     @endif
+    @if ($currentRole === 'eleve')
+        <a href="{{ route('eleve.portal') }}" @class(['active' => ($activeModule ?? '') === 'eleve_portal'])>
+            <i class="fa fa-graduation-cap"></i> <span>Cours en ligne</span>
+        </a>
+    @endif
     @foreach ($moduleKeys as $moduleIndex => $module)
         @php
             $info = $modules[$module];

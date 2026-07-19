@@ -81,6 +81,11 @@ class RoleDashboardController extends Controller
 
     private function permissions(int $userId): array
     {
+        $role = session('utilisateur.role');
+        if ($role === 'eleve') {
+            return [];
+        }
+
         return DB::table('permissions')
             ->where('utilisateur_id', $userId)
             ->pluck('acces', 'module')

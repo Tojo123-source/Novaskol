@@ -18,6 +18,10 @@ class CheckModulePermission
             return $next($request);
         }
 
+        if (($user['role'] ?? '') === 'eleve') {
+            return $this->deny($request);
+        }
+
         $userId = (int) $user['id'];
 
         $access = Cache::remember("perm.$userId.$module", 60, function () use ($userId, $module) {
