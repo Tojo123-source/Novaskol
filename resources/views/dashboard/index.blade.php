@@ -883,11 +883,25 @@
     </style>
 </head>
 <body>
+@if (session('impersonating'))
+    <div style="background:#ea580c;color:#fff;text-align:center;padding:6px 16px;font-size:.82rem;display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;z-index:9999;position:relative">
+        <i class="fa fa-user-secret"></i>
+        Connecte en tant que <strong>{{ session('utilisateur.nom') }}</strong>
+        <form method="POST" action="{{ route('admin.impersonate.leave') }}" style="display:inline">
+            @csrf
+            <button style="background:rgba(255,255,255,.2);border:0;border-radius:6px;color:#fff;padding:4px 12px;cursor:pointer;font-weight:600;font-size:.78rem">
+                <i class="fa fa-undo"></i> Retour
+            </button>
+        </form>
+    </div>
+@endif
 @php
     $legacyBase = 'http://localhost/novaskol/';
     $logo = $ecole->logo ?? 'novaskol.png';
     $logoPath = str_starts_with($logo, 'images/') ? substr($logo, 7) : $logo;
     $currentUserId = (int) session('utilisateur.id', 0);
+    $impersonating = session('impersonating');
+    $impersonator = session('impersonator');
     $currentUser = $currentUserId ? DB::table('utilisateurs')->where('id', $currentUserId)->first() : null;
     $userAvatar = trim((string) ($currentUser->avatar ?? ''));
     $userAvatarUrl = $userAvatar === '' ? asset('legacy/images/default-avatar.png') : ((str_starts_with($userAvatar, 'images/') || str_starts_with($userAvatar, 'uploads/')) ? asset('legacy/'.$userAvatar) : asset('legacy/uploads/avatars/'.$userAvatar));
@@ -956,6 +970,11 @@
                 @endforeach
             </div>
         </div>
+        @if($isConnected ?? false)
+        <button type="button" title="Synchronisation" class="theme-toggle" onclick="novaskolManualSync()" style="color:var(--primary);">
+            <i class="fa fa-refresh"></i>
+        </button>
+        @endif
         <button type="button" title="Changer de theme" class="theme-toggle" id="themeToggle">
             <i class="fas fa-moon"></i>
         </button>
@@ -1005,9 +1024,11 @@
     </div>
     <div class="profile-dropdown" id="profileDropdown">
         <div class="profile-card"><img src="{{ $userAvatarUrl }}" alt="Profil"><h3>{{ $currentUser->nom ?? session('utilisateur.nom', 'Utilisateur') }}</h3><small>{{ $currentUser->email ?? session('utilisateur.email', '') }} - {{ $currentUser->role ?? session('utilisateur.role', '') }}</small></div>
-        <div class="profile-tabs"><button type="button" onclick="dashboardProfileTab('dashProfileInfo')">Profil</button><button type="button" onclick="dashboardProfileTab('dashProfilePass')">Compte</button></div>
+        <div class="profile-tabs"><button type="button" onclick="dashboardProfileTab('dashProfileInfo')">Profil</button>@if($isConnected ?? false)<button type="button" onclick="novaskolRetourAppairage()" style="border-color:var(--danger);color:var(--danger);flex:1.5;"><i class="fa fa-unlink"></i> Appairage</button>@else<button type="button" onclick="dashboardProfileTab('dashProfilePass')">Compte</button>@endif</div>
         <form id="dashProfileInfo" class="profile-pane active" method="POST" action="{{ route('profile.update') }}" enctype="multipart/form-data">@csrf<label>Nom</label><input name="nom" value="{{ $currentUser->nom ?? '' }}" required><label>Email</label><input type="email" name="email" value="{{ $currentUser->email ?? '' }}" required><label>Photo de profil</label><input type="file" name="avatar" accept="image/*"><div class="profile-actions"><button class="global-primary">Enregistrer</button></div></form>
+        @if(!($isConnected ?? false))
         <form id="dashProfilePass" class="profile-pane" method="POST" action="{{ route('profile.password') }}">@csrf<label>Nouveau mot de passe</label><input type="password" name="mot_de_passe" required minlength="6"><label>Confirmation</label><input type="password" name="mot_de_passe_confirmation" required minlength="6"><div class="profile-actions"><button class="global-primary">Modifier</button></div></form>
+        @endif
         <form method="POST" action="{{ route('logout') }}" class="profile-actions">@csrf<button class="global-danger"><i class="fa fa-power-off"></i> Deconnexion</button></form>
     </div>
 </header>
@@ -1700,6 +1721,49 @@ document.addEventListener('DOMContentLoaded', () => {
     }));
 });
 </script>
-<script src="{{ asset('js/novaskol-connected-bridge.js') }}?v=1.0.0"></script>
+<script>
+@if($isConnected ?? false)
+async function novaskolManualSync() {
+    const btn = document.querySelector('[title="Synchronisation"] i');
+    try {
+        if (btn) btn.className = 'fa fa-spinner fa-spin';
+        if (window.NovaskolConnected && typeof NovaskolConnected.syncNow === 'function') {
+            await NovaskolConnected.syncNow();
+        } else {
+            const r = await fetch('/connected/sync/run', { headers: { 'Accept': 'application/json' } });
+            const data = await r.json();
+            if (!data.success) throw new Error(data.message || 'Sync failed');
+        }
+        if (typeof Swal !== 'undefined') {
+            Swal.fire({ toast: true, position: 'top-end', timer: 2000, showConfirmButton: false, icon: 'success', title: 'Synchronisation reussie' });
+        }
+    } catch (e) {
+        if (typeof Swal !== 'undefined') {
+            Swal.fire({ icon: 'warning', title: 'Sync impossible', text: e.message || 'Verifiez que le serveur principal est accessible sur le meme WiFi.' });
+        }
+    } finally {
+        if (btn) setTimeout(() => { btn.className = 'fa fa-refresh'; }, 800);
+    }
+}
+async function novaskolRetourAppairage() {
+    const ok = typeof Swal !== 'undefined'
+        ? await Swal.fire({ icon: 'warning', title: "Retour a l'appairage ?", text: 'Vous serez redirige vers la page de configuration.', showCancelButton: true, confirmButtonText: 'Oui', cancelButtonText: 'Annuler', confirmButtonColor: '#ef4444' })
+        : { isConfirmed: confirm("Retour a l'appairage ?") };
+    if (!ok.isConfirmed) return;
+    localStorage.removeItem('novaskol_connected_profile');
+    localStorage.removeItem('novaskol_connected_bootstrap');
+    localStorage.removeItem('novaskol_connected_queue');
+    if (window.connectedDesktop && typeof window.connectedDesktop.disconnect === 'function') {
+        await window.connectedDesktop.disconnect();
+    } else {
+        try {
+            await fetch('/connected/disconnect', { method: 'POST', headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}', 'Accept': 'application/json' } });
+        } catch (e) {}
+        window.location.href = '/';
+    }
+}
+@endif
+</script>
+<script src="{{ asset('js/novaskol-connected-bridge.js') }}?v=1.0.1"></script>
 </body>
 </html>

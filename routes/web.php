@@ -284,4 +284,64 @@ Route::middleware('module.access:sauvegardes')->group(function () {
     Route::delete('/sauvegardes/{file}', [SettingsController::class, 'deleteBackup'])->name('modules.sauvegardes.delete');
 });
 
+// --- Teacher: Course Management ---
+Route::middleware('module.access:gestion_ressource')->group(function () {
+    Route::get('/enseignant/cours', [App\Http\Controllers\CourseController::class, 'index'])->name('teacher.courses.index');
+    Route::post('/enseignant/cours', [App\Http\Controllers\CourseController::class, 'store'])->name('teacher.courses.store');
+    Route::get('/enseignant/cours/{id}', [App\Http\Controllers\CourseController::class, 'show'])->name('teacher.courses.show');
+    Route::post('/enseignant/cours/{id}', [App\Http\Controllers\CourseController::class, 'update'])->name('teacher.courses.update');
+    Route::delete('/enseignant/cours/{id}', [App\Http\Controllers\CourseController::class, 'destroy'])->name('teacher.courses.destroy');
+    Route::post('/enseignant/cours/{courseId}/chapitres', [App\Http\Controllers\CourseController::class, 'storeChapitre'])->name('teacher.courses.chapitres.store');
+    Route::post('/enseignant/chapitres/{id}', [App\Http\Controllers\CourseController::class, 'updateChapitre'])->name('teacher.courses.chapitres.update');
+    Route::delete('/enseignant/chapitres/{id}', [App\Http\Controllers\CourseController::class, 'destroyChapitre'])->name('teacher.courses.chapitres.destroy');
+    Route::post('/enseignant/chapitres/{chapitreId}/fichiers', [App\Http\Controllers\CourseController::class, 'storeFichier'])->name('teacher.courses.fichiers.store');
+    Route::delete('/enseignant/fichiers/{id}', [App\Http\Controllers\CourseController::class, 'destroyFichier'])->name('teacher.courses.fichiers.destroy');
+    Route::get('/enseignant/fichiers/{id}/download', [App\Http\Controllers\CourseController::class, 'downloadFichier'])->name('teacher.courses.fichiers.download');
+    Route::post('/enseignant/sessions', [App\Http\Controllers\CourseController::class, 'storeSession'])->name('teacher.courses.sessions.store');
+});
+
+// --- Teacher: Exercise Management ---
+Route::middleware('module.access:gestion_ressource')->group(function () {
+    Route::get('/enseignant/exercices', [App\Http\Controllers\ExerciseManagementController::class, 'index'])->name('teacher.exercices.index');
+    Route::get('/enseignant/exercices/create/{chapitreId}', [App\Http\Controllers\ExerciseManagementController::class, 'create'])->name('teacher.exercices.create');
+    Route::post('/enseignant/exercices', [App\Http\Controllers\ExerciseManagementController::class, 'store'])->name('teacher.exercices.store');
+    Route::get('/enseignant/exercices/{id}/edit', [App\Http\Controllers\ExerciseManagementController::class, 'edit'])->name('teacher.exercices.edit');
+    Route::post('/enseignant/exercices/{id}', [App\Http\Controllers\ExerciseManagementController::class, 'update'])->name('teacher.exercices.update');
+    Route::delete('/enseignant/exercices/{id}', [App\Http\Controllers\ExerciseManagementController::class, 'destroy'])->name('teacher.exercices.destroy');
+});
+
+// --- Student Portal ---
+Route::prefix('eleve')->name('eleve.')->group(function () {
+    Route::get('/accueil', [App\Http\Controllers\Eleve\StudentCourseController::class, 'portal'])->name('portal');
+    Route::get('/cours', [App\Http\Controllers\Eleve\StudentCourseController::class, 'courses'])->name('courses');
+    Route::get('/cours/{id}', [App\Http\Controllers\Eleve\StudentCourseController::class, 'showCourse'])->name('course.show');
+    Route::post('/cours/{courseId}/favori', [App\Http\Controllers\Eleve\StudentCourseController::class, 'toggleFavori'])->name('course.favori');
+    Route::post('/chapitres/{chapitreId}/progresser', [App\Http\Controllers\Eleve\StudentCourseController::class, 'progresser'])->name('chapitre.progresser');
+    Route::get('/historique', [App\Http\Controllers\Eleve\StudentCourseController::class, 'historique'])->name('historique');
+    Route::get('/rapport', [App\Http\Controllers\Eleve\StudentCourseController::class, 'rapport'])->name('rapport');
+    Route::get('/chapitres/{chapitreId}/exercices', [App\Http\Controllers\Eleve\ExerciseController::class, 'list'])->name('exercices.list');
+    Route::get('/exercices/{id}', [App\Http\Controllers\Eleve\ExerciseController::class, 'show'])->name('exercices.show');
+    Route::post('/exercices/{id}', [App\Http\Controllers\Eleve\ExerciseController::class, 'submit'])->name('exercices.submit');
+    Route::get('/exercices/{id}/resultat', [App\Http\Controllers\Eleve\ExerciseController::class, 'result'])->name('exercices.result');
+});
+
+// --- Activation ---
+Route::middleware('module.access:parametres')->group(function () {
+    Route::get('/parametres/activation', [App\Http\Controllers\ActivationController::class, 'index'])->name('modules.parametres.activations');
+    Route::post('/parametres/activation', [App\Http\Controllers\ActivationController::class, 'activate'])->name('modules.parametres.activations.activate');
+    Route::post('/parametres/activation/{id}/desactiver', [App\Http\Controllers\ActivationController::class, 'desactiver'])->name('modules.parametres.activations.desactiver');
+});
+
+// --- Admin: Impersonation ---
+Route::middleware('module.access:comptes_utilisateurs')->group(function () {
+    Route::get('/admin/impersonate', [App\Http\Controllers\Admin\ImpersonationController::class, 'index'])->name('admin.impersonate');
+    Route::post('/admin/impersonate/login-as', [App\Http\Controllers\Admin\ImpersonationController::class, 'loginAs'])->name('admin.impersonate.login-as');
+    Route::post('/admin/impersonate/leave', [App\Http\Controllers\Admin\ImpersonationController::class, 'leave'])->name('admin.impersonate.leave');
+});
+
+// --- Global Search ---
+Route::middleware('module.access:parametres')->group(function () {
+    Route::get('/recherche', [App\Http\Controllers\Admin\SearchController::class, 'search'])->name('admin.search');
+});
+
 

@@ -156,6 +156,8 @@
             <div class="teacher-box">
                 <strong>Espace de travail enseignant</strong>
                 <p>{{ $teacherWorkspace['classes'] }} classe(s), {{ $teacherWorkspace['lessons'] }} lecon(s), {{ $teacherWorkspace['tasks'] }} tache(s) ouvertes.</p>
+                <a class="module-tile" href="{{ route('teacher.courses.index') }}"><i class="fa fa-book"></i><span>Mes cours<small>Creer et gerer les cours, chapitres et fichiers</small></span></a>
+                <a class="module-tile" href="{{ route('teacher.exercices.index') }}"><i class="fa fa-puzzle-piece"></i><span>Exercices<small>QCM, Vrai/Faux, exercices interactifs</small></span></a>
                 <a class="module-tile" href="{{ $teacherWorkspace['route'] }}"><i class="fa fa-pencil-square-o"></i><span>Journal pedagogique<small>Lecons, rubriques, planning et checklist</small></span></a>
             </div>
         @endif

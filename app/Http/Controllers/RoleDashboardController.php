@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Services\Novaskol\ModuleRegistry;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 
 class RoleDashboardController extends Controller
 {
@@ -17,6 +18,10 @@ class RoleDashboardController extends Controller
 
         if (($user['role'] ?? '') === 'admin') {
             return redirect()->route('dashboard');
+        }
+
+        if (($user['role'] ?? '') === 'eleve') {
+            return redirect()->route('eleve.portal');
         }
 
         $permissions = $this->permissions((int) $user['id']);
@@ -36,7 +41,9 @@ class RoleDashboardController extends Controller
         $calMonth = (int) $request->query('mois', now()->month);
         $calYear = (int) $request->query('annee', now()->year);
 
-        $connectedMode = env('CONNECTED_MODE') === 'true';
+        $connectedMode = env('CONNECTED_MODE') === 'true'
+            || config('novaskol.edition', 'principal') === 'connecte'
+            || File::exists(env('CONNECTED_PAIRED_PATH', storage_path('app/connected/paired.json')));
         $serverUrl = env('CONNECTED_SERVER_URL', '');
 
         return view('dashboard.role', [
@@ -46,6 +53,7 @@ class RoleDashboardController extends Controller
             'userPermissions' => $permissions,
             'ecole' => $ecole,
             'connectedMode' => $connectedMode,
+            'isConnected' => $connectedMode,
             'serverUrl' => $serverUrl,
             'availableModules' => $availableModules,
             'stats' => $this->statsFor($user),
