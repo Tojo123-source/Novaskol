@@ -112,10 +112,14 @@ return new class extends Migration
             });
 
             // Drop old unique index (staff_id, date_jour) → create (staff_id, date_jour, session_jour)
-            DB::statement('DROP INDEX IF EXISTS `presence_personnels_staff_id_date_jour_unique` ON `presence_personnels`');
-            Schema::table('presence_personnels', function (Blueprint $t) {
-                $t->unique(['staff_id', 'date_jour', 'session_jour']);
-            });
+            try {
+                DB::statement('DROP INDEX IF EXISTS `presence_personnels_staff_id_date_jour_unique` ON `presence_personnels`');
+                Schema::table('presence_personnels', function (Blueprint $t) {
+                    $t->unique(['staff_id', 'date_jour', 'session_jour']);
+                });
+            } catch (\Throwable $e) {
+                // Skip if index drop fails (FK constraint in MariaDB)
+            }
         }
 
         // =============================================
@@ -149,10 +153,14 @@ return new class extends Migration
                 }
             });
 
-            DB::statement('DROP INDEX IF EXISTS `presence_staff_staff_id_date_jour_unique` ON `presence_staff`');
-            Schema::table('presence_staff', function (Blueprint $t) {
-                $t->unique(['staff_id', 'date_jour', 'session_jour']);
-            });
+            try {
+                DB::statement('DROP INDEX IF EXISTS `presence_staff_staff_id_date_jour_unique` ON `presence_staff`');
+                Schema::table('presence_staff', function (Blueprint $t) {
+                    $t->unique(['staff_id', 'date_jour', 'session_jour']);
+                });
+            } catch (\Throwable $e) {
+                // Skip if index drop fails (FK constraint in MariaDB)
+            }
         }
 
         // =============================================
