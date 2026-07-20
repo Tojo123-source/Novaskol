@@ -9,9 +9,16 @@ use Illuminate\Support\Facades\File;
 
 class CourseController extends Controller
 {
+    private function ensureTeacher(): array
+    {
+        $u = session('utilisateur');
+        abort_unless($u && in_array($u['role'] ?? '', ['admin', 'enseignant'], true), 403);
+        return $u;
+    }
+
     public function index(Request $request)
     {
-        $user = session('utilisateur');
+        $user = $this->ensureTeacher();
         $matiereId = (int) $request->query('matiere_id', 0);
 
         $courses = DB::table('courses')
@@ -32,7 +39,7 @@ class CourseController extends Controller
             'matiere_id' => 'nullable|integer|exists:matieres,id',
             'niveau' => 'nullable|string|max:50',
         ]);
-        $user = session('utilisateur');
+        $user = $this->ensureTeacher();
 
         $id = DB::table('courses')->insertGetId([
             'enseignant_id' => $user['id'],
@@ -48,7 +55,7 @@ class CourseController extends Controller
 
     public function show(int $id)
     {
-        $user = session('utilisateur');
+        $user = $this->ensureTeacher();
         $course = DB::table('courses')->where('id', $id)->where('enseignant_id', $user['id'])->firstOrFail();
         $chapitres = DB::table('course_chapitres')->where('course_id', $id)->orderBy('ordre')->get();
 
@@ -62,7 +69,7 @@ class CourseController extends Controller
 
     public function update(Request $request, int $id)
     {
-        $user = session('utilisateur');
+        $user = $this->ensureTeacher();
         $course = DB::table('courses')->where('id', $id)->where('enseignant_id', $user['id'])->firstOrFail();
 
         $data = $request->validate([
@@ -83,7 +90,7 @@ class CourseController extends Controller
 
     public function destroy(int $id)
     {
-        $user = session('utilisateur');
+        $user = $this->ensureTeacher();
         $course = DB::table('courses')->where('id', $id)->where('enseignant_id', $user['id'])->firstOrFail();
         $chIds = DB::table('course_chapitres')->where('course_id', $id)->pluck('id');
 
@@ -104,7 +111,7 @@ class CourseController extends Controller
     // --- CHAPTERS ---
     public function storeChapitre(Request $request, int $courseId)
     {
-        $user = session('utilisateur');
+        $user = $this->ensureTeacher();
         DB::table('courses')->where('id', $courseId)->where('enseignant_id', $user['id'])->firstOrFail();
 
         $data = $request->validate([
@@ -124,7 +131,7 @@ class CourseController extends Controller
     public function updateChapitre(Request $request, int $id)
     {
         $ch = DB::table('course_chapitres')->where('id', $id)->firstOrFail();
-        $user = session('utilisateur');
+        $user = $this->ensureTeacher();
         DB::table('courses')->where('id', $ch->course_id)->where('enseignant_id', $user['id'])->firstOrFail();
 
         $data = $request->validate([
@@ -143,7 +150,7 @@ class CourseController extends Controller
     public function destroyChapitre(int $id)
     {
         $ch = DB::table('course_chapitres')->where('id', $id)->firstOrFail();
-        $user = session('utilisateur');
+        $user = $this->ensureTeacher();
         DB::table('courses')->where('id', $ch->course_id)->where('enseignant_id', $user['id'])->firstOrFail();
 
         foreach (DB::table('course_fichiers')->where('chapitre_id', $id)->get() as $f) {
@@ -162,7 +169,7 @@ class CourseController extends Controller
     public function storeFichier(Request $request, int $chapitreId)
     {
         $ch = DB::table('course_chapitres')->where('id', $chapitreId)->firstOrFail();
-        $user = session('utilisateur');
+        $user = $this->ensureTeacher();
         DB::table('courses')->where('id', $ch->course_id)->where('enseignant_id', $user['id'])->firstOrFail();
 
         $request->validate(['fichier' => 'required|file|max:102400']);
@@ -185,7 +192,7 @@ class CourseController extends Controller
     {
         $f = DB::table('course_fichiers')->where('id', $id)->firstOrFail();
         $ch = DB::table('course_chapitres')->where('id', $f->chapitre_id)->firstOrFail();
-        $user = session('utilisateur');
+        $user = $this->ensureTeacher();
         DB::table('courses')->where('id', $ch->course_id)->where('enseignant_id', $user['id'])->firstOrFail();
 
         $p = storage_path('app/' . $f->fichier_path);
@@ -205,7 +212,7 @@ class CourseController extends Controller
             'session_date' => 'required|date',
             'course_id' => 'nullable|integer|exists:courses,id',
         ]);
-        $user = session('utilisateur');
+        $user = $this->ensureTeacher();
         $id = DB::table('teacher_lessons')->insertGetId([
             'professeur_id' => $this->getProfesseurId($user),
             'classe_id' => $data['classe_id'], 'matiere_id' => $data['matiere_id'],

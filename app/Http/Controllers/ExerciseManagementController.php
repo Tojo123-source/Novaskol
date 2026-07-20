@@ -8,9 +8,16 @@ use Illuminate\Support\Facades\DB;
 
 class ExerciseManagementController extends Controller
 {
+    private function ensureTeacher(): array
+    {
+        $u = session('utilisateur');
+        abort_unless($u && in_array($u['role'] ?? '', ['admin', 'enseignant'], true), 403);
+        return $u;
+    }
+
     public function index(Request $request)
     {
-        $user = session('utilisateur');
+        $user = $this->ensureTeacher();
         $courseId = (int) $request->query('course_id', 0);
 
         $courses = DB::table('courses')->where('enseignant_id', $user['id'])->orderByDesc('created_at')->get();
@@ -36,6 +43,7 @@ class ExerciseManagementController extends Controller
 
     public function create(Request $request, int $chapitreId)
     {
+        $this->ensureTeacher();
         $ch = DB::table('course_chapitres')->where('id', $chapitreId)->firstOrFail();
         $course = DB::table('courses')->where('id', $ch->course_id)->firstOrFail();
 
@@ -44,6 +52,7 @@ class ExerciseManagementController extends Controller
 
     public function store(Request $request)
     {
+        $this->ensureTeacher();
         $data = $request->validate([
             'chapitre_id' => 'required|integer|exists:course_chapitres,id',
             'titre' => 'required|string|max:200',
@@ -88,6 +97,7 @@ class ExerciseManagementController extends Controller
 
     public function edit(int $id)
     {
+        $this->ensureTeacher();
         $exercice = DB::table('exercices')->where('id', $id)->firstOrFail();
         $ch = DB::table('course_chapitres')->where('id', $exercice->chapitre_id)->firstOrFail();
         $course = DB::table('courses')->where('id', $ch->course_id)->firstOrFail();
@@ -98,6 +108,7 @@ class ExerciseManagementController extends Controller
 
     public function update(Request $request, int $id)
     {
+        $this->ensureTeacher();
         $exercice = DB::table('exercices')->where('id', $id)->firstOrFail();
 
         $data = $request->validate([
@@ -141,6 +152,7 @@ class ExerciseManagementController extends Controller
 
     public function destroy(int $id)
     {
+        $this->ensureTeacher();
         $exercice = DB::table('exercices')->where('id', $id)->firstOrFail();
         DB::table('exercice_soumissions')->where('exercice_id', $id)->delete();
         DB::table('exercice_questions')->where('exercice_id', $id)->delete();

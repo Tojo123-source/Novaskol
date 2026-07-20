@@ -6,6 +6,7 @@ use App\Services\Novaskol\ModuleRegistry;
 use App\Services\Novaskol\RelationalDeleteService;
 use App\Services\QrCodeService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Schema;
@@ -529,21 +530,20 @@ class HumanResourceController extends Controller
             'permissions' => ['array'],
         ]);
         $valid = ['aucun', 'masquer', 'lecture', 'ecriture'];
-        DB::transaction(function () use ($data, $modules, $valid) {
-            $targetRole = (string) DB::table('utilisateurs')->where('id', $data['utilisateur_id'])->value('role');
+        $uid = $data['utilisateur_id'];
+        DB::transaction(function () use ($uid, $data, $modules, $valid) {
+            $targetRole = (string) DB::table('utilisateurs')->where('id', $uid)->value('role');
             abort_if($targetRole === 'parent', 422, 'Les permissions parent sont automatiques.');
-            DB::table('permissions')->where('utilisateur_id', $data['utilisateur_id'])->delete();
             foreach (array_keys($modules->all()) as $module) {
                 $access = $targetRole === 'admin' ? 'ecriture' : ($data['permissions'][$module] ?? 'aucun');
                 if (! in_array($access, $valid, true)) {
                     $access = 'aucun';
                 }
-                DB::table('permissions')->insert([
-                    'utilisateur_id' => $data['utilisateur_id'],
-                    'role' => $targetRole ?: ($data['role'] ?? ''),
-                    'module' => $module,
-                    'acces' => $access,
-                ]);
+                DB::table('permissions')->updateOrInsert(
+                    ['utilisateur_id' => $uid, 'module' => $module],
+                    ['role' => $targetRole ?: ($data['role'] ?? ''), 'acces' => $access]
+                );
+                Cache::forget("perm.$uid.$module");
             }
         });
 
@@ -901,6 +901,7 @@ class HumanResourceController extends Controller
                     'acces' => $defaults[$module] ?? 'masquer',
                 ]
             );
+            \Illuminate\Support\Facades\Cache::forget("perm.$userId.$module");
         }
     }
 
