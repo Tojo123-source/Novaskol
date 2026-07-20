@@ -312,7 +312,9 @@ Route::middleware('module.access:gestion_ressource')->group(function () {
 
 // --- Student Portal ---
 Route::prefix('eleve')->name('eleve.')->group(function () {
-    Route::get('/accueil', [App\Http\Controllers\Eleve\StudentCourseController::class, 'portal'])->name('portal');
+    Route::get('/accueil', App\Http\Controllers\Eleve\StudentPortalController::class)->name('portal');
+    Route::get('/chat', [App\Http\Controllers\Eleve\StudentPortalController::class, 'chat'])->name('portal.chat');
+    Route::match(['get', 'post'], '/anonyme', [App\Http\Controllers\Eleve\StudentPortalController::class, 'anonymous'])->name('portal.anonymous');
     Route::get('/cours', [App\Http\Controllers\Eleve\StudentCourseController::class, 'courses'])->name('courses');
     Route::get('/cours/{id}', [App\Http\Controllers\Eleve\StudentCourseController::class, 'showCourse'])->name('course.show');
     Route::post('/cours/{courseId}/favori', [App\Http\Controllers\Eleve\StudentCourseController::class, 'toggleFavori'])->name('course.favori');

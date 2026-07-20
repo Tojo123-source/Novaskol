@@ -549,6 +549,10 @@ class CommunicationController extends Controller
             return true;
         }
 
+        if ($this->userRole() === 'eleve') {
+            return ! $write || $conversation->type === 'private';
+        }
+
         if ($conversation->type === 'group' && (int) ($conversation->is_announcement ?? 0) === 1) {
             return ! $write;
         }
