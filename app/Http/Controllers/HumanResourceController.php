@@ -872,11 +872,6 @@ class HumanResourceController extends Controller
 
     private function ensureDefaultPermissions(int $userId, string $role): void
     {
-        $existing = DB::table('permissions')->where('utilisateur_id', $userId)->exists();
-        if ($existing) {
-            return;
-        }
-
         $defaults = $role === 'enseignant'
             ? [
                 'notes' => 'ecriture',
@@ -888,6 +883,7 @@ class HumanResourceController extends Controller
                 'chat_private' => 'ecriture',
                 'chat_group' => 'ecriture',
                 'rapport_presence' => 'lecture',
+                'gestion_ressource' => 'ecriture',
             ]
             : [
                 'notifications' => 'lecture',
