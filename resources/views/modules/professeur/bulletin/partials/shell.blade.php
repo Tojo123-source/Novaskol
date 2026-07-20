@@ -15,34 +15,34 @@
     } else {
         $userAvatarUrl = asset('legacy/uploads/avatars/'.$userAvatar);
     }
-    @if (in_array($currentRole, ['admin', 'staff', 'enseignant']))
-    $latestNotifications = DB::table('notifications')
-        ->where(function ($n) use ($currentUserId, $currentRole) {
-            if ($currentRole === 'parent') {
-                $n->where('destinataire_id', $currentUserId);
-            } else {
-                $n->whereNull('destinataire_id')->orWhere('destinataire_id', $currentUserId);
-            }
-        })
-        ->orderByDesc('date_creation')
-        ->limit(10)
-        ->get(['id','type','message','date_creation','lu','statut']);
-    $unreadNotifications = DB::table('notifications')
-        ->where(function ($n) use ($currentUserId, $currentRole) {
-            if ($currentRole === 'parent') {
-                $n->where('destinataire_id', $currentUserId);
-            } else {
-                $n->whereNull('destinataire_id')->orWhere('destinataire_id', $currentUserId);
-            }
-        })
-        ->where(function ($q) {
-            $q->where('lu', 0)->orWhere('statut', 'non lu');
-        })
-        ->count();
-    @else
-    $latestNotifications = collect();
-    $unreadNotifications = 0;
-    @endif
+    if (in_array($currentRole, ['admin', 'staff', 'enseignant'])) {
+        $latestNotifications = DB::table('notifications')
+            ->where(function ($n) use ($currentUserId, $currentRole) {
+                if ($currentRole === 'parent') {
+                    $n->where('destinataire_id', $currentUserId);
+                } else {
+                    $n->whereNull('destinataire_id')->orWhere('destinataire_id', $currentUserId);
+                }
+            })
+            ->orderByDesc('date_creation')
+            ->limit(10)
+            ->get(['id','type','message','date_creation','lu','statut']);
+        $unreadNotifications = DB::table('notifications')
+            ->where(function ($n) use ($currentUserId, $currentRole) {
+                if ($currentRole === 'parent') {
+                    $n->where('destinataire_id', $currentUserId);
+                } else {
+                    $n->whereNull('destinataire_id')->orWhere('destinataire_id', $currentUserId);
+                }
+            })
+            ->where(function ($q) {
+                $q->where('lu', 0)->orWhere('statut', 'non lu');
+            })
+            ->count();
+    } else {
+        $latestNotifications = collect();
+        $unreadNotifications = 0;
+    }
     $latestMessages = $currentUserId ? DB::table('messages as m')
         ->join('conversation_participants as cp', 'cp.conversation_id', '=', 'm.conversation_id')
         ->join('conversations as c', 'c.id', '=', 'm.conversation_id')
