@@ -285,7 +285,7 @@ Route::middleware('module.access:sauvegardes')->group(function () {
 });
 
 // --- Teacher: Course Management ---
-Route::group(function () {
+Route::group([], function () {
     Route::get('/enseignant/cours', [App\Http\Controllers\CourseController::class, 'index'])->name('teacher.courses.index');
     Route::post('/enseignant/cours', [App\Http\Controllers\CourseController::class, 'store'])->name('teacher.courses.store');
     Route::get('/enseignant/cours/{id}', [App\Http\Controllers\CourseController::class, 'show'])->name('teacher.courses.show');
@@ -301,7 +301,7 @@ Route::group(function () {
 });
 
 // --- Teacher: Exercise Management ---
-Route::group(function () {
+Route::group([], function () {
     Route::get('/enseignant/exercices', [App\Http\Controllers\ExerciseManagementController::class, 'index'])->name('teacher.exercices.index');
     Route::get('/enseignant/exercices/create/{chapitreId}', [App\Http\Controllers\ExerciseManagementController::class, 'create'])->name('teacher.exercices.create');
     Route::post('/enseignant/exercices', [App\Http\Controllers\ExerciseManagementController::class, 'store'])->name('teacher.exercices.store');
