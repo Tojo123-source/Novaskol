@@ -9,7 +9,7 @@
     @include('modules.professeur.bulletin.partials.styles')
     <style>
         body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); }
-        .wrap { margin: 88px 20px 20px 256px; max-width: 700px; }
+        .student-wrap { margin: 88px 20px 20px 256px; max-width: 700px; }
         .hero { background: linear-gradient(135deg, var(--card), var(--surface)); border: 1px solid var(--border); border-radius: 12px; padding: 22px; box-shadow: 0 8px 24px var(--shadow-soft); margin-bottom: 18px; }
         .hero h1 { margin: 0; color: var(--primary); font-size: 1.3rem; }
         .hero p { margin: 6px 0 0; color: var(--text-sec); font-size: .85rem; }
@@ -30,8 +30,8 @@
         .history-item .date { color: var(--text-sec); font-size: .75rem; }
         .history-item .reponse { margin-top: 8px; padding: 8px; border-left: 3px solid var(--primary); background: rgba(0,200,83,.08); border-radius: 4px; }
         .empty-state { padding: 30px; text-align: center; color: var(--text-sec); }
-        @media(max-width:1180px) { .wrap { margin-left: 16px; margin-right: 16px; } }
-        @media(max-width:700px) { .wrap { margin-top: 100px; } }
+        @media(max-width:1180px) { .student-wrap { margin-left: 16px; margin-right: 16px; } }
+        @media(max-width:700px) { .student-wrap { margin-top: 100px; } }
     </style>
 </head>
 <body>
@@ -44,7 +44,7 @@
     <div class="header-center">Message anonyme</div>
 </header>
 
-<div class="wrap">
+<div class="student-wrap">
     @if (session('success'))
         <div class="flash flash-success"><i class="fa fa-check-circle"></i> {{ session('success') }}</div>
     @endif

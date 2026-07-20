@@ -30,7 +30,12 @@ class ExerciseController extends Controller
             ->where('eleve_id', $this->student()->id)
             ->get()->keyBy('exercice_id');
 
-        return view('eleve.exercices', compact('ch', 'course', 'exercices', 'soumissions'));
+        return view('eleve.exercices', compact('ch', 'course', 'exercices', 'soumissions') + [
+            'modules' => app(\App\Services\Novaskol\ModuleRegistry::class)->all(),
+            'ecole' => DB::table('ecole')->select('nom', 'logo')->first() ?: (object) ['nom' => 'Ecole', 'logo' => 'novaskol.png'],
+            'userPermissions' => [],
+            'activeModule' => 'eleve_exercices',
+        ]);
     }
 
     public function show(int $id)
@@ -53,7 +58,12 @@ class ExerciseController extends Controller
             ->orderBy('ordre')
             ->get();
 
-        return view('eleve.exercice-show', compact('exercice', 'ch', 'course', 'questions'));
+        return view('eleve.exercice-show', compact('exercice', 'ch', 'course', 'questions') + [
+            'modules' => app(\App\Services\Novaskol\ModuleRegistry::class)->all(),
+            'ecole' => DB::table('ecole')->select('nom', 'logo')->first() ?: (object) ['nom' => 'Ecole', 'logo' => 'novaskol.png'],
+            'userPermissions' => [],
+            'activeModule' => 'eleve_exercice',
+        ]);
     }
 
     public function submit(Request $request, int $id)
@@ -125,6 +135,11 @@ class ExerciseController extends Controller
         $reponses = json_decode($soumission->reponses, true);
         $ch = DB::table('course_chapitres')->where('id', $exercice->chapitre_id)->first();
 
-        return view('eleve.exercice-result', compact('soumission', 'exercice', 'questions', 'reponses', 'ch'));
+        return view('eleve.exercice-result', compact('soumission', 'exercice', 'questions', 'reponses', 'ch') + [
+            'modules' => app(\App\Services\Novaskol\ModuleRegistry::class)->all(),
+            'ecole' => DB::table('ecole')->select('nom', 'logo')->first() ?: (object) ['nom' => 'Ecole', 'logo' => 'novaskol.png'],
+            'userPermissions' => [],
+            'activeModule' => 'eleve_exercice_result',
+        ]);
     }
 }

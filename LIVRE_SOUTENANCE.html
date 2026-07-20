@@ -1,0 +1,3152 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Livre de Soutenance - Novaskol</title>
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Source+Sans+3:wght@300;400;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+        font-family: 'Source Sans 3', 'Segoe UI', sans-serif;
+        color: #1a1a2e;
+        background: #fafafa;
+        line-height: 1.7;
+        font-size: 11pt;
+    }
+
+    .book-container {
+        max-width: 210mm;
+        margin: 0 auto;
+        background: white;
+        box-shadow: 0 0 30px rgba(0,0,0,0.1);
+    }
+
+    /* COVER PAGE */
+    .cover-page {
+        page-break-after: always;
+        height: 297mm;
+        background: linear-gradient(135deg, #080e18 0%, #0f1a30 50%, #162240 100%);
+        color: white;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        padding: 60px 80px;
+        position: relative;
+        overflow: hidden;
+    }
+    .cover-page::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle at 30% 50%, rgba(0,200,83,0.08) 0%, transparent 50%);
+    }
+    .cover-page .accent-line {
+        width: 100px;
+        height: 4px;
+        background: #00c853;
+        margin: 25px auto;
+        border-radius: 2px;
+    }
+    .cover-page h1 {
+        font-family: 'Playfair Display', serif;
+        font-size: 36pt;
+        font-weight: 700;
+        margin-bottom: 10px;
+        letter-spacing: 1px;
+    }
+    .cover-page .subtitle {
+        font-size: 14pt;
+        font-weight: 300;
+        color: #aab;
+        max-width: 400px;
+        line-height: 1.5;
+    }
+    .cover-page .meta {
+        margin-top: 60px;
+        font-size: 11pt;
+        color: #8899bb;
+        line-height: 2;
+    }
+    .cover-page .meta strong { color: #ccd; }
+
+    /* Front matter */
+    .front-matter {
+        page-break-after: always;
+        padding: 50px 70px;
+    }
+    .front-matter h2 {
+        font-family: 'Playfair Display', serif;
+        font-size: 20pt;
+        margin-bottom: 20px;
+        color: #080e18;
+        border-bottom: 2px solid #00c853;
+        padding-bottom: 8px;
+    }
+    .front-matter p {
+        margin-bottom: 12px;
+        text-align: justify;
+    }
+
+    /* Chapter headings */
+    h1 {
+        font-family: 'Playfair Display', serif;
+        font-size: 24pt;
+        color: #080e18;
+        page-break-before: always;
+        page-break-after: avoid;
+        padding-top: 40px;
+        margin-bottom: 20px;
+        border-bottom: 3px solid #00c853;
+        padding-bottom: 10px;
+    }
+    h1:first-of-type { page-break-before: avoid; }
+
+    h2 {
+        font-family: 'Playfair Display', serif;
+        font-size: 16pt;
+        color: #0f1a30;
+        margin-top: 30px;
+        margin-bottom: 12px;
+        page-break-after: avoid;
+    }
+
+    h3 {
+        font-family: 'Source Sans 3', sans-serif;
+        font-size: 13pt;
+        font-weight: 600;
+        color: #333;
+        margin-top: 22px;
+        margin-bottom: 8px;
+        page-break-after: avoid;
+    }
+
+    h4 {
+        font-family: 'Source Sans 3', sans-serif;
+        font-size: 11pt;
+        font-weight: 600;
+        font-style: italic;
+        color: #555;
+        margin-top: 16px;
+        margin-bottom: 6px;
+    }
+
+    .content {
+        padding: 40px 70px 60px;
+    }
+
+    p {
+        margin-bottom: 10px;
+        text-align: justify;
+        orphans: 3;
+        widows: 3;
+    }
+
+    strong { color: #0f1a30; }
+
+    /* Lists */
+    ul, ol { margin: 8px 0 12px 30px; }
+    li { margin-bottom: 4px; }
+
+    /* Tables */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 15px 0;
+        font-size: 9.5pt;
+        page-break-inside: auto;
+    }
+    thead { display: table-header-group; }
+    tr { page-break-inside: avoid; }
+    th {
+        background: #080e18;
+        color: white;
+        padding: 8px 10px;
+        text-align: left;
+        font-weight: 600;
+    }
+    td {
+        padding: 6px 10px;
+        border-bottom: 1px solid #ddd;
+    }
+    tr:nth-child(even) td { background: #f5f5fa; }
+    tr:hover td { background: #eef; }
+
+    /* Code blocks */
+    pre.code-block {
+        background: #1a1a2e;
+        color: #e0e0f0;
+        padding: 16px 20px;
+        border-radius: 8px;
+        font-family: 'JetBrains Mono', 'Consolas', monospace;
+        font-size: 8pt;
+        line-height: 1.6;
+        overflow-x: auto;
+        margin: 15px 0;
+        page-break-inside: avoid;
+    }
+
+    pre.ascii-diagram {
+        background: #f8f8fc;
+        color: #333;
+        padding: 12px 16px;
+        border-left: 3px solid #00c853;
+        font-family: 'JetBrains Mono', 'Consolas', monospace;
+        font-size: 8pt;
+        line-height: 1.4;
+        margin: 12px 0;
+        page-break-inside: avoid;
+    }
+
+    code {
+        font-family: 'JetBrains Mono', 'Consolas', monospace;
+        font-size: 9pt;
+        background: #f0f0f5;
+        padding: 2px 5px;
+        border-radius: 3px;
+    }
+
+    pre code { background: transparent; padding: 0; }
+
+    /* Blockquotes */
+    blockquote {
+        border-left: 4px solid #00c853;
+        padding: 12px 20px;
+        margin: 15px 0;
+        background: #f8fff8;
+        font-style: italic;
+    }
+
+    /* Page breaks */
+    .page-break { page-break-before: always; }
+
+    /* Print styles */
+    @media print {
+        body { background: white; }
+        .book-container {
+            box-shadow: none;
+            max-width: 100%;
+        }
+        .cover-page { height: 297mm; }
+        .content { padding: 30px 50px; }
+        .front-matter { padding: 30px 50px; }
+        @page { margin: 15mm 20mm; }
+    }
+    </style>
+</head>
+<body>
+<div class="book-container">
+
+<div class="cover-page">
+    <div>
+        <p style="font-size:11pt;letter-spacing:3px;text-transform:uppercase;color:#8899bb;margin-bottom:20px;">
+            Livre de Soutenance
+        </p>
+        <h1>Novaskol</h1>
+        <div class="accent-line"></div>
+        <p class="subtitle">
+            Conception et realisation d'une application de gestion scolaire<br>
+            hors-ligne avec Laravel, Electron et SQLite
+        </p>
+        <div class="meta">
+            <p><strong>Presente par :</strong> Tojo Nambinina RANDRIAMIFALY</p>
+            <p><strong>Encadre par :</strong> [Nom de l'encadrant]</p>
+            <p style="margin-top:15px;">Communication en Audiovisuelle et Numerique (CAN)</p>
+            <p>Specialisation Developpement Web — Année universitaire 2025-2026</p>
+        </div>
+    </div>
+</div>
+
+<div class="content">
+<h1 id="livre-de-soutenance">Livre de Soutenance</h1>
+<h2 id="conception-et-realisation-dune-application-de-gestion-scolaire-hors-ligne-avec-laravel-electron-et-sqlite">Conception et réalisation d'une application de gestion scolaire hors-ligne avec Laravel, Electron et SQLite</h2>
+<hr />
+<p><strong>Présenté par :</strong>
+Tojo Nambinina RANDRIAMIFALY</p>
+<p><strong>Encadré par :</strong>
+[Nom de l'encadrant]</p>
+<p><strong>Parcours :</strong> Communication en Audiovisuelle et Numérique (CAN)
+<strong>Spécialisation :</strong> Développement Web (après L3)
+<strong>Année universitaire :</strong> 2025-2026</p>
+<hr />
+<h2 id="remerciements">Remerciements</h2>
+<p>En premier lieu, nous remercions Dieu tout-puissant de nous avoir donné la force, la patience et la détermination nécessaires pour mener à bien ce projet.</p>
+<p>Nous tenons à exprimer notre profonde gratitude à notre encadrant pour ses conseils précieux, sa disponibilité et son accompagnement tout au long de ce travail. Sa confiance et ses orientations éclairées ont grandement contribué à la réussite de ce projet.</p>
+<p>Nous remercions chaleureusement les membres du jury qui nous font l'honneur d'évaluer ce travail.</p>
+<p>Nos sincères remerciements vont également à toutes les personnes qui ont participé de près ou de loin à la réalisation de ce projet, en particulier les enseignants et le personnel administratif des établissements scolaires qui nous ont accordé de leur temps pour les entretiens et les tests.</p>
+<p>Enfin, nous exprimons notre reconnaissance à nos familles et à nos proches pour leur soutien indéfectible et leurs encouragements tout au long de notre parcours universitaire.</p>
+<hr />
+<h2 id="dedicaces">Dédicaces</h2>
+<p>Je dédie ce modeste travail à :</p>
+<p>Mes chers parents, pour leur amour inconditionnel, leurs sacrifices et leur soutien permanent tout au long de mes études.</p>
+<p>Mes frères et sœurs, pour leur encouragement et leur présence à mes côtés.</p>
+<p>Tous mes amis et camarades de promotion, pour les moments partagés et l'entraide mutuelle.</p>
+<p>Tous ceux qui ont contribué, de près ou de loin, à la réalisation de ce projet.</p>
+<hr />
+<h2 id="sommaire">Sommaire</h2>
+<p><strong>Introduction générale</strong></p>
+<p><strong>Chapitre I : État de l'art et technologies utilisées</strong>
+1. Introduction
+2. Architecture logicielle
+3. Architectures distribuées
+4. Modèle Client/Serveur
+5. Internet et le Web
+6. Technologies de développement web
+7. Systèmes de Gestion de Base de Données
+8. Applications de bureau hybrides
+9. Conclusion</p>
+<p><strong>Chapitre II : Architecture et technologies de Novaskol</strong>
+1. Introduction
+2. Présentation du projet Novaskol
+3. Architecture globale du système
+4. Technologies et outils utilisés
+5. Architecture détaillée de la base de données
+6. Modules et fonctionnalités
+7. Conclusion</p>
+<p><strong>Chapitre III : Analyse et conception</strong>
+1. Introduction
+2. Analyse des besoins
+3. Identification des acteurs
+4. Diagrammes de cas d'utilisation
+5. Diagrammes de séquence
+6. Diagrammes d'activité
+7. Modèle conceptuel de données
+8. Conclusion</p>
+<p><strong>Chapitre IV : Réalisation</strong>
+1. Introduction
+2. Environnement de développement
+3. Implémentation du backend Laravel
+4. Implémentation du frontend
+5. Application de bureau Electron
+6. Application mobile companion (Novaskol Connecte)
+7. Application de bureau Connecte Desktop
+8. Processus de packaging et déploiement
+9. Interfaces principales
+10. Conclusion</p>
+<p><strong>Conclusion générale</strong></p>
+<p><strong>Bibliographie</strong></p>
+<p><strong>Annexes</strong>
+- Annexe A : Généralités sur les réseaux informatiques
+- Annexe B : UML — Unified Modeling Language
+- Annexe C : Guide d'installation de Novaskol
+- Annexe D : Structure du paquet de distribution
+- Annexe E : Tableau des routes API</p>
+<hr />
+<h2 id="liste-des-figures">Liste des figures</h2>
+<p>Figure I.1 : Vues de l'architecture logicielle selon P. Kruchten
+Figure I.2 : Principe de fonctionnement du Client/Serveur
+Figure I.3 : Architecture à 2 niveaux
+Figure I.4 : Architecture à 3 niveaux
+Figure I.5 : Architecture multi-niveaux
+Figure I.6 : Architecture MVC (Modèle-Vue-Contrôleur)
+Figure II.1 : Architecture globale de Novaskol
+Figure II.2 : Architecture Electron + Laravel
+Figure II.3 : Diagramme de contexte de l'application
+Figure II.4 : Schéma relationnel de la base de données
+Figure III.1 : Démarche de modélisation de l'application
+Figure III.2 : Diagramme de contexte
+Figure III.3 : Diagramme de cas d'utilisation global
+Figure III.4 : Diagramme de cas d'utilisation – Administrateur
+Figure III.5 : Diagramme de cas d'utilisation – Enseignant
+Figure III.6 : Diagramme de cas d'utilisation – Parent
+Figure III.7 : Diagramme de cas d'utilisation – Personnel
+Figure III.8 : Diagramme de séquence – Authentification
+Figure III.9 : Diagramme de séquence – Saisie des notes
+Figure III.10 : Diagramme de séquence – Génération de bulletin
+Figure III.11 : Diagramme de séquence – Synchronisation
+Figure III.12 : Diagramme d'activité – Authentification
+Figure III.13 : Diagramme d'activité – Saisie des notes
+Figure III.14 : Diagramme de classe global
+Figure IV.1 : Interface de développement (VS Code)
+Figure IV.2 : Structure du projet Laravel
+Figure IV.3 : Architecture des contrôleurs
+Figure IV.4 : Processus de démarrage de l'application Electron
+Figure IV.5 : Architecture IPC (preload.cjs)
+Figure IV.6 : Page d'accueil / Authentification
+Figure IV.7 : Tableau de bord principal
+Figure IV.8 : Interface de saisie des notes
+Figure IV.9 : Interface de génération de bulletin
+Figure IV.10 : Interface d'emploi du temps
+Figure IV.11 : Interface de messagerie interne
+Figure IV.12 : Interface de gestion des présences par QR code
+Figure IV.13 : Application de bureau Electron (splash screen)
+Figure IV.14 : Application Novaskol Connecte (mobile)
+Figure IV.15 : Application Connecte Desktop
+Figure IV.16 : Processus de packaging et déploiement
+Figure IV.17 : Structure du paquet de distribution</p>
+<hr />
+<h2 id="liste-des-tableaux">Liste des tableaux</h2>
+<p>Tableau I.1 : Comparaison des SGBD
+Tableau I.2 : Comparaison des frameworks PHP
+Tableau II.1 : Spécifications techniques de Novaskol
+Tableau II.2 : Liste complète des tables de la base de données
+Tableau II.3 : Dictionnaire des données (tables principales)
+Tableau II.4 : Liste des 45 modules fonctionnels
+Tableau III.1 : Identification des acteurs
+Tableau III.2 : Spécification des cas d'utilisation
+Tableau III.3 : Besoins fonctionnels détaillés
+Tableau III.4 : Besoins non fonctionnels
+Tableau III.5 : Correspondance acteurs-tâches
+Tableau III.6 : Spécification des scénarios principaux
+Tableau IV.1 : Outils de développement
+Tableau IV.2 : Arborescence complète du projet
+Tableau IV.3 : Liste des contrôleurs
+Tableau IV.4 : Configuration electron-builder</p>
+<hr />
+<h2 id="introduction-generale">Introduction générale</h2>
+<p>L'informatique a profondément transformé notre société au cours des dernières décennies. La numérisation des processus administratifs et pédagogiques dans le domaine de l'éducation est devenue une nécessité incontournable pour améliorer l'efficacité, la transparence et la qualité du service rendu aux élèves, aux enseignants et aux parents.</p>
+<p>Dans de nombreux établissements scolaires, en particulier dans les pays en développement et les zones rurales, la gestion des notes, des absences, des emplois du temps et de la communication avec les parents s'effectue encore de manière manuelle ou semi-automatisée à l'aide d'outils disparates. Cette situation engendre des problèmes majeurs : perte de temps, erreurs de saisie, difficultés de suivi, absence de centralisation des données, et communication limitée entre les différents acteurs de la communauté éducative.</p>
+<p>Par ailleurs, les solutions de gestion scolaire existantes sur le marché présentent plusieurs limitations : elles sont souvent payantes, nécessitent une connexion Internet permanente, sont complexes à déployer, ou ne répondent pas aux spécificités du système éducatif local. La plupart des établissements scolaires ne disposent pas d'une infrastructure réseau fiable ni d'un accès Internet permanent, ce qui rend les solutions web traditionnelles inadaptées à leur contexte.</p>
+<p>C'est dans ce contexte que s'inscrit notre projet de fin d'études : concevoir et réaliser une application de gestion scolaire complète, fonctionnant hors-ligne, déployable localement sur un simple PC sans nécessité de serveur dédié ni de connexion Internet. L'application, baptisée <strong>Novaskol</strong>, se présente sous la forme d'une application de bureau autonome (Electron + Laravel) couplée à une application mobile companion pour les usages mobiles, avec un mécanisme de synchronisation multi-appareils sur le réseau local.</p>
+<p><strong>Note personnelle.</strong> Mon parcours en Communication en Audiovisuelle et Numérique (CAN) m'a sensibilisé dès le début à la place du numérique dans notre société. Après la L3, j'ai naturellement orienté ma formation vers le développement web, fasciné par la capacité de créer des solutions accessibles, fonctionnelles et utiles. Bien que je ne vienne pas d'un cursus purement informatique, c'est précisément cette transition — du numérique vers la technique web — qui m'a poussé à choisir Novaskol comme projet. Je voyais dans ce système une opportunité de laisser une trace concrète, une solution que j'ai choisie, façonnée et portée de bout en bout, reflet de mon intérêt pour le web et de ma volonté de créer quelque chose qui a du sens.</p>
+<p>Notre problématique centrale peut être formulée ainsi : <strong>Comment concevoir et développer un système de gestion scolaire complet, accessible hors-ligne, facile à déployer et à utiliser, qui réponde aux besoins des établissements scolaires en matière de gestion administrative, pédagogique et financière ?</strong></p>
+<p>Pour répondre à cette problématique, nous avons adopté une démarche méthodologique rigoureuse :</p>
+<ol>
+<li><strong>Analyse des besoins</strong> auprès des acteurs du système éducatif (direction, enseignants, parents, personnel administratif)</li>
+<li><strong>Étude comparative</strong> des solutions existantes et des technologies disponibles</li>
+<li><strong>Conception architecturale</strong> et modélisation UML complète</li>
+<li><strong>Développement itératif</strong> avec des cycles de test fréquents (méthodologie agile)</li>
+<li><strong>Packaging et déploiement</strong> pour une distribution facilitée via un installateur Windows</li>
+</ol>
+<p>Les principales fonctionnalités offertes par Novaskol couvrent l'ensemble du cycle de gestion scolaire : inscription des élèves, gestion des classes et des matières, saisie et consultation des notes, génération de bulletins et de relevés, gestion des emplois du temps, suivi des présences par QR code, communication interne par messagerie instantanée, gestion financière (paiements, dépenses, salaires), gestion des ressources humaines, et synchronisation multi-appareils sur le réseau local.</p>
+<p>Le système est articulé autour de 45 modules fonctionnels répartis en 8 catégories, 67 tables de base de données, et 33 migrations Laravel, le tout embarqué dans une application de bureau Electron de 650 Mo.</p>
+<p>Ce mémoire est organisé en quatre chapitres :</p>
+<p>Le <strong>premier chapitre</strong> présente l'état de l'art des technologies utilisées : architectures logicielles, modèle client/serveur, technologies web, frameworks PHP, systèmes de gestion de base de données, et applications de bureau hybrides.</p>
+<p>Le <strong>deuxième chapitre</strong> est consacré à la présentation détaillée de Novaskol : son architecture globale, les technologies employées, sa base de données exhaustive, et l'ensemble de ses modules fonctionnels.</p>
+<p>Le <strong>troisième chapitre</strong> détaille l'analyse et la conception du système à l'aide du langage UML : identification des acteurs, diagrammes de cas d'utilisation, de séquence, d'activité, et modèle conceptuel de données complet.</p>
+<p>Le <strong>quatrième chapitre</strong> présente la réalisation pratique : environnement de développement, implémentation du backend et du frontend, application de bureau Electron avec son processus de démarrage, applications companion (mobile et desktop), processus de packaging et déploiement, et présentation des interfaces principales.</p>
+<p>Enfin, une conclusion générale synthétise les résultats obtenus, les difficultés rencontrées, les compétences acquises, et propose des perspectives d'évolution pour le projet.</p>
+<hr />
+<h1 id="chapitre-i-etat-de-lart-et-technologies-utilisees">Chapitre I : État de l'art et technologies utilisées</h1>
+<h2 id="1-introduction">1. Introduction</h2>
+<p>La réalisation d'un système d'information moderne pour la gestion scolaire nécessite une maîtrise approfondie des concepts architecturaux et des technologies disponibles. Ce chapitre présente les fondements théoriques sur lesquels repose notre projet Novaskol : les architectures logicielles, le modèle client/serveur, les technologies web, les systèmes de gestion de base de données, et les frameworks modernes de développement d'applications de bureau et mobiles.</p>
+<p>L'objectif de ce chapitre est de situer notre projet dans le paysage technologique actuel, de justifier nos choix techniques, et de fournir les bases conceptuelles nécessaires à la compréhension des chapitres suivants.</p>
+<h2 id="2-architecture-logicielle">2. Architecture logicielle</h2>
+<h3 id="21-definition">2.1 Définition</h3>
+<p>L'architecture logicielle est la structure fondamentale d'un système logiciel, comprenant ses composants, leurs relations mutuelles et avec l'environnement, ainsi que les principes guidant sa conception et son évolution. Une bonne architecture permet de répondre aux exigences fonctionnelles et non fonctionnelles du système tout en facilitant sa maintenance et son évolution.</p>
+<h3 id="22-le-modele-41-vues-de-philippe-kruchten">2.2 Le modèle 4+1 vues de Philippe Kruchten</h3>
+<p>Selon Philippe Kruchten (1995), l'architecture d'un système logiciel peut être représentée selon cinq vues complémentaires, chacune décrivant un aspect particulier du système :</p>
+<p><strong>Vue Logique :</strong> La vue logique se concentre sur la modélisation des principaux éléments d'architecture et mécanismes logiciels. Elle comprend les modèles d'analyse et de conception du système, définissant les entités métier, leurs relations et leur comportement. Dans le cadre de Novaskol, cette vue correspond aux modèles métier : élèves, enseignants, classes, matières, notes, bulletins, etc.</p>
+<p><strong>Vue Composants :</strong> La vue composants identifie les modules logiciels qui implémentent les éléments définis dans la vue logique. Pour Novaskol, ces composants incluent les contrôleurs (30+), les services métier (9), les middlewares (3), les modèles Eloquent, et les modules fonctionnels de l'application.</p>
+<p><strong>Vue Processus :</strong> Cette vue définit les processus, la coordination et la synchronisation des tâches. Dans notre architecture, cela correspond au serveur PHP intégré, aux files d'attente (queues Laravel) pour les tâches asynchrones, à la synchronisation multi-appareils, et aux processus Electron (main process, renderer process).</p>
+<p><strong>Vue Déploiement :</strong> La vue déploiement précise l'architecture de production : ressources matérielles, implantation des composants, et configuration réseau. Novaskol peut être déployé selon trois modes : local (application de bureau autonome avec SQLite), hébergement (serveur web Apache/Nginx avec MySQL), ou hybride (desktop + appareils connectés).</p>
+<p><strong>Vue Use-Cases :</strong> Les cas d'utilisation constituent le fil conducteur qui relie les quatre autres vues. Ils expriment les besoins fonctionnels du système du point de vue des utilisateurs finaux.</p>
+<h3 id="23-le-patron-darchitecture-mvc-modele-vue-controleur">2.3 Le patron d'architecture MVC (Modèle-Vue-Contrôleur)</h3>
+<p>Le patron d'architecture MVC (Modèle-Vue-Contrôleur) est l'un des patrons d'architecture les plus utilisés dans le développement d'applications web. Il propose une séparation claire des responsabilités en trois composants distincts :</p>
+<p><strong>Le Modèle (Model) :</strong> Gère les données et la logique métier. Il encapsule l'accès à la base de données, les règles de validation, et les relations entre les entités. Dans Laravel, les modèles Eloquent ORM implémentent ce rôle, permettant d'interagir avec la base de données via une interface orientée objet.</p>
+<p><strong>La Vue (View) :</strong> Assure la présentation des données à l'utilisateur. Elle reçoit les données du contrôleur et les formate pour l'affichage. Novaskol utilise le moteur de templates Blade pour générer les interfaces HTML, avec TailwindCSS pour le style.</p>
+<p><strong>Le Contrôleur (Controller) :</strong> Fait le lien entre le modèle et la vue. Il traite les requêtes HTTP, orchestre la logique d'interaction, et prépare les données pour la vue.</p>
+<p>Le schéma suivant illustre le fonctionnement de l'architecture MVC :</p>
+<p><strong>CODEBLOCK_1</strong></p>
+<p><strong>Figure I.1 : Schéma de l'architecture MVC (Modèle-Vue-Contrôleur)</strong></p>
+<h2 id="3-architectures-distribuees">3. Architectures distribuées</h2>
+<h3 id="31-definition">3.1 Définition</h3>
+<p>Une architecture distribuée est une architecture dont les ressources ne se trouvent pas au même endroit ou sur la même machine. Les fonctions de l'application sont réparties entre plusieurs systèmes interconnectés par un réseau.</p>
+<h3 id="32-types-darchitectures-distribuees">3.2 Types d'architectures distribuées</h3>
+<p><strong>Architecture centralisée :</strong> Toutes les ressources sont sur une seule machine. Le traitement, les données et la logique métier sont concentrés sur un seul système. Cette approche est simple à mettre en œuvre mais présente des limites en termes de passage à l'échelle et de tolérance aux pannes.</p>
+<p><strong>Architecture client/serveur :</strong> Répartition entre des clients (qui demandent des services) et un ou plusieurs serveurs (qui fournissent ces services). C'est le modèle le plus répandu pour les applications web.</p>
+<p><strong>Architecture peer-to-peer (P2P) :</strong> Chaque nœud est à la fois client et serveur. Les ressources sont partagées directement entre les pairs sans nécessité de serveur central.</p>
+<p><strong>Architecture multi-tiers (n-tiers) :</strong> L'application est divisée en plusieurs couches distinctes, chacune ayant une responsabilité spécifique. Cette séparation permet une meilleure maintenabilité, évolutivité et sécurité.</p>
+<h2 id="4-modele-clientserveur">4. Modèle Client/Serveur</h2>
+<h3 id="41-definition">4.1 Définition</h3>
+<p>Le modèle client/serveur est un modèle de communication où des machines clientes contactent un serveur pour obtenir des services. Un client envoie une requête au serveur, qui la traite et retourne une réponse. Ce modèle est à la base de la plupart des applications réseau modernes, y compris les applications web.</p>
+<h3 id="42-principe-de-fonctionnement">4.2 Principe de fonctionnement</h3>
+<p>Le fonctionnement du modèle client/serveur suit un cycle requête-réponse en plusieurs étapes :</p>
+<ol>
+<li>Le client établit une connexion avec le serveur</li>
+<li>Le client envoie une requête décrivant l'opération souhaitée</li>
+<li>Le serveur traite la requête (accès à la base de données, calculs, etc.)</li>
+<li>Le serveur renvoie la réponse au client</li>
+<li>Le client traite la réponse et l'affiche à l'utilisateur</li>
+</ol>
+<p>Ce principe est illustré par la figure suivante :</p>
+<p><strong>CODEBLOCK_2</strong></p>
+<p><strong>Figure I.2 : Principe de fonctionnement du Client/Serveur</strong></p>
+<h3 id="43-architecture-a-2-niveaux-2-tiers">4.3 Architecture à 2 niveaux (2-tiers)</h3>
+<p>Dans cette configuration, le client interagit directement avec le serveur de base de données. Le client contient à la fois la logique de présentation et la logique métier, tandis que le serveur gère les données :</p>
+<p><strong>CODEBLOCK_3</strong></p>
+<p><strong>Figure I.3 : Architecture à 2 niveaux</strong></p>
+<p>Cette architecture est simple à mettre en œuvre mais pose des problèmes de maintenance (mise à jour de la logique métier sur chaque poste client) et d'évolutivité.</p>
+<h3 id="44-architecture-a-3-niveaux-3-tiers">4.4 Architecture à 3 niveaux (3-tiers)</h3>
+<p>L'architecture à trois niveaux introduit un niveau intermédiaire, le serveur d'application (middleware), qui contient la logique métier :</p>
+<p><strong>CODEBLOCK_4</strong></p>
+<p><strong>Figure I.4 : Architecture à 3 niveaux</strong></p>
+<p>Les avantages de cette architecture sont :
+- Séparation claire des responsabilités
+- Meilleure évolutivité (chaque niveau peut être mis à l'échelle indépendamment)
+- Maintenance facilitée
+- Sécurité renforcée</p>
+<p><strong>Application dans Novaskol :</strong>
+- <strong>Niveau 1 (Client)</strong> : Navigateur web ou fenêtre Electron
+- <strong>Niveau 2 (Application)</strong> : Serveur PHP/Laravel avec sa logique métier
+- <strong>Niveau 3 (Données)</strong> : Base de données SQLite ou MySQL</p>
+<h3 id="45-architecture-multi-niveaux-n-tiers">4.5 Architecture multi-niveaux (n-tiers)</h3>
+<p>L'architecture multi-niveaux étend le modèle à 3 niveaux en décomposant davantage les couches. Novaskol, dans sa configuration Electron, utilise une variante de cette architecture avec les couches suivantes :</p>
+<ul>
+<li><strong>Couche présentation</strong> : Interface utilisateur (HTML/Blade)</li>
+<li><strong>Couche contrôle</strong> : Contrôleurs Laravel</li>
+<li><strong>Couche service</strong> : Services métier</li>
+<li><strong>Couche persistance</strong> : Modèles Eloquent</li>
+<li><strong>Couche données</strong> : SQLite/MySQL</li>
+</ul>
+<h3 id="46-middleware">4.6 Middleware</h3>
+<p>Un middleware est un logiciel qui sert d'intermédiaire entre les différentes couches d'une architecture distribuée. Il facilite la communication, la gestion des transactions, et la coordination entre les composants.</p>
+<p>Dans Laravel, les middlewares sont des filtres HTTP qui s'exécutent avant ou après le traitement d'une requête. Novaskol utilise un middleware personnalisé <code>module.access</code> pour le contrôle d'accès basé sur les modules.</p>
+<h2 id="5-internet-et-le-web">5. Internet et le Web</h2>
+<h3 id="51-internet">5.1 Internet</h3>
+<p>Internet est un réseau mondial de réseaux interconnectés utilisant le protocole TCP/IP. Il permet l'échange de données entre des millions d'ordinateurs à travers le monde.</p>
+<p><strong>Principaux protocoles :</strong>
+- <strong>TCP/IP</strong> : Protocole de base garantissant la transmission fiable des données
+- <strong>HTTP/HTTPS</strong> : Protocole de transfert hypertexte
+- <strong>FTP</strong> : Protocole de transfert de fichiers
+- <strong>SMTP/POP3/IMAP</strong> : Protocoles de messagerie électronique
+- <strong>DNS</strong> : Système de résolution de noms de domaine</p>
+<h3 id="52-intranet-et-extranet">5.2 Intranet et Extranet</h3>
+<ul>
+<li><strong>Intranet</strong> : Réseau interne à une organisation utilisant les technologies Internet, accessible uniquement aux membres de l'organisation</li>
+<li><strong>Extranet</strong> : Extension de l'intranet permettant à des partenaires externes d'accéder à certaines ressources</li>
+</ul>
+<h3 id="53-le-world-wide-web">5.3 Le World Wide Web</h3>
+<p>Le Web est un système hypermédia fonctionnant sur Internet, permettant de consulter des pages web liées entre elles par des hyperliens.</p>
+<h4 id="531-sites-web-statiques">5.3.1 Sites web statiques</h4>
+<p>Composés de pages HTML pré-générées, servies telles quelles par le serveur web. Chaque page est un fichier indépendant.</p>
+<h4 id="532-sites-web-dynamiques">5.3.2 Sites web dynamiques</h4>
+<p>Les pages sont générées à la volée en fonction des paramètres de la requête et des données stockées en base. Ils utilisent des langages côté serveur (PHP, Python, Java, etc.).</p>
+<h3 id="54-le-protocole-http">5.4 Le protocole HTTP</h3>
+<p>HTTP (HyperText Transfer Protocol) est le protocole de communication utilisé par le Web. Fonctionnant en mode requête/réponse, il permet aux navigateurs web de demander des ressources aux serveurs web.</p>
+<p>Novaskol utilise le serveur HTTP intégré de PHP (Artisan serve) pour le mode local, et peut être déployé sous Apache ou Nginx pour le mode hébergé.</p>
+<h3 id="55-rest-api">5.5 REST API</h3>
+<p>REST (Representational State Transfer) est un style d'architecture pour les systèmes hypermédia distribués. Novaskol expose des API RESTful pour la synchronisation entre l'application desktop et les applications mobiles Connecte.</p>
+<h2 id="6-technologies-de-developpement-web">6. Technologies de développement web</h2>
+<h3 id="61-php">6.1 PHP</h3>
+<h4 id="611-presentation">6.1.1 Présentation</h4>
+<p>PHP (Hypertext Preprocessor) est un langage de programmation côté serveur, spécialement conçu pour le développement d'applications web. Créé par Rasmus Lerdorf en 1994, PHP est aujourd'hui l'un des langages les plus utilisés pour le développement web.</p>
+<h4 id="612-php-82">6.1.2 PHP 8.2</h4>
+<p>La version 8.2 de PHP, utilisée dans Novaskol, apporte des améliorations significatives :</p>
+<ul>
+<li><strong>Type system amélioré</strong> : Types d'union, type mixed, types statiques</li>
+<li><strong>JIT (Just-In-Time Compilation)</strong> : Compilation à la volée pour des performances accrues</li>
+<li><strong>Named arguments</strong> : Arguments nommés pour les fonctions</li>
+<li><strong>Match expression</strong> : Alternative améliorée au switch</li>
+<li><strong>Readonly classes</strong> : Classes immutables</li>
+<li><strong>Performance</strong> : Jusqu'à 3x plus rapide que PHP 7.x</li>
+</ul>
+<h4 id="613-avantages-de-php-pour-novaskol">6.1.3 Avantages de PHP pour Novaskol</h4>
+<ul>
+<li>Large communauté et écosystème riche</li>
+<li>Support natif de SQLite (extension PDO_SQLITE)</li>
+<li>Facilité d'apprentissage et de déploiement</li>
+<li>Compatibilité avec tous les hébergeurs</li>
+<li>Performances accrues avec PHP 8.x</li>
+<li>Bibliothèque standard riche</li>
+</ul>
+<h3 id="62-laravel">6.2 Laravel</h3>
+<h4 id="621-presentation">6.2.1 Présentation</h4>
+<p>Laravel est un framework PHP open-source, créé par Taylor Otwell en 2011, qui suit le patron d'architecture MVC. Il est aujourd'hui le framework PHP le plus populaire.</p>
+<h4 id="622-version-utilisee-laravel-12">6.2.2 Version utilisée : Laravel 12</h4>
+<p>Laravel 12, utilisé dans Novaskol, offre les fonctionnalités suivantes :</p>
+<p><strong>Eloquent ORM :</strong> Mappage objet-relationnel intuitif. Les tables sont représentées par des classes PHP, et les relations sont définies sous forme de méthodes.</p>
+<p><strong>Blade Template Engine :</strong> Moteur de templates performant avec héritage de vues, sections, composants.</p>
+<p><strong>Migration System :</strong> Versionnement du schéma de base de données. Chaque modification de la structure est une classe PHP exécutable, permettant de déployer et d'annuler les changements.</p>
+<p><strong>Artisan CLI :</strong> Outil en ligne de commande pour les tâches courantes.</p>
+<p><strong>Queues :</strong> Gestion de tâches asynchrones.</p>
+<p><strong>Security :</strong> Protection intégrée contre les vulnérabilités web courantes (CSRF, XSS, SQL injection).</p>
+<p><strong>Testing :</strong> PHPUnit intégré avec des helpers de test.</p>
+<h4 id="623-fonctionnalites-cles-utilisees-dans-novaskol">6.2.3 Fonctionnalités clés utilisées dans Novaskol</h4>
+<ul>
+<li>Service Providers</li>
+<li>Middleware (module.access)</li>
+<li>Event &amp; Listeners</li>
+<li>Filesystem</li>
+<li>Cache</li>
+<li>Validation</li>
+<li>Mail (notifications)</li>
+<li>Routing</li>
+</ul>
+<h3 id="63-comparaison-des-frameworks-php">6.3 Comparaison des frameworks PHP</h3>
+<table>
+<thead>
+<tr>
+<th>Critere</th>
+<th>Laravel</th>
+<th>Symfony</th>
+<th>CodeIgniter</th>
+<th>CakePHP</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Courbe d'apprentissage</td>
+<td>Facile</td>
+<td>Moderee</td>
+<td>Facile</td>
+<td>Moderee</td>
+</tr>
+<tr>
+<td>Performance</td>
+<td>Bonne</td>
+<td>Bonne</td>
+<td>Tres bonne</td>
+<td>Bonne</td>
+</tr>
+<tr>
+<td>ORM</td>
+<td>Eloquent</td>
+<td>Doctrine</td>
+<td>Custom</td>
+<td>CakePHP ORM</td>
+</tr>
+<tr>
+<td>Templating</td>
+<td>Blade</td>
+<td>Twig</td>
+<td>Custom</td>
+<td>Custom</td>
+</tr>
+<tr>
+<td>Communaute</td>
+<td>Tres large</td>
+<td>Large</td>
+<td>Modelee</td>
+<td>Modelee</td>
+</tr>
+<tr>
+<td>Version actuelle</td>
+<td>12.x</td>
+<td>7.x</td>
+<td>4.x</td>
+<td>5.x</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Tableau I.2 : Comparaison des frameworks PHP</strong></p>
+<h3 id="64-nodejs-et-npm">6.4 Node.js et npm</h3>
+<p>Node.js est un environnement d'exécution JavaScript côté serveur, construit sur le moteur V8 de Google Chrome. npm est le gestionnaire de paquets associé.</p>
+<p>Dans Novaskol, ils sont utilisés pour :
+- Le processus principal Electron
+- Les outils de build (Vite, TailwindCSS, electron-builder)
+- La gestion des dépendances frontend
+- Les scripts de développement et de build</p>
+<h3 id="65-vite">6.5 Vite</h3>
+<p>Vite est un outil de build moderne qui offre un développement rapide avec rechargement à chaud (HMR). Utilise les modules ES natifs en développement et Rollup pour la production.</p>
+<p>Novaskol utilise Vite 7 pour compiler les assets CSS (TailwindCSS) et JavaScript.</p>
+<h3 id="66-tailwindcss">6.6 TailwindCSS</h3>
+<p>TailwindCSS est un framework CSS utilitaire avec une approche "utility-first". Version 4 utilisée dans Novaskol, avec configuration automatique.</p>
+<h2 id="7-systemes-de-gestion-de-base-de-donnees-sgbd">7. Systèmes de Gestion de Base de Données (SGBD)</h2>
+<h3 id="71-definition">7.1 Definition</h3>
+<p>Un Système de Gestion de Base de Données (SGBD) est un logiciel permettant de stocker, manipuler et interroger des données de manière structurée. Il assure la persistance, l'intégrité, la sécurité et la gestion des accès concurrents.</p>
+<h3 id="72-sqlite">7.2 SQLite</h3>
+<p>SQLite est un SGBD relationnel embarqué, leger et sans serveur, stockant les donnees dans un fichier unique.</p>
+<p><strong>Caractéristiques :</strong>
+- Aucune configuration serveur nécessaire
+- Base de données = fichier unique
+- Performant pour applications mono-utilisateur
+- Supporté nativement par PHP
+- Taille maximale : 281 To</p>
+<p><strong>Utilisation dans Novaskol :</strong>
+Base de données par défaut pour le mode hors-ligne. Chaque installation Desktop crée son propre fichier SQLite.</p>
+<h3 id="73-mysqlmariadb">7.3 MySQL/MariaDB</h3>
+<p>MySQL est un SGBD relationnel client/serveur. MariaDB est un fork communautaire.</p>
+<p><strong>Caractéristiques :</strong>
+- Architecture client/serveur avec processus dédié
+- Gestion multi-utilisateurs avancée
+- Performances élevées
+- Transactions ACID
+- Procédures stockées, triggers, vues</p>
+<p><strong>Utilisation dans Novaskol :</strong>
+Déploiements hébergés et installations multi-utilisateurs. MySQL 8.0 portable embarqué dans le runtime.</p>
+<h2 id="8-applications-de-bureau-hybrides">8. Applications de bureau hybrides</h2>
+<h3 id="81-electron">8.1 Electron</h3>
+<p>Electron est un framework open-source (GitHub, 2013) permettant de créer des applications de bureau multiplateformes avec HTML/CSS/JavaScript. Utilise Chromium pour le rendu et Node.js pour les API système.</p>
+<p><strong>Version utilisée :</strong> Electron 37.2.1</p>
+<p><strong>Architecture :</strong>
+- <strong>Main process (Node.js)</strong> : Cycle de vie, fenêtres, API système, IPC
+- <strong>Renderer process (Chromium)</strong> : Interface web, accès limité système</p>
+<p><strong>CODEBLOCK_5</strong></p>
+<p><strong>Figure I.5 : Architecture d'une application Electron</strong></p>
+<p><strong>Avantages pour Novaskol :</strong>
+- Packaging complet PHP + Laravel
+- Déploiement simplifié (installateur unique)
+- Fonctionnement hors-ligne
+- Accès API système
+- Expérience native</p>
+<h3 id="82-electron-builder">8.2 electron-builder</h3>
+<p>Outil de packaging pour applications Electron. Version 26.0.12 utilisée avec cible NSIS Windows.</p>
+<p><strong>Configuration :</strong>
+- Installateur non one-click avec choix du répertoire
+- Raccourcis Bureau et Menu Démarrer
+- Ressources Laravel intégrées</p>
+<h3 id="83-capacitor">8.3 Capacitor</h3>
+<p>Capacitor est un framework de développement d'applications mobiles hybrides, successeur de Cordova, développé par l'équipe Ionic. Il permet de transformer une application web en application mobile native.</p>
+<p><strong>Version utilisée :</strong> Capacitor 8.3.3</p>
+<p><strong>Avantages :</strong>
+- Accès aux API natives (appareil photo, notifications, etc.)
+- Génération de builds Android et iOS à partir d'une base de code web
+- Performance proche du natif</p>
+<h2 id="9-conclusion">9. Conclusion</h2>
+<p>Ce chapitre nous a permis de poser les bases théoriques et technologiques de notre projet. Le modèle client/serveur à 3 niveaux, couplé à l'architecture MVC de Laravel, constitue le socle architectural de Novaskol. Le choix des technologies (PHP 8.2, Laravel 12, SQLite, Electron 37, Capacitor 8) a été guidé par les impératifs de simplicité de déploiement, de fonctionnement hors-ligne, de maintenabilité et d'évolutivité. Le chapitre suivant présente l'architecture globale de Novaskol et comment ces technologies sont orchestrées.</p>
+<hr />
+<h1 id="chapitre-ii-architecture-et-technologies-de-novaskol">Chapitre II : Architecture et technologies de Novaskol</h1>
+<h2 id="1-introduction_1">1. Introduction</h2>
+<p>Ce chapitre est consacré à la présentation détaillée de Novaskol : son contexte, son architecture globale, ses composants technologiques, sa base de données exhaustive, et l'ensemble des modules fonctionnels qui le composent. Nous décrivons également les spécificités architecturales qui font de Novaskol une solution innovante dans le paysage des systèmes de gestion scolaire, notamment son architecture Electron + Laravel embarqué et son système de synchronisation multi-appareils.</p>
+<h2 id="2-presentation-du-projet-novaskol">2. Présentation du projet Novaskol</h2>
+<h3 id="21-contexte-et-objectifs">2.1 Contexte et objectifs</h3>
+<p>Novaskol est un système de gestion scolaire complet conçu pour répondre aux besoins des établissements d'enseignement primaire, secondaire et technique. Le projet est né du constat que de nombreuses écoles, en particulier dans les zones à connectivité Internet limitée, ne disposent pas d'outils numériques adaptés à leur contexte.</p>
+<p>L'auteur du projet est <strong>Tojo Nambinina RANDRIAMIFALY</strong>, et le projet est publié sous licence MIT.</p>
+<p><strong>Objectifs principaux :</strong>
+1. Fournir un outil de gestion scolaire complet et accessible hors-ligne
+2. Simplifier le déploiement via une application de bureau autonome
+3. Permettre une synchronisation multi-appareils sur le réseau local
+4. Offrir une interface adaptée à chaque profil d'utilisateur
+5. Garantir la sécurité et l'intégrité des données
+6. Assurer la portabilité sur Windows 10/11</p>
+<h3 id="22-specifications-techniques">2.2 Spécifications techniques</h3>
+<table>
+<thead>
+<tr>
+<th>Specification</th>
+<th>Valeur</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Version</td>
+<td>1.0.6</td>
+</tr>
+<tr>
+<td>Backend</td>
+<td>Laravel 12.x (PHP 8.2+)</td>
+</tr>
+<tr>
+<td>Application de bureau</td>
+<td>Electron 37.2.1</td>
+</tr>
+<tr>
+<td>Base de donnees</td>
+<td>SQLite (defaut) / MySQL 8.0 / MariaDB</td>
+</tr>
+<tr>
+<td>Application mobile</td>
+<td>React 19 + Capacitor 8 (Android + PWA)</td>
+</tr>
+<tr>
+<td>Companion Desktop</td>
+<td>Electron 37 (Windows)</td>
+</tr>
+<tr>
+<td>Licence</td>
+<td>MIT</td>
+</tr>
+<tr>
+<td>Auteur</td>
+<td>Tojo Nambinina RANDRIAMIFALY</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Tableau II.1 : Spécifications techniques de Novaskol</strong></p>
+<h2 id="3-architecture-globale-du-systeme">3. Architecture globale du système</h2>
+<h3 id="31-vue-densemble">3.1 Vue d'ensemble</h3>
+<p>L'architecture de Novaskol est organisée en plusieurs couches interconnectées, formant un écosystème complet de gestion scolaire :</p>
+<p><strong>CODEBLOCK_6</strong></p>
+<p><strong>Figure II.1 : Architecture globale de Novaskol</strong></p>
+<h3 id="32-lapplication-de-bureau-electron-novaskol-desktop">3.2 L'application de bureau Electron (Novaskol Desktop)</h3>
+<p>L'application de bureau Novaskol est le composant central du système. Elle est construite avec Electron 37 et embarque l'ensemble des composants nécessaires à son fonctionnement autonome.</p>
+<h4 id="321-composants-embarques">3.2.1 Composants embarqués</h4>
+<ul>
+<li><strong>Serveur PHP portable</strong> (<code>tools/runtime/php/php.exe</code>) : PHP 8.2.0 avec les extensions suivantes activées : bz2, curl, gd, gettext, gmp, intl, imap, ldap, mbstring, exif, mysqli, openssl, pdo_mysql, pdo_sqlite, soap, sockets, sqlite3, xsl, zip</li>
+<li><strong>Serveur MySQL/MariaDB portable</strong> (<code>tools/runtime/mysql/bin/mysqld.exe</code>) : MySQL 8.0.31 pour les installations nécessitant une base de données robuste</li>
+<li><strong>Application Laravel complète</strong> avec toutes ses dépendances PHP (vendor)</li>
+<li><strong>Base de données SQLite</strong> par défaut, sans configuration</li>
+</ul>
+<h4 id="322-processus-de-demarrage">3.2.2 Processus de démarrage</h4>
+<p>Le processus de démarrage de l'application suit une séquence précise :</p>
+<ol>
+<li>L'utilisateur lance <code>Novaskol.exe</code></li>
+<li>Une fenêtre de démarrage (splash screen) s'affiche (460x360, frameless, thème sombre #080e18)</li>
+<li>Le processus principal Electron localise le binaire PHP (4 stratégies : ressources packagées, distribution source, développement, env vars)</li>
+<li>Le fichier <code>.env</code> est configuré automatiquement avec les paramètres de production (APP_ENV=local, APP_DEBUG=false, DB_CONNECTION=sqlite, SESSION_DRIVER=file)</li>
+<li>La clé d'application (APP_KEY) est générée si absente</li>
+<li>Si le dossier vendor est absent, Composer est exécuté pour installer les dépendances</li>
+<li>Les migrations de base de données sont exécutées (<code>php artisan migrate --force</code>)</li>
+<li>Le serveur PHP intégré est démarré (<code>php -S 0.0.0.0:8001 router.php</code>)</li>
+<li>L'application attend que le serveur HTTP réponde (ping jusqu'à 120 secondes)</li>
+<li>La fenêtre principale charge l'URL <code>http://127.0.0.1:8001</code></li>
+</ol>
+<p><strong>CODEBLOCK_7</strong></p>
+<p><strong>Figure II.2 : Processus de démarrage de l'application Electron</strong></p>
+<h4 id="323-communication-ipc-inter-process-communication">3.2.3 Communication IPC (Inter-Process Communication)</h4>
+<p>La communication entre le processus principal (Node.js) et le processus de rendu (Chromium) s'effectue via un pont IPC sécurisé utilisant <code>contextBridge</code> :</p>
+<p><strong>CODEBLOCK_8</strong></p>
+<p><strong>Handlers IPC côté main :</strong>
+- <code>desktop:get-meta</code> : Retourne les informations de version
+- <code>print</code> : Imprime la page courante
+- <code>print-html</code> : Imprime un contenu HTML personnalisé</p>
+<h4 id="324-gestion-du-cycle-de-vie">3.2.4 Gestion du cycle de vie</h4>
+<ul>
+<li><strong>Démarrage</strong> : Splash screen → Initialisation → Fenêtre principale</li>
+<li><strong>Fermeture</strong> : Boîte de confirmation "Voulez-vous vraiment quitter Novaskol ?" → Arrêt du serveur PHP → Nettoyage</li>
+<li><strong>Instance unique</strong> : Lock d'instance pour éviter les lancements multiples</li>
+</ul>
+<h3 id="33-la-synchronisation-multi-appareils">3.3 La synchronisation multi-appareils</h3>
+<p>Le système de synchronisation permet à plusieurs appareils de travailler sur les mêmes données via le réseau local. Il repose sur une architecture maître-esclave où l'appareil principal (Desktop Novaskol) sert de serveur central.</p>
+<h4 id="331-processus-dappairage">3.3.1 Processus d'appairage</h4>
+<ol>
+<li>L'appareil secondaire (mobile ou desktop) scanne un QR code ou saisit un code d'appairage</li>
+<li>Il ping le serveur principal via <code>/reseau-local/manifest-appareil</code></li>
+<li>Il envoie ses informations (UUID, type, plateforme, etc.)</li>
+<li>Le serveur vérifie le code et autorise la connexion</li>
+<li>Les données initiales sont transférées (bootstrap)</li>
+</ol>
+<h4 id="332-synchronisation-bidirectionnelle">3.3.2 Synchronisation bidirectionnelle</h4>
+<p>La synchronisation assure la cohérence des données entre tous les appareils connectés :</p>
+<ul>
+<li><strong>Push</strong> : L'appareil connecté envoie ses modifications locales au serveur principal</li>
+<li><strong>Pull</strong> : L'appareil connecté récupère les modifications des autres appareils</li>
+<li><strong>Intervalle</strong> : Synchronisation automatique toutes les 5 minutes (Connecte Desktop)</li>
+<li><strong>File d'attente</strong> : Les modifications sont mises en file d'attente en cas de déconnexion</li>
+</ul>
+<h4 id="333-gestion-des-conflits">3.3.3 Gestion des conflits</h4>
+<p>En cas de modification concurrente sur le même enregistrement, un mécanisme de résolution de conflits est déclenché :</p>
+<ol>
+<li>Les deux versions sont conservées (locale et entrante)</li>
+<li>Un ticket de conflit est créé dans la table <code>sync_conflicts</code></li>
+<li>L'administrateur peut résoudre le conflit manuellement</li>
+<li>La résolution choisie est propagée aux autres appareils</li>
+</ol>
+<h3 id="34-modes-de-deploiement">3.4 Modes de déploiement</h3>
+<table>
+<thead>
+<tr>
+<th>Mode</th>
+<th>Description</th>
+<th>Base de donnees</th>
+<th>Usage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Local (Desktop)</td>
+<td>Application autonome avec PHP embarque</td>
+<td>SQLite</td>
+<td>Ecole individuelle, hors-ligne</td>
+</tr>
+<tr>
+<td>Hebergement</td>
+<td>Serveur web Apache/Nginx classique</td>
+<td>MySQL/MariaDB</td>
+<td>Acces web permanent</td>
+</tr>
+<tr>
+<td>Hybride</td>
+<td>Desktop + Appareils connectes</td>
+<td>SQLite + Sync reseau</td>
+<td>Multi-poste local</td>
+</tr>
+</tbody>
+</table>
+<h2 id="4-technologies-et-outils-utilises">4. Technologies et outils utilisés</h2>
+<h3 id="41-backend">4.1 Backend</h3>
+<table>
+<thead>
+<tr>
+<th>Technologie</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PHP 8.2.0</td>
+<td>Langage de programmation serveur</td>
+</tr>
+<tr>
+<td>Laravel 12</td>
+<td>Framework d'application web MVC</td>
+</tr>
+<tr>
+<td>Composer 2.x</td>
+<td>Gestionnaire de dependances PHP</td>
+</tr>
+<tr>
+<td>barryvdh/laravel-dompdf ^2.3</td>
+<td>Generation de PDF (bulletins)</td>
+</tr>
+<tr>
+<td>phpoffice/phpspreadsheet ^5.7</td>
+<td>Manipulation de fichiers Excel</td>
+</tr>
+<tr>
+<td>chillerlan/php-qrcode ^5.0</td>
+<td>Generation de QR codes</td>
+</tr>
+<tr>
+<td>laravel/pint</td>
+<td>Correcteur de style de code</td>
+</tr>
+</tbody>
+</table>
+<h3 id="42-frontend">4.2 Frontend</h3>
+<table>
+<thead>
+<tr>
+<th>Technologie</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Blade</td>
+<td>Moteur de templates Laravel</td>
+</tr>
+<tr>
+<td>TailwindCSS 4</td>
+<td>Framework CSS utilitaire</td>
+</tr>
+<tr>
+<td>Vite 7</td>
+<td>Outil de build et bundler</td>
+</tr>
+<tr>
+<td>JavaScript (vanilla + jQuery 3.6)</td>
+<td>Interactivite client</td>
+</tr>
+<tr>
+<td>Chart.js 4</td>
+<td>Graphiques statistiques</td>
+</tr>
+<tr>
+<td>FullCalendar 6</td>
+<td>Calendrier interactif</td>
+</tr>
+<tr>
+<td>Font Awesome 6</td>
+<td>Icones</td>
+</tr>
+<tr>
+<td>SweetAlert2 11.x</td>
+<td>Boites de dialogue et notifications</td>
+</tr>
+<tr>
+<td>Axios</td>
+<td>Requetes HTTP</td>
+</tr>
+</tbody>
+</table>
+<h3 id="43-desktop">4.3 Desktop</h3>
+<table>
+<thead>
+<tr>
+<th>Technologie</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Electron 37.2.1</td>
+<td>Framework d'application de bureau</td>
+</tr>
+<tr>
+<td>electron-builder 26.0.12</td>
+<td>Packaging et creation d'installateur NSIS</td>
+</tr>
+<tr>
+<td>Node.js 22</td>
+<td>Environnement d'execution</td>
+</tr>
+</tbody>
+</table>
+<h3 id="44-mobile">4.4 Mobile</h3>
+<table>
+<thead>
+<tr>
+<th>Technologie</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>React 19</td>
+<td>Framework d'interface utilisateur</td>
+</tr>
+<tr>
+<td>Capacitor 8.3.3</td>
+<td>Pont natif pour applications mobiles</td>
+</tr>
+<tr>
+<td>Vite 8</td>
+<td>Outil de build</td>
+</tr>
+<tr>
+<td>Service Worker</td>
+<td>Cache hors-ligne PWA</td>
+</tr>
+</tbody>
+</table>
+<h2 id="5-architecture-detaillee-de-la-base-de-donnees">5. Architecture détaillée de la base de données</h2>
+<h3 id="51-presentation">5.1 Présentation</h3>
+<p>La base de données de Novaskol comprend environ 42 tables organisées en plusieurs domaines fonctionnels. Le système de migration de Laravel (33 migrations) permet de versionner et de déployer le schéma automatiquement.</p>
+<p>Le projet a été initialement développé avec MySQL (base legacy <code>bulletin_system</code>), puis migré vers Laravel avec support SQLite pour le mode hors-ligne. Les migrations couvrent la période de mai à juillet 2026.</p>
+<h3 id="52-liste-complete-des-tables">5.2 Liste complète des tables</h3>
+<p>Tableau II.2 : Liste complète des tables de la base de données</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Table</th>
+<th>Objectif</th>
+<th>Migree depuis legacy</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>utilisateurs</td>
+<td>Utilisateurs de l'application (admin, enseignant, staff, parent)</td>
+<td>Oui</td>
+</tr>
+<tr>
+<td>2</td>
+<td>sessions</td>
+<td>Sessions PHP/Laravel</td>
+<td>Non (Laravel)</td>
+</tr>
+<tr>
+<td>3</td>
+<td>cache</td>
+<td>Cache applicatif</td>
+<td>Non (Laravel)</td>
+</tr>
+<tr>
+<td>4</td>
+<td>cache_locks</td>
+<td>Verrouillage du cache</td>
+<td>Non (Laravel)</td>
+</tr>
+<tr>
+<td>5</td>
+<td>jobs</td>
+<td>Files d'attente de taches</td>
+<td>Non (Laravel)</td>
+</tr>
+<tr>
+<td>6</td>
+<td>job_batches</td>
+<td>Lots de travaux</td>
+<td>Non (Laravel)</td>
+</tr>
+<tr>
+<td>7</td>
+<td>failed_jobs</td>
+<td>Historique des echecs</td>
+<td>Non (Laravel)</td>
+</tr>
+<tr>
+<td>8</td>
+<td>ecole</td>
+<td>Informations sur l'etablissement</td>
+<td>Oui</td>
+</tr>
+<tr>
+<td>9</td>
+<td>parametres</td>
+<td>Parametres de configuration</td>
+<td>Oui</td>
+</tr>
+<tr>
+<td>10</td>
+<td>permissions</td>
+<td>Permissions d'acces aux modules</td>
+<td>Oui</td>
+</tr>
+<tr>
+<td>11</td>
+<td>classes</td>
+<td>Classes (nom, niveau)</td>
+<td>Oui</td>
+</tr>
+<tr>
+<td>12</td>
+<td>eleves</td>
+<td>Eleves inscrits</td>
+<td>Oui</td>
+</tr>
+<tr>
+<td>13</td>
+<td>matieres</td>
+<td>Matieres enseignees</td>
+<td>Oui</td>
+</tr>
+<tr>
+<td>14</td>
+<td>classe_matieres</td>
+<td>Association classe-matiere (coefficient)</td>
+<td>Oui</td>
+</tr>
+<tr>
+<td>15</td>
+<td>professeurs</td>
+<td>Enseignants</td>
+<td>Oui</td>
+</tr>
+<tr>
+<td>16</td>
+<td>professeurs_classes</td>
+<td>Affectation enseignant-classe-matiere</td>
+<td>Oui</td>
+</tr>
+<tr>
+<td>17</td>
+<td>notes</td>
+<td>Notes des eleves</td>
+<td>Oui</td>
+</tr>
+<tr>
+<td>18</td>
+<td>bulletins</td>
+<td>Bulletins de notes</td>
+<td>Oui</td>
+</tr>
+<tr>
+<td>19</td>
+<td>remarques</td>
+<td>Remarques/commentaires</td>
+<td>Oui</td>
+</tr>
+<tr>
+<td>20</td>
+<td>examen_blanc</td>
+<td>Examens blancs</td>
+<td>Oui</td>
+</tr>
+<tr>
+<td>21</td>
+<td>remarques_examen_blanc</td>
+<td>Remarques examens blancs</td>
+<td>Oui</td>
+</tr>
+<tr>
+<td>22</td>
+<td>emploi_du_temps</td>
+<td>Emploi du temps</td>
+<td>Oui</td>
+</tr>
+<tr>
+<td>23</td>
+<td>evenements</td>
+<td>Evenements du calendrier scolaire</td>
+<td>Oui</td>
+</tr>
+<tr>
+<td>24</td>
+<td>presence_eleves</td>
+<td>Presence des eleves</td>
+<td>Oui</td>
+</tr>
+<tr>
+<td>25</td>
+<td>parents</td>
+<td>Parents/tuteurs</td>
+<td>Oui</td>
+</tr>
+<tr>
+<td>26</td>
+<td>parent_eleves</td>
+<td>Lien parent-eleve</td>
+<td>Oui</td>
+</tr>
+<tr>
+<td>27</td>
+<td>enseignants</td>
+<td>Table enseignants alternative</td>
+<td>Oui</td>
+</tr>
+<tr>
+<td>28</td>
+<td>staff</td>
+<td>Personnel non enseignant</td>
+<td>Oui</td>
+</tr>
+<tr>
+<td>29</td>
+<td>departements</td>
+<td>Departements</td>
+<td>Oui</td>
+</tr>
+<tr>
+<td>30</td>
+<td>presence_personnels</td>
+<td>Presence du personnel</td>
+<td>Oui</td>
+</tr>
+<tr>
+<td>31</td>
+<td>presence_staff</td>
+<td>Presence du personnel (bis)</td>
+<td>Oui</td>
+</tr>
+<tr>
+<td>32</td>
+<td>conversations</td>
+<td>Conversations (privee/groupe)</td>
+<td>Oui</td>
+</tr>
+<tr>
+<td>33</td>
+<td>conversation_participants</td>
+<td>Participants aux conversations</td>
+<td>Oui</td>
+</tr>
+<tr>
+<td>34</td>
+<td>messages</td>
+<td>Messages</td>
+<td>Oui</td>
+</tr>
+<tr>
+<td>35</td>
+<td>message_reactions</td>
+<td>Reactions aux messages (emojis)</td>
+<td>Oui</td>
+</tr>
+<tr>
+<td>36</td>
+<td>notifications</td>
+<td>Notifications systeme</td>
+<td>Oui</td>
+</tr>
+<tr>
+<td>37</td>
+<td>types_paiements</td>
+<td>Types de paiement (frais scolaire)</td>
+<td>Oui</td>
+</tr>
+<tr>
+<td>38</td>
+<td>paiements</td>
+<td>Paiements effectues</td>
+<td>Oui</td>
+</tr>
+<tr>
+<td>39</td>
+<td>paiements_assignes</td>
+<td>Paiements assignes</td>
+<td>Oui</td>
+</tr>
+<tr>
+<td>40</td>
+<td>depenses</td>
+<td>Depenses</td>
+<td>Oui</td>
+</tr>
+<tr>
+<td>41</td>
+<td>revenus</td>
+<td>Revenus</td>
+<td>Oui</td>
+</tr>
+<tr>
+<td>42</td>
+<td>salaires_assignes</td>
+<td>Salaires du personnel</td>
+<td>Oui</td>
+</tr>
+<tr>
+<td>43</td>
+<td>roles</td>
+<td>Roles utilisateur</td>
+<td>Oui</td>
+</tr>
+<tr>
+<td>44</td>
+<td>dossiers</td>
+<td>Dossiers documentaires</td>
+<td>Oui</td>
+</tr>
+<tr>
+<td>45</td>
+<td>fichiers</td>
+<td>Fichiers dans les dossiers</td>
+<td>Oui</td>
+</tr>
+<tr>
+<td>46</td>
+<td>typing_status</td>
+<td>Indicateurs de saisie (chat)</td>
+<td>Oui</td>
+</tr>
+<tr>
+<td>47</td>
+<td>personnes</td>
+<td>Personnes generiques</td>
+<td>Oui</td>
+</tr>
+<tr>
+<td>48</td>
+<td>equipements</td>
+<td>Equipements / inventaire</td>
+<td>Oui</td>
+</tr>
+<tr>
+<td>49</td>
+<td>ressources</td>
+<td>Ressources</td>
+<td>Oui</td>
+</tr>
+<tr>
+<td>50</td>
+<td>salles</td>
+<td>Salles</td>
+<td>Oui</td>
+</tr>
+<tr>
+<td>51</td>
+<td>reservations</td>
+<td>Reservations de salles</td>
+<td>Oui</td>
+</tr>
+<tr>
+<td>52</td>
+<td>reservations_ressources</td>
+<td>Reservation-ressource pivot</td>
+<td>Oui</td>
+</tr>
+<tr>
+<td>53</td>
+<td>licence</td>
+<td>Licence logicielle</td>
+<td>Oui</td>
+</tr>
+<tr>
+<td>54</td>
+<td>mpiasa</td>
+<td>Employes (modele Malagasy)</td>
+<td>Oui</td>
+</tr>
+<tr>
+<td>55</td>
+<td>teacher_lessons</td>
+<td>Plans de cours des enseignants</td>
+<td>Non</td>
+</tr>
+<tr>
+<td>56</td>
+<td>teacher_tasks</td>
+<td>Taches des enseignants</td>
+<td>Non</td>
+</tr>
+<tr>
+<td>57</td>
+<td>sync_devices</td>
+<td>Appareils connectes</td>
+<td>Non</td>
+</tr>
+<tr>
+<td>58</td>
+<td>sync_batches</td>
+<td>Lots de synchronisation</td>
+<td>Non</td>
+</tr>
+<tr>
+<td>59</td>
+<td>sync_changes</td>
+<td>Modifications synchronisees</td>
+<td>Non</td>
+</tr>
+<tr>
+<td>60</td>
+<td>sync_conflicts</td>
+<td>Conflits de synchronisation</td>
+<td>Non</td>
+</tr>
+<tr>
+<td>61</td>
+<td>sync_record_keys</td>
+<td>Cles UUID synchronisees</td>
+<td>Non</td>
+</tr>
+<tr>
+<td>62</td>
+<td>retards_personnels</td>
+<td>Retards du personnel (legacy)</td>
+<td>Oui</td>
+</tr>
+<tr>
+<td>63</td>
+<td>users</td>
+<td>Utilisateurs Laravel (stock)</td>
+<td>Non</td>
+</tr>
+<tr>
+<td>64</td>
+<td>password_reset_tokens</td>
+<td>Jetons reset mot de passe</td>
+<td>Non</td>
+</tr>
+<tr>
+<td>65</td>
+<td>chat_typing_status</td>
+<td>Statut de saisie (legacy)</td>
+<td>Oui</td>
+</tr>
+</tbody>
+</table>
+<h3 id="53-dictionnaire-de-donnees-tables-principales">5.3 Dictionnaire de données (tables principales)</h3>
+<p><strong>Tableau II.3 : Dictionnaire des données (tables principales)</strong></p>
+<p><strong>Table eleves (eleves)</strong>
+| Champ | Type | Description |
+|---|---|---|
+| id | BIGINT PK | Identifiant unique |
+| prenom | VARCHAR(100) | Prenom de l'eleve |
+| nom | VARCHAR(100) | Nom de l'eleve |
+| date_naissance | DATE | Date de naissance |
+| lieu_naissance | VARCHAR(150) | Lieu de naissance |
+| adresse | VARCHAR(255) | Adresse de l'eleve |
+| numero_acte | VARCHAR(100) | Numero d'acte de naissance |
+| fonkotany | VARCHAR(150) | Fokontany d'origine |
+| commune | VARCHAR(150) | Commune d'origine |
+| ecole_ancienne | VARCHAR(150) | Ecole precedente |
+| nom_pere | VARCHAR(150) | Nom du pere |
+| nom_mere | VARCHAR(150) | Nom de la mere |
+| telephone | VARCHAR(50) | Telephone |
+| telephone_pere | VARCHAR(50) | Telephone du pere |
+| telephone_mere | VARCHAR(50) | Telephone de la mere |
+| profession_pere | VARCHAR(150) | Profession du pere |
+| profession_mere | VARCHAR(150) | Profession de la mere |
+| adresse_pere | VARCHAR(255) | Adresse du pere |
+| adresse_mere | VARCHAR(255) | Adresse de la mere |
+| id_classe | BIGINT FK | Classe de l'eleve |
+| matricule | VARCHAR(100) | Matricule unique |
+| annee_scolaire | VARCHAR(20) | Annee scolaire |
+| genre | ENUM('F','G') | Genre |
+| statut | ENUM('nouveau','passant','redoublant') | Statut |
+| photo | VARCHAR(255) | Photo d'identite |
+| qr_token | VARCHAR(100) | Token QR pour carte |</p>
+<p><strong>Table notes (notes)</strong>
+| Champ | Type | Description |
+|---|---|---|
+| id | BIGINT PK | Identifiant unique |
+| eleve_id | BIGINT FK | Eleve concerne |
+| matiere_id | BIGINT FK | Matiere |
+| professeur_id | BIGINT FK | Professeur |
+| valeur | FLOAT | Note (0-20) |
+| trimestre | INTEGER | Trimestre (1-3) |
+| annee_scolaire | VARCHAR(20) | Annee scolaire |
+| coefficient | FLOAT | Coefficient |
+| periode | VARCHAR(10) | Periode (B1, B2, T1, etc.) |
+| observation | TEXT | Observation |</p>
+<p><strong>Table bulletins (bulletins)</strong>
+| Champ | Type | Description |
+|---|---|---|
+| id | BIGINT PK | Identifiant unique |
+| id_eleve | BIGINT FK | Eleve |
+| trimestre | INTEGER | Trimestre |
+| moyenne | FLOAT | Moyenne generale |
+| mention | VARCHAR(100) | Mention obtenue |
+| appreciation | TEXT | Appreciation |
+| annee_scolaire | VARCHAR(20) | Annee scolaire |</p>
+<p><strong>Table professeurs (professeurs)</strong>
+| Champ | Type | Description |
+|---|---|---|
+| id | BIGINT PK | Identifiant unique |
+| nom | VARCHAR(100) | Nom |
+| prenom | VARCHAR(100) | Prenom |
+| email | VARCHAR(100) | Email (unique) |
+| telephone | VARCHAR(50) | Telephone |
+| specialisation | VARCHAR(100) | Specialisation |
+| matiere_id | BIGINT FK | Matiere principale |
+| salaire_horaire | DECIMAL(10,2) | Salaire horaire |
+| diplome_pedagogique | VARCHAR(100) | Diplome pedagogique |
+| autorisation_enseigner | VARCHAR(50) | Autorisation |
+| annees_experience | INTEGER | Annees d'experience |
+| statut | VARCHAR(50) | Statut (actif/inactif) |
+| photo | VARCHAR(255) | Photo |</p>
+<h3 id="54-relations-principales">5.4 Relations principales</h3>
+<p>Le diagramme ci-dessous illustre les relations entre les entités principales :</p>
+<ul>
+<li>Un <strong>Eleve</strong> appartient a une <strong>Classe</strong> (N:1 via <code>id_classe</code>)</li>
+<li>Une <strong>Classe</strong> a plusieurs <strong>Matieres</strong> (N:N via <code>classe_matieres</code> avec coefficient)</li>
+<li>Un <strong>Professeur</strong> enseigne dans plusieurs <strong>Classes</strong> et <strong>Matieres</strong> (N:N via <code>professeurs_classes</code>)</li>
+<li>Un <strong>Eleve</strong> a plusieurs <strong>Notes</strong> par matiere (1:N)</li>
+<li>Un <strong>Bulletin</strong> est lie a un <strong>Eleve</strong> et un trimestre (N:1)</li>
+<li>Un <strong>Parent</strong> est lie a plusieurs <strong>Eleves</strong> (N:N via <code>parent_eleves</code>)</li>
+<li>Un <strong>Message</strong> appartient a une <strong>Conversation</strong> (N:1)</li>
+<li>Un <strong>Paiement</strong> est lie a un <strong>Type de paiement</strong> (N:1)</li>
+<li>Un <strong>Professeur</strong> a des <strong>Lecons</strong> planifiees (1:N via <code>teacher_lessons</code>)</li>
+<li>Un <strong>Appareil</strong> connecte a une session de synchronisation (1:N via <code>sync_batches</code>)</li>
+</ul>
+<h3 id="55-systeme-de-synchronisation">5.5 Système de synchronisation</h3>
+<p>Les tables de synchronisation forment un système robuste de réplication de données :</p>
+<ul>
+<li><code>sync_devices</code> : Enregistre chaque appareil connecté avec son UUID unique, son type, sa plateforme, son adresse IP, et son statut d'autorisation</li>
+<li><code>sync_batches</code> : Regroupe les modifications par lot avec un statut (en_attente, en_cours, termine, erreur)</li>
+<li><code>sync_changes</code> : Stocke chaque modification avec la table concernée, l'UUID de l'enregistrement, l'opération (create, update, delete), et le payload JSON</li>
+<li><code>sync_conflicts</code> : Enregistre les conflits avec les versions locale et entrante pour résolution</li>
+<li><code>sync_record_keys</code> : Maintient une correspondance entre les IDs locaux et les UUIDs globaux</li>
+</ul>
+<h2 id="6-modules-et-fonctionnalites">6. Modules et fonctionnalités</h2>
+<p>Novaskol propose 45 modules fonctionnels répartis en 8 catégories. Chaque module est accessible via un middleware de permission spécifique (<code>module.access:{cle_module}</code>).</p>
+<h3 id="61-administration-generale">6.1 Administration generale</h3>
+<table>
+<thead>
+<tr>
+<th>Module</th>
+<th>Route</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Dashboard / Accueil</td>
+<td>/dashboard</td>
+<td>Tableau de bord avec statistiques, evenements, notifications</td>
+</tr>
+<tr>
+<td>Ecole</td>
+<td>/ecole</td>
+<td>Gestion des informations de l'etablissement (nom, logo)</td>
+</tr>
+<tr>
+<td>Parametres</td>
+<td>/parametres</td>
+<td>Configuration systeme, sauvegardes, diagnostic, guide</td>
+</tr>
+<tr>
+<td>Comptes utilisateurs</td>
+<td>/comptes-utilisateurs</td>
+<td>Gestion des comptes et profils</td>
+</tr>
+</tbody>
+</table>
+<h3 id="62-gestion-des-inscriptions">6.2 Gestion des inscriptions</h3>
+<table>
+<thead>
+<tr>
+<th>Module</th>
+<th>Route</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Inscription</td>
+<td>/inscription</td>
+<td>Enregistrement des eleves, import Excel, recherche</td>
+</tr>
+<tr>
+<td>Liste des classes</td>
+<td>/classes</td>
+<td>CRUD des classes, affectation des eleves</td>
+</tr>
+<tr>
+<td>Matieres</td>
+<td>/matieres</td>
+<td>Gestion des matieres, coefficients par classe</td>
+</tr>
+<tr>
+<td>Depot de dossier</td>
+<td>/depot-dossier</td>
+<td>Gestion des documents administratifs</td>
+</tr>
+</tbody>
+</table>
+<h3 id="63-gestion-pedagogique">6.3 Gestion pedagogique</h3>
+<table>
+<thead>
+<tr>
+<th>Module</th>
+<th>Route</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Notes</td>
+<td>/notes</td>
+<td>Saisie des notes par matiere et trimestre</td>
+</tr>
+<tr>
+<td>Bulletins</td>
+<td>/bulletin</td>
+<td>Generation de bulletins (individuel, classe, annuel)</td>
+</tr>
+<tr>
+<td>Resultats</td>
+<td>/resultats</td>
+<td>Consultation des resultats</td>
+</tr>
+<tr>
+<td>Examens blancs</td>
+<td>/examen-blanc</td>
+<td>Gestion des examens blancs</td>
+</tr>
+<tr>
+<td>Emploi du temps</td>
+<td>/emploi-du-temps</td>
+<td>Planification des cours par classe</td>
+</tr>
+<tr>
+<td>Presence eleves</td>
+<td>/presence-etudiant</td>
+<td>Suivi des presences par QR code</td>
+</tr>
+<tr>
+<td>Presence numerique</td>
+<td>/presence-etudiant/numerique</td>
+<td>Pointage numerique</td>
+</tr>
+<tr>
+<td>Calendrier</td>
+<td>/calendrier</td>
+<td>Calendrier des evenements scolaires</td>
+</tr>
+<tr>
+<td>Fiche de suivi</td>
+<td>/fpe</td>
+<td>Suivi pedagogique (FPE)</td>
+</tr>
+<tr>
+<td>Carte scolaire</td>
+<td>/cartes</td>
+<td>Generation de cartes avec QR code</td>
+</tr>
+<tr>
+<td>Assurance</td>
+<td>/liste-assurance</td>
+<td>Liste des eleves assures</td>
+</tr>
+<tr>
+<td>Espace enseignant</td>
+<td>/enseignant/espace</td>
+<td>Plans de cours, progressions</td>
+</tr>
+</tbody>
+</table>
+<h3 id="64-communication">6.4 Communication</h3>
+<table>
+<thead>
+<tr>
+<th>Module</th>
+<th>Route</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Messagerie generale</td>
+<td>/communication</td>
+<td>Chat general</td>
+</tr>
+<tr>
+<td>Messagerie privee</td>
+<td>/chat-prive</td>
+<td>Chat prive 1-1</td>
+</tr>
+<tr>
+<td>Messagerie groupe</td>
+<td>/chat-groupe</td>
+<td>Chat de groupe</td>
+</tr>
+<tr>
+<td>Notifications</td>
+<td>/notifications</td>
+<td>Notifications systeme</td>
+</tr>
+</tbody>
+</table>
+<h3 id="65-gestion-des-ressources-humaines">6.5 Gestion des ressources humaines</h3>
+<table>
+<thead>
+<tr>
+<th>Module</th>
+<th>Route</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Enseignants</td>
+<td>/enseignants</td>
+<td>Gestion des enseignants</td>
+</tr>
+<tr>
+<td>Personnels</td>
+<td>/staff</td>
+<td>Gestion du personnel non enseignant</td>
+</tr>
+<tr>
+<td>Presence personnels</td>
+<td>/presence</td>
+<td>Suivi des presences enseignants</td>
+</tr>
+<tr>
+<td>Presence staff</td>
+<td>/presence-staff</td>
+<td>Suivi des presences personnel</td>
+</tr>
+<tr>
+<td>Pointage unifie</td>
+<td>/pointage</td>
+<td>Pointage centralise par QR code</td>
+</tr>
+<tr>
+<td>Permissions</td>
+<td>/permissions</td>
+<td>Controle d'acces aux modules</td>
+</tr>
+<tr>
+<td>Gestion ressources</td>
+<td>/gestion-ressource</td>
+<td>Salles, equipements, ressources</td>
+</tr>
+</tbody>
+</table>
+<h3 id="66-gestion-financiere">6.6 Gestion financiere</h3>
+<table>
+<thead>
+<tr>
+<th>Module</th>
+<th>Route</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Types de paiement</td>
+<td>/detail-paiement/type</td>
+<td>Configuration frais de scolarite</td>
+</tr>
+<tr>
+<td>Comptabilite</td>
+<td>/comptable</td>
+<td>Enregistrement des paiements</td>
+</tr>
+<tr>
+<td>Liste des paiements</td>
+<td>/liste-paiements</td>
+<td>Consultation des transactions</td>
+</tr>
+<tr>
+<td>Factures</td>
+<td>/facture</td>
+<td>Generation de factures et recus</td>
+</tr>
+<tr>
+<td>Depenses</td>
+<td>(dans comptable)</td>
+<td>Gestion des depenses</td>
+</tr>
+<tr>
+<td>Rapports comptables</td>
+<td>/rapport-comptable</td>
+<td>Etats financiers</td>
+</tr>
+<tr>
+<td>Salaires</td>
+<td>/detail-paiement/salaires</td>
+<td>Gestion des salaires</td>
+</tr>
+</tbody>
+</table>
+<h3 id="67-portail-parents">6.7 Portail parents</h3>
+<table>
+<thead>
+<tr>
+<th>Module</th>
+<th>Route</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Espace parent</td>
+<td>/parent/espace</td>
+<td>Suivi resultats, presence, paiements</td>
+</tr>
+<tr>
+<td>Communication parent</td>
+<td>/parent/responsable-chat</td>
+<td>Chat avec les enseignants</td>
+</tr>
+</tbody>
+</table>
+<h3 id="68-systeme">6.8 Systeme</h3>
+<table>
+<thead>
+<tr>
+<th>Module</th>
+<th>Route</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Diagnostics</td>
+<td>/diagnostic-systeme</td>
+<td>Verification etat du systeme</td>
+</tr>
+<tr>
+<td>Sauvegardes</td>
+<td>/sauvegardes</td>
+<td>Creation, telechargement, restauration</td>
+</tr>
+<tr>
+<td>Reseau local</td>
+<td>/reseau-local</td>
+<td>Appairage, synchronisation</td>
+</tr>
+<tr>
+<td>Guide d'utilisation</td>
+<td>/guide-utilisation</td>
+<td>Aide integree</td>
+</tr>
+<tr>
+<td>A propos</td>
+<td>/apropos-novaskol</td>
+<td>Informations version</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Tableau II.4 : Liste des 45 modules fonctionnels</strong></p>
+<h2 id="7-conclusion">7. Conclusion</h2>
+<p>Ce chapitre a présenté l'architecture globale et les composants de Novaskol. Le système combine un backend Laravel robuste, une application de bureau Electron autonome embarquant PHP et SQLite, et deux applications companion (mobile React/Capacitor et desktop Electron). Avec 45 modules fonctionnels couvrant 8 domaines et une base de données de 42 tables, Novaskol offre une couverture complète des besoins de gestion d'un établissement scolaire. Le mécanisme de synchronisation multi-appareils permet un travail collaboratif sur le réseau local, sans dépendance Internet.</p>
+<p>Le chapitre suivant détaille la phase d'analyse et de conception du système à l'aide du langage UML.</p>
+<hr />
+<h1 id="chapitre-iii-analyse-et-conception">Chapitre III : Analyse et conception</h1>
+<h2 id="1-introduction_2">1. Introduction</h2>
+<p>Ce chapitre est consacré à l'analyse et à la conception du système Novaskol à l'aide du langage de modélisation UML (Unified Modeling Language). Nous présentons successivement l'analyse des besoins, l'identification des acteurs, les diagrammes de cas d'utilisation, les diagrammes de séquence, les diagrammes d'activité, et le modèle conceptuel de données.</p>
+<p>La démarche de modélisation adoptée suit les étapes classiques de l'ingénierie des systèmes d'information :</p>
+<ol>
+<li>Recueil et analyse des besoins</li>
+<li>Identification des acteurs et des cas d'utilisation</li>
+<li>Modélisation dynamique (diagrammes de séquence et d'activité)</li>
+<li>Modélisation statique (diagramme de classes)</li>
+</ol>
+<p><strong>CODEBLOCK_9</strong></p>
+<p><strong>Figure III.1 : Démarche de modélisation de l'application</strong></p>
+<h2 id="2-analyse-des-besoins">2. Analyse des besoins</h2>
+<h3 id="21-besoins-fonctionnels">2.1 Besoins fonctionnels</h3>
+<p>Les besoins fonctionnels définissent les fonctionnalités que le système doit offrir. Pour Novaskol, nous avons identifié 16 besoins fonctionnels principaux :</p>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Besoin</th>
+<th>Description</th>
+<th>Module concerne</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>BF01</td>
+<td>Authentification</td>
+<td>Le systeme doit permettre aux utilisateurs de s'authentifier avec email, mot de passe et role</td>
+<td>Auth</td>
+</tr>
+<tr>
+<td>BF02</td>
+<td>Gestion des profils</td>
+<td>Chaque utilisateur dispose d'un profil avec des permissions specifiques</td>
+<td>Comptes</td>
+</tr>
+<tr>
+<td>BF03</td>
+<td>Gestion des eleves</td>
+<td>Inscription, modification, consultation et suppression des eleves</td>
+<td>Inscription</td>
+</tr>
+<tr>
+<td>BF04</td>
+<td>Gestion des classes</td>
+<td>Creation, modification et organisation des classes</td>
+<td>Classes</td>
+</tr>
+<tr>
+<td>BF05</td>
+<td>Gestion des matieres</td>
+<td>Definition des matieres et de leurs coefficients par classe</td>
+<td>Matieres</td>
+</tr>
+<tr>
+<td>BF06</td>
+<td>Saisie des notes</td>
+<td>Les enseignants peuvent saisir les notes des eleves</td>
+<td>Notes</td>
+</tr>
+<tr>
+<td>BF07</td>
+<td>Generation de bulletins</td>
+<td>Generation automatique des bulletins avec calcul des moyennes</td>
+<td>Bulletin</td>
+</tr>
+<tr>
+<td>BF08</td>
+<td>Emploi du temps</td>
+<td>Planification et affichage des emplois du temps</td>
+<td>Emploi du temps</td>
+</tr>
+<tr>
+<td>BF09</td>
+<td>Suivi des presences</td>
+<td>Suivi des presences par QR code ou manuellement</td>
+<td>Presence</td>
+</tr>
+<tr>
+<td>BF10</td>
+<td>Communication</td>
+<td>Messagerie interne entre utilisateurs</td>
+<td>Communication</td>
+</tr>
+<tr>
+<td>BF11</td>
+<td>Gestion financiere</td>
+<td>Suivi des paiements, depenses et revenus</td>
+<td>Comptable</td>
+</tr>
+<tr>
+<td>BF12</td>
+<td>Gestion RH</td>
+<td>Gestion des enseignants et du personnel</td>
+<td>RH</td>
+</tr>
+<tr>
+<td>BF13</td>
+<td>Calendrier</td>
+<td>Gestion des evenements scolaires</td>
+<td>Calendrier</td>
+</tr>
+<tr>
+<td>BF14</td>
+<td>Sauvegardes</td>
+<td>Sauvegarde et restauration de la base de donnees</td>
+<td>Sauvegardes</td>
+</tr>
+<tr>
+<td>BF15</td>
+<td>Synchronisation</td>
+<td>Synchronisation multi-appareils sur reseau local</td>
+<td>Reseau local</td>
+</tr>
+<tr>
+<td>BF16</td>
+<td>Rapports</td>
+<td>Generation de rapports (presences, notes, finances)</td>
+<td>Rapports</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Tableau III.1 : Besoins fonctionnels détaillés</strong></p>
+<h3 id="22-besoins-non-fonctionnels">2.2 Besoins non fonctionnels</h3>
+<p>Les besoins non fonctionnels définissent les contraintes et qualités du système :</p>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Besoin</th>
+<th>Description</th>
+<th>Priorite</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>BNF01</td>
+<td>Hors-ligne</td>
+<td>L'application doit fonctionner sans connexion Internet</td>
+<td>Haute</td>
+</tr>
+<tr>
+<td>BNF02</td>
+<td>Performance</td>
+<td>Les temps de reponse doivent etre &lt; 2 secondes</td>
+<td>Haute</td>
+</tr>
+<tr>
+<td>BNF03</td>
+<td>Securite</td>
+<td>Mots de passe haches (bcrypt), acces controles par module</td>
+<td>Haute</td>
+</tr>
+<tr>
+<td>BNF04</td>
+<td>Portabilite</td>
+<td>Fonctionnement sur Windows 10/11 64-bit</td>
+<td>Haute</td>
+</tr>
+<tr>
+<td>BNF05</td>
+<td>Evolutivite</td>
+<td>Architecture permettant l'ajout de nouveaux modules</td>
+<td>Moyenne</td>
+</tr>
+<tr>
+<td>BNF06</td>
+<td>Maintenabilite</td>
+<td>Code structure, utilise des standards (MVC, PSR-4)</td>
+<td>Moyenne</td>
+</tr>
+<tr>
+<td>BNF07</td>
+<td>Sauvegarde automatique</td>
+<td>Sauvegarde facile de la base de donnees (fichier unique)</td>
+<td>Haute</td>
+</tr>
+<tr>
+<td>BNF08</td>
+<td>Interface intuitive</td>
+<td>Interface accessible aux utilisateurs non techniques</td>
+<td>Haute</td>
+</tr>
+<tr>
+<td>BNF09</td>
+<td>Multilingue</td>
+<td>Support de plusieurs langues (6 langues)</td>
+<td>Basse</td>
+</tr>
+<tr>
+<td>BNF10</td>
+<td>Securite des acces</td>
+<td>Permissions modulables par utilisateur</td>
+<td>Haute</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Tableau III.2 : Besoins non fonctionnels</strong></p>
+<h2 id="3-identification-des-acteurs">3. Identification des acteurs</h2>
+<p>Un acteur est une entité (personne ou système) qui interagit avec le système. Pour Novaskol, nous avons identifié 7 acteurs principaux :</p>
+<table>
+<thead>
+<tr>
+<th>Acteur</th>
+<th>Description</th>
+<th>Cas d'utilisation principaux</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Administrateur</td>
+<td>Gere l'ensemble du systeme, les utilisateurs, les permissions</td>
+<td>Gestion complete du systeme</td>
+</tr>
+<tr>
+<td>Enseignant</td>
+<td>Saisit les notes, gere les presences, planifie les cours</td>
+<td>Saisie notes, presence, cours</td>
+</tr>
+<tr>
+<td>Eleve</td>
+<td>Consulte ses notes, son emploi du temps, ses presences</td>
+<td>Consultation</td>
+</tr>
+<tr>
+<td>Parent</td>
+<td>Consulte les resultats et la presence de ses enfants</td>
+<td>Consultation, communication</td>
+</tr>
+<tr>
+<td>Agent de scolarite</td>
+<td>Gere les inscriptions, les dossiers, les paiements</td>
+<td>Inscription, paiements</td>
+</tr>
+<tr>
+<td>Chef d'etablissement</td>
+<td>Supervise l'ensemble, consulte les rapports</td>
+<td>Rapports, supervision</td>
+</tr>
+<tr>
+<td>Personnel (staff)</td>
+<td>Gere les ressources, la logistique</td>
+<td>RH, ressources</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Tableau III.3 : Identification des acteurs</strong></p>
+<h3 id="31-correspondance-acteurs-taches">3.1 Correspondance acteurs-tâches</h3>
+<table>
+<thead>
+<tr>
+<th>Tache</th>
+<th>Admin</th>
+<th>Enseignant</th>
+<th>Eleve</th>
+<th>Parent</th>
+<th>Scolarite</th>
+<th>Chef</th>
+<th>Staff</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Authentification</td>
+<td>X</td>
+<td>X</td>
+<td>X</td>
+<td>X</td>
+<td>X</td>
+<td>X</td>
+<td>X</td>
+</tr>
+<tr>
+<td>Gestion eleves</td>
+<td>X</td>
+<td></td>
+<td></td>
+<td></td>
+<td>X</td>
+<td>X</td>
+<td></td>
+</tr>
+<tr>
+<td>Saisie notes</td>
+<td></td>
+<td>X</td>
+<td></td>
+<td></td>
+<td></td>
+<td>X</td>
+<td></td>
+</tr>
+<tr>
+<td>Consultation notes</td>
+<td>X</td>
+<td>X</td>
+<td>X</td>
+<td>X</td>
+<td>X</td>
+<td>X</td>
+<td>X</td>
+</tr>
+<tr>
+<td>Bulletins</td>
+<td>X</td>
+<td>X</td>
+<td></td>
+<td>X</td>
+<td>X</td>
+<td>X</td>
+<td></td>
+</tr>
+<tr>
+<td>Emploi du temps</td>
+<td>X</td>
+<td>X</td>
+<td>X</td>
+<td>X</td>
+<td>X</td>
+<td>X</td>
+<td></td>
+</tr>
+<tr>
+<td>Presence eleves</td>
+<td>X</td>
+<td>X</td>
+<td></td>
+<td>X</td>
+<td></td>
+<td>X</td>
+<td></td>
+</tr>
+<tr>
+<td>Communication</td>
+<td>X</td>
+<td>X</td>
+<td>X</td>
+<td>X</td>
+<td>X</td>
+<td>X</td>
+<td>X</td>
+</tr>
+<tr>
+<td>Paiements</td>
+<td>X</td>
+<td></td>
+<td></td>
+<td>X</td>
+<td>X</td>
+<td>X</td>
+<td></td>
+</tr>
+<tr>
+<td>Gestion RH</td>
+<td>X</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td>X</td>
+<td></td>
+</tr>
+<tr>
+<td>Rapports</td>
+<td>X</td>
+<td></td>
+<td></td>
+<td></td>
+<td>X</td>
+<td>X</td>
+<td></td>
+</tr>
+<tr>
+<td>Parametres</td>
+<td>X</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Synchronisation</td>
+<td>X</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Tableau III.4 : Correspondance acteurs-tâches</strong></p>
+<h2 id="4-diagrammes-de-cas-dutilisation">4. Diagrammes de cas d'utilisation</h2>
+<h3 id="41-diagramme-de-contexte">4.1 Diagramme de contexte</h3>
+<p>Le diagramme de contexte présente une vue d'ensemble du système et de ses interactions avec les acteurs externes :</p>
+<p><strong>CODEBLOCK_10</strong></p>
+<p><strong>Figure III.2 : Diagramme de contexte</strong></p>
+<h3 id="42-diagramme-de-cas-dutilisation-global">4.2 Diagramme de cas d'utilisation global</h3>
+<p>Le diagramme de cas d'utilisation global présente l'ensemble des fonctionnalités du système vues par les différents acteurs, avec leurs relations d'inclusion et d'extension.</p>
+<p><strong>Cas d'utilisation pour l'Administrateur :</strong>
+- Gerer l'etablissement (informations, configuration)
+- Gerer les utilisateurs (creation, modification, permissions)
+- Gerer la base de donnees (sauvegardes, restauration)
+- Configurer les parametres systeme
+- Acceder au diagnostic systeme
+- Gerer la synchronisation reseau
+- Consulter les rapports
+- Gerer les modules (activation/desactivation)</p>
+<p><strong>Cas d'utilisation pour l'Enseignant :</strong>
+- S'authentifier
+- Consulter son emploi du temps
+- Saisir les notes des eleves
+- Consulter les resultats
+- Gerer les presences des eleves (QR code / manuel)
+- Planifier les cours (lecons, taches)
+- Communiquer via la messagerie
+- Consulter le calendrier
+- Generer des bulletins
+- Gerer les examens blancs</p>
+<p><strong>Cas d'utilisation pour le Parent :</strong>
+- S'authentifier (via un portail dedie)
+- Consulter les notes de son enfant
+- Consulter les presences de son enfant
+- Consulter les bulletins
+- Communiquer avec les enseignants
+- Consulter les paiements</p>
+<p><strong>Cas d'utilisation pour l'Agent de scolarite :</strong>
+- Gerer les inscriptions
+- Gerer les dossiers documentaires
+- Gerer les paiements
+- Consulter les statistiques</p>
+<p><strong>Cas d'utilisation pour le Personnel (Staff) :</strong>
+- Pointer sa presence (QR code)
+- Gerer les ressources
+- Gerer les salles et equipements</p>
+<h3 id="43-diagramme-de-cas-dutilisation-authentification">4.3 Diagramme de cas d'utilisation - Authentification</h3>
+<p><strong>CODEBLOCK_11</strong></p>
+<p><strong>Figure III.3 : Diagramme de cas d'utilisation - Authentification</strong></p>
+<h3 id="44-diagramme-de-cas-dutilisation-saisie-des-notes">4.4 Diagramme de cas d'utilisation - Saisie des notes</h3>
+<p><strong>CODEBLOCK_12</strong></p>
+<p><strong>Figure III.4 : Diagramme de cas d'utilisation - Saisie des notes</strong></p>
+<h2 id="5-diagrammes-de-sequence">5. Diagrammes de séquence</h2>
+<p>Les diagrammes de séquence illustrent les interactions entre les objets du système au cours du temps. Ils montrent l'ordre des messages échangés.</p>
+<h3 id="51-diagramme-de-sequence-authentification">5.1 Diagramme de séquence - Authentification</h3>
+<p>Le diagramme suivant illustre le processus d'authentification d'un utilisateur dans Novaskol :</p>
+<p><strong>CODEBLOCK_13</strong></p>
+<p><strong>Figure III.5 : Diagramme de séquence - Authentification</strong></p>
+<p><strong>Scénario nominal :</strong>
+1. L'utilisateur saisit ses identifiants (email, mot de passe, rôle)
+2. Le contrôleur interroge la base de données pour trouver l'utilisateur
+3. Le mot de passe est vérifié avec <code>Hash::check()</code>
+4. Si valide, une session est créée avec les informations utilisateur
+5. Les permissions sont chargées depuis la table <code>permissions</code>
+6. L'utilisateur est redirigé vers le tableau de bord</p>
+<p><strong>Scénario d'échec :</strong>
+1. Identifiants invalides → message d'erreur
+2. Compte inactif → message d'accès refusé</p>
+<h3 id="52-diagramme-de-sequence-saisie-des-notes">5.2 Diagramme de séquence - Saisie des notes</h3>
+<p><strong>CODEBLOCK_14</strong></p>
+<p><strong>Figure III.6 : Diagramme de séquence - Saisie des notes</strong></p>
+<p><strong>Scénario nominal :</strong>
+1. L'enseignant sélectionne une classe, une matière et un trimestre
+2. Le système charge la liste des élèves de cette classe
+3. L'enseignant saisit les notes pour chaque élève
+4. Les notes sont validées (bornes 0-20, format numérique)
+5. Les notes sont enregistrées dans la base de données
+6. Une confirmation est affichée</p>
+<h3 id="53-diagramme-de-sequence-generation-de-bulletin">5.3 Diagramme de séquence - Génération de bulletin</h3>
+<p><strong>CODEBLOCK_15</strong></p>
+<p><strong>Figure III.7 : Diagramme de séquence - Génération de bulletin</strong></p>
+<p><strong>Algorithme de calcul du bulletin :</strong>
+1. Récupération de toutes les notes de l'élève pour le trimestre
+2. Calcul de la moyenne par matière (somme des notes × coefficient / somme des coefficients)
+3. Calcul de la moyenne générale (somme des moyennes pondérées / somme des coefficients)
+4. Calcul du rang (classement des élèves par moyenne générale)
+5. Détermination de la mention en fonction de la moyenne
+6. Génération du bulletin en HTML, puis export PDF via DOMPDF</p>
+<h3 id="54-diagramme-de-sequence-synchronisation">5.4 Diagramme de séquence - Synchronisation</h3>
+<p><strong>CODEBLOCK_16</strong></p>
+<p><strong>Figure III.8 : Diagramme de séquence - Synchronisation</strong></p>
+<h2 id="6-diagrammes-dactivite">6. Diagrammes d'activité</h2>
+<p>Les diagrammes d'activité modélisent les flux de contrôle et de données d'un processus.</p>
+<h3 id="61-diagramme-dactivite-authentification">6.1 Diagramme d'activité - Authentification</h3>
+<p><strong>CODEBLOCK_17</strong></p>
+<p><strong>Figure III.9 : Diagramme d'activité - Authentification</strong></p>
+<h3 id="62-diagramme-dactivite-saisie-des-notes">6.2 Diagramme d'activité - Saisie des notes</h3>
+<p><strong>CODEBLOCK_18</strong></p>
+<p><strong>Figure III.10 : Diagramme d'activité - Saisie des notes</strong></p>
+<h2 id="7-modele-conceptuel-de-donnees">7. Modèle conceptuel de données</h2>
+<h3 id="71-diagramme-de-classe-global">7.1 Diagramme de classe global</h3>
+<p>Le diagramme de classe présente les principales entités du système et leurs relations. Il constitue le modèle conceptuel de données (MCD) sur lequel repose l'ensemble de l'application.</p>
+<p><strong>Entités principales :</strong></p>
+<ol>
+<li><strong>Ecole</strong> : représente l'établissement scolaire (nom, logo)</li>
+<li><strong>Classe</strong> : groupe d'eleves avec un niveau (nom, niveau)</li>
+<li><strong>Eleve</strong> : apprenant inscrit dans une classe (matricule, nom, prenom, date_naissance, etc.)</li>
+<li><strong>Professeur</strong> : enseignant (nom, prenom, email, specialisation, diplome)</li>
+<li><strong>Matiere</strong> : discipline enseignee avec coefficient (nom, code)</li>
+<li><strong>Note</strong> : evaluation d'un eleve dans une matiere (valeur, trimestre, coefficient)</li>
+<li><strong>Bulletin</strong> : releve de notes periodique (moyenne, mention, appreciation)</li>
+<li><strong>PresenceEleve</strong> : enregistrement d'assiduite (date, session, statut)</li>
+<li><strong>EmploiDuTemps</strong> : planification des cours (jour, heure_debut, heure_fin)</li>
+<li><strong>Parent</strong> : representant legal de l'eleve (nom, prenom, lien)</li>
+<li><strong>Utilisateur</strong> : personne ayant acces au systeme (email, mot_de_passe, role)</li>
+<li><strong>Permission</strong> : droit d'acces a un module (module, acces)</li>
+<li><strong>Paiement</strong> : transaction financiere (montant, mois, statut)</li>
+<li><strong>Message</strong> : communication entre utilisateurs (contenu, type, fichier)</li>
+<li><strong>Conversation</strong> : groupe de discussion (type, nom)</li>
+<li><strong>Evenement</strong> : evenement du calendrier scolaire (titre, date_debut, date_fin)</li>
+<li><strong>Enseignant</strong> : variante legacy de professeur</li>
+<li><strong>Staff</strong> : personnel non enseignant (poste, salaire_base)</li>
+<li><strong>Departement</strong> : unite organisationnelle</li>
+<li><strong>SyncDevice</strong> : appareil connecte pour synchronisation</li>
+</ol>
+<h3 id="72-relations-principales">7.2 Relations principales</h3>
+<p>Les relations entre ces entités sont les suivantes :</p>
+<ul>
+<li><strong>Ecole</strong> 1 --- N <strong>Classe</strong> : Un établissement a plusieurs classes</li>
+<li><strong>Classe</strong> 1 --- N <strong>Eleve</strong> : Une classe contient plusieurs élèves</li>
+<li><strong>Classe</strong> N --- N <strong>Matiere</strong> (via <strong>ClasseMatiere</strong>) : Une classe étudie plusieurs matières, avec des coefficients</li>
+<li><strong>Professeur</strong> N --- N <strong>Classe</strong> (via <strong>ProfesseurClasse</strong>) : Un professeur enseigne dans plusieurs classes</li>
+<li><strong>Matiere</strong> N --- N <strong>ProfesseurClasse</strong> : Une matière est enseignée par plusieurs professeurs</li>
+<li><strong>Eleve</strong> 1 --- N <strong>Note</strong> : Un élève a plusieurs notes</li>
+<li><strong>Note</strong> N --- 1 <strong>Matiere</strong> : Une note concerne une matière</li>
+<li><strong>Note</strong> N --- 1 <strong>Professeur</strong> : Une note est attribuée par un professeur</li>
+<li><strong>Eleve</strong> 1 --- N <strong>Bulletin</strong> : Un élève reçoit un bulletin par trimestre</li>
+<li><strong>Eleve</strong> 1 --- N <strong>PresenceEleve</strong> : Un élève a plusieurs présences</li>
+<li><strong>Parent</strong> N --- N <strong>Eleve</strong> (via <strong>ParentEleve</strong>) : Un parent peut avoir plusieurs enfants</li>
+<li><strong>Parent</strong> N --- 1 <strong>Utilisateur</strong> : Un parent est lié à un compte utilisateur</li>
+<li><strong>Utilisateur</strong> 1 --- N <strong>Permission</strong> : Un utilisateur a plusieurs permissions</li>
+<li><strong>Conversation</strong> N --- N <strong>Participant</strong> : Une conversation implique plusieurs participants</li>
+<li><strong>Conversation</strong> 1 --- N <strong>Message</strong> : Une conversation contient plusieurs messages</li>
+<li><strong>Message</strong> 1 --- N <strong>MessageReaction</strong> : Un message peut avoir plusieurs réactions</li>
+<li><strong>Eleve</strong> 1 --- N <strong>Paiement</strong> : Un élève effectue plusieurs paiements</li>
+<li><strong>TypePaiement</strong> 1 --- N <strong>Paiement</strong> : Un type de paiement correspond à plusieurs transactions</li>
+<li><strong>Utilisateur</strong> 1 --- N <strong>Notification</strong> : Un utilisateur reçoit plusieurs notifications</li>
+<li><strong>Professeur</strong> 1 --- N <strong>TeacherLesson</strong> : Un professeur planifie plusieurs leçons</li>
+<li><strong>SyncDevice</strong> 1 --- N <strong>SyncBatch</strong> : Un appareil génère plusieurs lots de sync</li>
+</ul>
+<h3 id="73-schema-relationnel-simplifie">7.3 Schéma relationnel simplifié</h3>
+<p><strong>CODEBLOCK_19</strong></p>
+<p><strong>Figure III.11 : Schéma relationnel simplifié</strong></p>
+<h2 id="8-conclusion">8. Conclusion</h2>
+<p>Ce chapitre a présenté l'analyse et la conception du système Novaskol en utilisant le langage UML. Nous avons identifié 16 besoins fonctionnels et 10 besoins non fonctionnels, défini 7 acteurs avec leurs cas d'utilisation, modélisé les interactions dynamiques via des diagrammes de séquence et d'activité, et établi le modèle conceptuel de données avec toutes les entités et leurs relations. Cette modélisation constitue le socle sur lequel s'appuie la phase de réalisation présentée dans le chapitre suivant.</p>
+<hr />
+<h1 id="chapitre-iv-realisation">Chapitre IV : Réalisation</h1>
+<h2 id="1-introduction_3">1. Introduction</h2>
+<p>Ce chapitre présente la phase de réalisation de Novaskol. Nous décrivons en détail l'environnement de développement, l'implémentation du backend Laravel avec ses contrôleurs, services et middlewares, le frontend avec ses vues Blade et son design responsive, l'application de bureau Electron avec son processus de démarrage complet, les applications companion (mobile React/Capacitor et desktop Electron), le processus de packaging et de déploiement, et les interfaces principales de l'application.</p>
+<h2 id="2-environnement-de-developpement">2. Environnement de développement</h2>
+<h3 id="21-outils-de-developpement">2.1 Outils de développement</h3>
+<p>Le développement de Novaskol a été réalisé avec les outils suivants :</p>
+<table>
+<thead>
+<tr>
+<th>Outil</th>
+<th>Version</th>
+<th>Utilisation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Visual Studio Code</td>
+<td>Derniere</td>
+<td>Editeur de code principal</td>
+</tr>
+<tr>
+<td>PHP</td>
+<td>8.2.0</td>
+<td>Langage serveur</td>
+</tr>
+<tr>
+<td>Composer</td>
+<td>2.x</td>
+<td>Gestionnaire de dependances PHP</td>
+</tr>
+<tr>
+<td>Node.js</td>
+<td>22.x</td>
+<td>Execution JavaScript</td>
+</tr>
+<tr>
+<td>npm</td>
+<td>10.x</td>
+<td>Gestionnaire de paquets</td>
+</tr>
+<tr>
+<td>Git</td>
+<td>2.x</td>
+<td>Controle de version</td>
+</tr>
+<tr>
+<td>WampServer</td>
+<td>3.x</td>
+<td>Environnement PHP local (dev)</td>
+</tr>
+<tr>
+<td>Electron</td>
+<td>37.2.1</td>
+<td>Framework desktop</td>
+</tr>
+<tr>
+<td>electron-builder</td>
+<td>26.0.12</td>
+<td>Packaging d'installateur</td>
+</tr>
+<tr>
+<td>Laravel Pint</td>
+<td>Derniere</td>
+<td>Correcteur de style</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Tableau IV.1 : Outils de développement</strong></p>
+<h3 id="22-structure-du-projet">2.2 Structure du projet</h3>
+<p>L'arborescence complète du projet Novaskol est la suivante :</p>
+<p><strong>CODEBLOCK_20</strong></p>
+<p><strong>Tableau IV.2 : Arborescence complète du projet</strong></p>
+<h3 id="23-processus-de-developpement">2.3 Processus de développement</h3>
+<p>Le développement a suivi une approche itérative avec des cycles de 2 semaines :</p>
+<ol>
+<li><strong>Phase d'analyse</strong> : Recueil des besoins, specifications</li>
+<li><strong>Phase de conception</strong> : Modelisation UML, architecture technique</li>
+<li><strong>Phase d'implementation</strong> : Codage des modules fonctionnels</li>
+<li><strong>Phase de test</strong> : Tests unitaires, tests d'integration</li>
+<li><strong>Phase de validation</strong> : Tests utilisateurs, corrections</li>
+<li><strong>Phase de packaging</strong> : Build, deploiement, documentation</li>
+</ol>
+<h2 id="3-implementation-du-backend-laravel">3. Implémentation du backend Laravel</h2>
+<h3 id="31-architecture-des-controleurs">3.1 Architecture des contrôleurs</h3>
+<p>Les contrôleurs sont organisés par domaine fonctionnel. Novaskol compte 30 fichiers de contrôleurs répartis comme suit :</p>
+<p><strong>CODEBLOCK_21</strong></p>
+<p><strong>Tableau IV.3 : Liste des contrôleurs</strong></p>
+<h3 id="32-systeme-dauthentification">3.2 Système d'authentification</h3>
+<p>Le système d'authentification est basé sur les sessions PHP et la table <code>utilisateurs</code>. Contrairement à l'authentification Laravel standard (scaffold Breeze/Jetstream), Novaskol utilise un système personnalisé développé spécifiquement pour le projet.</p>
+<p><strong>Processus d'authentification :</strong></p>
+<ol>
+<li>L'utilisateur soumet le formulaire de connexion avec email, mot de passe et rôle</li>
+<li>Le contrôleur interroge la table <code>utilisateurs</code> avec l'email et le rôle fournis</li>
+<li>Le mot de passe est vérifié à l'aide de <code>Hash::check()</code></li>
+<li>Si les identifiants sont valides :</li>
+<li>Les informations utilisateur sont stockées en session (<code>utilisateur_id</code>, <code>utilisateur_nom</code>, <code>utilisateur_email</code>, <code>utilisateur_role</code>)</li>
+<li>Si le rôle est 'admin', les permissions administrateur sont accordées</li>
+<li>L'utilisateur est redirigé vers <code>/dashboard</code></li>
+<li>Si les identifiants sont invalides, un message d'erreur est affiché</li>
+</ol>
+<p><strong>CODEBLOCK_22</strong></p>
+<h3 id="33-middleware-de-controle-dacces">3.3 Middleware de contrôle d'accès</h3>
+<p>Le middleware <code>module.access</code> est le mécanisme central de contrôle d'accès dans Novaskol. Chaque route est protégée par ce middleware avec un paramètre spécifiant le module concerné.</p>
+<p><strong>Fonctionnement :</strong>
+- Le middleware reçoit le nom du module en paramètre
+- Il vérifie si l'utilisateur connecté a une permission avec <code>acces = true</code> pour ce module
+- Si la vérification échoue, une réponse HTTP 403 (Accès non autorisé) est renvoyée
+- Si la vérification réussit, la requête est transmise au contrôleur</p>
+<p><strong>CODEBLOCK_23</strong></p>
+<p><strong>Exemples d'utilisation dans les routes :</strong>
+<strong>CODEBLOCK_24</strong></p>
+<h3 id="34-services-metier">3.4 Services métier</h3>
+<p>Les services métier encapsulent la logique complexe de l'application dans des classes dédiées :</p>
+<ul>
+<li><strong>BulletinCalculator</strong> : Calcul des moyennes par matière, moyenne générale, rang, mention</li>
+<li><strong>QrCodeService</strong> : Génération de QR codes pour les cartes d'identification (via chillerlan/php-qrcode)</li>
+<li><strong>ConnectedLocalSynchronizer</strong> : Synchronisation bidirectionnelle entre appareils</li>
+<li><strong>ModuleRegistry</strong> : Enregistrement et navigation des modules</li>
+<li><strong>RelationalDeleteService</strong> : Suppression en cascade avec gestion des dépendances</li>
+<li><strong>SyncService</strong> : Gestion des lots de synchronisation, résolution de conflits</li>
+<li><strong>ExportService</strong> : Export des données (Excel, PDF)</li>
+</ul>
+<h3 id="35-generation-de-pdf">3.5 Génération de PDF</h3>
+<p>Les bulletins et reçus sont générés en PDF via la bibliothèque DOMPDF (barryvdh/laravel-dompdf) :</p>
+<p><strong>CODEBLOCK_25</strong></p>
+<h3 id="36-routes-api">3.6 Routes API</h3>
+<p>Le fichier <code>routes/web.php</code> contient 287 lignes définissant l'ensemble des routes de l'application, organisées en :</p>
+<ul>
+<li><strong>Routes publiques</strong> : Authentification, installation, pages légales</li>
+<li><strong>Routes protégées</strong> : Chaque module avec son middleware d'accès</li>
+<li><strong>Routes API de synchronisation</strong> : Points d'accès REST pour les appareils connectés</li>
+<li><strong>Routes de l'espace parent</strong> : Portail parent dédié</li>
+<li><strong>Routes de l'espace enseignant</strong> : Plans de cours et tâches</li>
+</ul>
+<h2 id="4-implementation-du-frontend">4. Implémentation du frontend</h2>
+<h3 id="41-architecture-des-vues">4.1 Architecture des vues</h3>
+<p>Le frontend utilise le moteur de templates Blade de Laravel avec 66 fichiers de vue organisés par module fonctionnel. Chaque module dispose de ses propres vues, généralement une par action (index, create, edit, show).</p>
+<h3 id="42-design-et-theme">4.2 Design et thème</h3>
+<ul>
+<li><strong>Theme sombre</strong> par défaut avec mode clair activable</li>
+<li><strong>Palette de couleurs</strong> : Fond sombre (#080e18), accent vert (#00c853), avec nuances</li>
+<li><strong>CSS personnalise</strong> via variables CSS (<code>:root</code>)</li>
+<li><strong>Design responsive</strong> grace a TailwindCSS</li>
+<li><strong>Animations</strong> avec Intersection Observer et transitions CSS</li>
+<li><strong>Notifications</strong> SweetAlert2 pour les interactions utilisateur</li>
+</ul>
+<h3 id="43-composants-dinterface">4.3 Composants d'interface</h3>
+<ul>
+<li><strong>Barre laterale</strong> : Navigation principale avec sous-menus repliables, categorisation par module</li>
+<li><strong>En-tete fixe</strong> : Notifications, selection langue, profil utilisateur, bascule theme</li>
+<li><strong>Tableau de bord</strong> : Widgets statistiques, graphiques Chart.js, calendrier evenements</li>
+<li><strong>Tableaux de donnees</strong> : Listes avec recherche, tri, pagination</li>
+<li><strong>Formulaires</strong> : Saisie avec validation client et serveur</li>
+<li><strong>Cartes d'identite</strong> : Generation visuelle de cartes avec QR code integre</li>
+<li><strong>Calendrier</strong> : FullCalendar pour les evenements et emplois du temps</li>
+<li><strong>Chat</strong> : Interface de messagerie avec reactions, fichiers</li>
+</ul>
+<h3 id="44-internationalisation">4.4 Internationalisation</h3>
+<p>Le systeme supporte 6 langues :
+- Francais
+- Anglais
+- Allemand
+- Malgache
+- Espagnol
+- Portugais</p>
+<h2 id="5-application-de-bureau-electron">5. Application de bureau Electron</h2>
+<h3 id="51-architecture-electron">5.1 Architecture Electron</h3>
+<p>L'application de bureau Novaskol Desktop est le composant central du système. Elle est construite avec Electron 37 et embarque l'ensemble du serveur PHP et de Laravel dans une application Windows autonome.</p>
+<p><strong>Fichiers cles :</strong></p>
+<table>
+<thead>
+<tr>
+<th>Fichier</th>
+<th>Taille</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>desktop/main.cjs</code></td>
+<td>220 lignes</td>
+<td>Processus principal Electron</td>
+</tr>
+<tr>
+<td><code>desktop/preload.cjs</code></td>
+<td>16 lignes</td>
+<td>Pont IPC securise</td>
+</tr>
+<tr>
+<td><code>desktop/ui/splash.html</code></td>
+<td>135 lignes</td>
+<td>Interface de demarrage</td>
+</tr>
+<tr>
+<td><code>desktop/package.json</code></td>
+<td>51 lignes</td>
+<td>Configuration build</td>
+</tr>
+</tbody>
+</table>
+<h3 id="52-processus-principal-maincjs">5.2 Processus principal (main.cjs)</h3>
+<p>Le processus principal gère l'intégralité du cycle de vie de l'application :</p>
+<p><strong>CODEBLOCK_26</strong></p>
+<p><strong>Fonctionnalites du processus principal :</strong></p>
+<ol>
+<li><strong>Single-instance lock</strong> : <code>app.requestSingleInstanceLock()</code> empeche le lancement multiple</li>
+<li><strong>Resolution du runtime PHP</strong> : 4 strategies (packaged, distribution, env vars, PATH)</li>
+<li><strong>Fenetre splash</strong> : 460x360, frameless, theme sombre, logo anime</li>
+<li><strong>Fenetre principale</strong> : 1440x920 (min 1220x760), sans menu</li>
+<li><strong>Configuration .env</strong> automatique : SQLite, production, session fichier</li>
+<li><strong>Migration forcee</strong> : <code>php artisan migrate --force</code> au demarrage</li>
+<li><strong>Serveur PHP</strong> : <code>php artisan serve --host=0.0.0.0 --port=8001</code></li>
+<li><strong>Health check</strong> : Ping HTTP jusqu'a 120 secondes</li>
+<li><strong>Fermeture</strong> : Confirmation utilisateur, arret du processus PHP</li>
+</ol>
+<h3 id="53-pont-ipc-preloadcjs">5.3 Pont IPC (preload.cjs)</h3>
+<p>Le pont IPC expose des API securisees au processus de rendu via <code>contextBridge</code> :</p>
+<p><strong>CODEBLOCK_27</strong></p>
+<h3 id="54-configuration-electron-builder">5.4 Configuration electron-builder</h3>
+<p>La configuration de build est definie dans <code>desktop/package.json</code> :</p>
+<p><strong>CODEBLOCK_28</strong></p>
+<p><strong>Tableau IV.4 : Configuration electron-builder</strong></p>
+<h3 id="55-scripts-de-build-et-deploiement">5.5 Scripts de build et déploiement</h3>
+<p>Les scripts PowerShell dans <code>tools/windows/</code> automatisent l'ensemble du processus de build et de déploiement :</p>
+<p><strong>Build-Novaskol-Desktop.ps1 :</strong>
+1. Resout le chemin de PHP
+2. Execute <code>php artisan novaskol:prepare-installer-source --with-vendor</code>
+3. Nettoie l'ancienne distribution
+4. Execute <code>npm install</code> dans <code>desktop/</code>
+5. Execute <code>npm run build</code> (electron-builder)</p>
+<p><strong>Build-Novaskol-Runtime.ps1 :</strong>
+1. Copie PHP portable depuis WAMP vers <code>tools/runtime/php/</code>
+2. Copie les executables MySQL vers <code>tools/runtime/mysql/bin/</code>
+3. Patiente le php.ini (extension_dir relative, opcache)</p>
+<h2 id="6-application-mobile-companion-novaskol-connecte">6. Application mobile companion (Novaskol Connecte)</h2>
+<h3 id="61-architecture">6.1 Architecture</h3>
+<p>Novaskol Connecte est une application mobile hybride développée avec React 19, Vite 8, et Capacitor 8 pour Android. Elle fonctionne également comme PWA (Progressive Web App) pour une utilisation via navigateur.</p>
+<p><strong>Caractéristiques techniques :</strong>
+- <strong>Version</strong> : 0.2.0
+- <strong>Framework</strong> : React 19 (SPA single-file, 2178 lignes)
+- <strong>Build</strong> : Vite 8
+- <strong>Natiff</strong> : Capacitor 8.3.3 (Android)
+- <strong>Offline</strong> : Service Worker + localStorage
+- <strong>Stockage</strong> : IndexedDB via localStorage keys</p>
+<h3 id="62-fonctionnalites">6.2 Fonctionnalités</h3>
+<ul>
+<li>Consultation des notes et bulletins</li>
+<li>Suivi des presences</li>
+<li>Messagerie</li>
+<li>Calendrier scolaire</li>
+<li>Gestion des eleves (CRUD)</li>
+<li>Calcul de bulletins cote client</li>
+<li>Synchronisation hors-ligne</li>
+<li>Appairage par QR code</li>
+</ul>
+<h3 id="63-processus-dappairage">6.3 Processus d'appairage</h3>
+<p>L'application mobile suit un processus d'appairage en 3 étapes :</p>
+<ol>
+<li><strong>Etape 1</strong> : Saisie de l'URL du serveur, du code d'appairage, et du nom de l'appareil</li>
+<li><strong>Etape 2</strong> : Selection du role et authentification (email + mot de passe)</li>
+<li><strong>Etape 3</strong> : Resumé et validation avant initialisation</li>
+</ol>
+<p>Une fois appairée, l'application peut fonctionner en mode hors-ligne avec une file d'attente de modifications synchronisées périodiquement.</p>
+<h3 id="64-calcul-des-bulletins-cote-client">6.4 Calcul des bulletins (côté client)</h3>
+<p>L'application mobile implémente le calcul des bulletins entièrement côté client :</p>
+<ul>
+<li>Periodes : B1/B2 (bimestre), T1/T2/T3 (trimestre)</li>
+<li>Moyennes ponderees par coefficient</li>
+<li>Calcul du rang par matiere et general</li>
+<li>Mapping note-mention</li>
+</ul>
+<h2 id="7-application-de-bureau-connecte-desktop">7. Application de bureau Connecte Desktop</h2>
+<h3 id="71-architecture">7.1 Architecture</h3>
+<p>Novaskol Connecte Desktop est une application Electron companion pour PC secondaire. Contrairement à la version mobile, elle embarque son propre serveur PHP/Laravel (seed complet).</p>
+<p><strong>Caractéristiques techniques :</strong>
+- <strong>Version</strong> : 1.0.0
+- <strong>Framework</strong> : Electron 37.2.1
+- <strong>Backend</strong> : PHP 8.2 + Laravel embarque
+- <strong>Processus principal</strong> : 789 lignes
+- <strong>Autosync</strong> : Toutes les 5 minutes</p>
+<h3 id="72-differences-avec-la-version-mobile">7.2 Différences avec la version mobile</h3>
+<table>
+<thead>
+<tr>
+<th>Aspect</th>
+<th>Connecte Mobile</th>
+<th>Connecte Desktop</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Technologie</td>
+<td>React 19 + Capacitor</td>
+<td>Electron + PHP embarque</td>
+</tr>
+<tr>
+<td>Backend</td>
+<td>Externe (HTTP)</td>
+<td>Local (PHP serveur)</td>
+</tr>
+<tr>
+<td>Stockage</td>
+<td>localStorage</td>
+<td>SQLite locale</td>
+</tr>
+<tr>
+<td>Sync</td>
+<td>Push/Pull HTTP</td>
+<td>PHP + sync automatique</td>
+</tr>
+<tr>
+<td>Autonomie</td>
+<td>Necessite serveur principal</td>
+<td>Autonome (seed Laravel)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="73-processus-de-demarrage">7.3 Processus de démarrage</h3>
+<ol>
+<li>Lancement de l'executable</li>
+<li>Affichage du splash screen</li>
+<li>Initialisation du PHP et de Laravel (seed)</li>
+<li>Configuration du .env avec <code>NOVASKOL_EDITION=connecte</code></li>
+<li>Execution des migrations</li>
+<li>Demarrage du serveur PHP sur le port 8002</li>
+<li>Chargement de l'interface <code>/connected/init</code></li>
+</ol>
+<h2 id="8-processus-de-packaging-et-deploiement">8. Processus de packaging et déploiement</h2>
+<h3 id="81-application-de-bureau-electron-electron-builder">8.1 Application de bureau (Electron + electron-builder)</h3>
+<p>Le processus de build et packaging de l'application de bureau suit les étapes suivantes :</p>
+<ol>
+<li><strong>Preparation</strong> : <code>php artisan novaskol:prepare-installer-source --with-vendor</code></li>
+<li>Copie les fichiers essentiels (app/, config/, database/, etc.)</li>
+<li>Exclut les fichiers de dev (node_modules, .git, etc.)</li>
+<li>
+<p>Genere le dossier <code>storage/app/distribution/novaskol-app-latest/</code></p>
+</li>
+<li>
+<p><strong>Copie du runtime</strong> : PHP portable + extensions + MySQL portable</p>
+</li>
+<li>
+<p><code>tools/runtime/</code> copie vers <code>distribution/novaskol-app-latest/tools/runtime/</code></p>
+</li>
+<li>
+<p><strong>Installation des dependances npm</strong> : <code>npm install</code> dans <code>desktop/</code></p>
+</li>
+<li>
+<p><strong>Build Electron</strong> : <code>npm run build</code> (electron-builder --win nsis)</p>
+</li>
+<li>Compile l'application Electron</li>
+<li>Integre les extraResources (seed/novaskol)</li>
+<li>
+<p>Genere l'installateur NSIS</p>
+</li>
+<li>
+<p><strong>Resultat</strong> : <code>storage/app/desktop-dist/Novaskol Setup 1.0.6.exe</code> (~647 Mo)</p>
+</li>
+</ol>
+<h3 id="82-php-runtime-portable">8.2 PHP Runtime portable</h3>
+<p>Le runtime PHP est pre-packagé dans l'installateur. Sa configuration est optimisée pour le mode desktop :</p>
+<ul>
+<li><strong>PHP 8.2.0</strong> avec 19 extensions chargees</li>
+<li><strong>extension_dir="ext"</strong> (chemin relatif)</li>
+<li><strong>opcache</strong> active avec JIT tracing (mode production)</li>
+<li><strong>memory_limit=128M</strong></li>
+<li><strong>max_execution_time=120</strong></li>
+</ul>
+<h3 id="83-installateur-nsis">8.3 Installateur NSIS</h3>
+<p>L'installateur Windows, genere par electron-builder, offre :</p>
+<ul>
+<li>Assistant d'installation graphique</li>
+<li>Choix du repertoire d'installation (par defaut: %LOCALAPPDATA%\Programs\Novaskol)</li>
+<li>Raccourcis Bureau et Menu Demarrer</li>
+<li>Installation silencieuse possible</li>
+<li>Desinstallation propre (suppression cache, sessions, vues compilees)</li>
+<li>Icone personnalisee (novaskol.ico)</li>
+</ul>
+<h3 id="84-modes-de-deploiement">8.4 Modes de déploiement</h3>
+<table>
+<thead>
+<tr>
+<th>Mode</th>
+<th>Description</th>
+<th>Base de donnees</th>
+<th>Installation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Local (Desktop)</td>
+<td>Application autonome avec PHP embarque</td>
+<td>SQLite</td>
+<td>Installateur NSIS</td>
+</tr>
+<tr>
+<td>Hebergement</td>
+<td>Serveur web Apache/Nginx</td>
+<td>MySQL/MariaDB</td>
+<td>Deploiement FTP/CLI</td>
+</tr>
+<tr>
+<td>Hybride</td>
+<td>Desktop + Appareils connectes</td>
+<td>SQLite + Sync reseau</td>
+<td>Desktop + Connecte</td>
+</tr>
+</tbody>
+</table>
+<h2 id="9-interfaces-principales">9. Interfaces principales</h2>
+<h3 id="91-page-dauthentification">9.1 Page d'authentification</h3>
+<p>La page d'accueil de Novaskol presente :</p>
+<ul>
+<li>Le logo et le nom de l'application</li>
+<li>Un formulaire de connexion avec selection du role (administration, enseignant, personnel, parent)</li>
+<li>Des sections d'information (A propos, Espaces)</li>
+<li>Les fonctionnalites principales</li>
+<li>Un formulaire de contact</li>
+<li>Options multilingues (6 langues)</li>
+</ul>
+<h3 id="92-tableau-de-bord">9.2 Tableau de bord</h3>
+<p>Le tableau de bord principal offre une vue d'ensemble de l'etablissement :</p>
+<ul>
+<li>Widgets statistiques : nombre d'eleves, enseignants, classes</li>
+<li>Graphiques d'evolution (Chart.js)</li>
+<li>Evenements du calendrier a venir</li>
+<li>Notifications recentes</li>
+<li>Acces rapide aux modules frequents</li>
+<li>Bascule theme clair/sombre</li>
+</ul>
+<h3 id="93-saisie-des-notes">9.3 Saisie des notes</h3>
+<p>L'interface de saisie des notes permet :</p>
+<ul>
+<li>Selection de la classe et de la matiere</li>
+<li>Affichage de la liste des eleves avec notes existantes</li>
+<li>Saisie des notes avec validation automatique (0-20)</li>
+<li>Calcul automatique des moyennes</li>
+<li>Enregistrement par trimestre</li>
+<li>Gestion des coefficients</li>
+</ul>
+<h3 id="94-generation-de-bulletins">9.4 Génération de bulletins</h3>
+<p>L'interface de bulletins offre :</p>
+<ul>
+<li>Selection de l'eleve, de la classe, du trimestre</li>
+<li>Calcul automatique des moyennes par matiere</li>
+<li>Calcul de la moyenne generale et du rang</li>
+<li>Mention et appreciation automatiques</li>
+<li>Export PDF (via DOMPDF)</li>
+<li>Bulletin individuel, par classe, annuel</li>
+</ul>
+<h3 id="95-emploi-du-temps">9.5 Emploi du temps</h3>
+<p>L'interface d'emploi du temps presente :</p>
+<ul>
+<li>Vue hebdomadaire par classe</li>
+<li>Affectation des matieres et professeurs</li>
+<li>Gestion des creneaux horaires (heure_debut, heure_fin)</li>
+<li>Integration FullCalendar</li>
+</ul>
+<h3 id="96-messagerie-interne">9.6 Messagerie interne</h3>
+<p>L'interface de messagerie permet :</p>
+<ul>
+<li>Conversations privees et de groupe</li>
+<li>Envoi de messages textes et fichiers</li>
+<li>Reactions par emojis</li>
+<li>Indicateurs de lecture (is_read, is_delivered)</li>
+<li>Statut de saisie (typing_status)</li>
+<li>Messagerie d'annonces (is_announcement)</li>
+</ul>
+<h3 id="97-gestion-des-presences-par-qr-code">9.7 Gestion des présences par QR code</h3>
+<p>L'interface de pointage QR permet :</p>
+<ul>
+<li>Generation de cartes d'identification avec QR code</li>
+<li>Scan de QR code sur les cartes</li>
+<li>Enregistrement automatique de la presence</li>
+<li>Sessions matin et apres-midi</li>
+<li>Types de scan : entree / sortie</li>
+<li>Statistiques de presence</li>
+<li>Export des rapports</li>
+</ul>
+<h2 id="10-conclusion">10. Conclusion</h2>
+<p>Ce chapitre a presente la realisation complete de Novaskol. L'implementation couvre l'ensemble des 45 modules fonctionnels a travers une architecture modulaire et evolutive. Le backend Laravel avec ses 30 controleurs, 9 services et 3 middlewares constitue le cceur du systeme. Le frontend offre 66 vues Blade avec un design moderne et responsive. L'application de bureau Electron permet un deploiement simplifie et un fonctionnement completement hors-ligne. Les applications companion (mobile et desktop) etendent l'acces aux utilisateurs mobiles et aux postes secondaires. Le packaging via electron-builder produit un installateur Windows autonome de 647 Mo contenant l'integralite des composants necessaires.</p>
+<hr />
+<h2 id="conclusion-generale">Conclusion generale</h2>
+<p>Le travail presente dans ce memoire avait pour objectif la conception et la realisation d'un systeme de gestion scolaire complet, fonctionnant hors-ligne, facile a deployer et a utiliser. Nous avons concu et developpe <strong>Novaskol</strong>, une application qui repond aux besoins specifiques des etablissements scolaires en matiere de gestion administrative, pedagogique et financiere.</p>
+<h3 id="resultats-obtenus">Resultats obtenus</h3>
+<p>Au terme de ce projet, nous avons atteint les objectifs fixés :</p>
+<ol>
+<li>
+<p><strong>Un systeme complet</strong> : 45 modules fonctionnels couvrant l'ensemble des besoins de gestion scolaire (inscriptions, notes, bulletins, presences, emplois du temps, communication, finances, RH, synchronisation, etc.)</p>
+</li>
+<li>
+<p><strong>Une architecture robuste</strong> : Basee sur Laravel 12 et PHP 8.2 avec Eloquent ORM, architecture MVC, middlewares de controle d'acces, et services metier specialises.</p>
+</li>
+<li>
+<p><strong>Une base de donnees exhaustive</strong> : 42 tables couvrant l'ensemble des domaines fonctionnels, avec 33 migrations Laravel pour le versionnement du schema.</p>
+</li>
+<li>
+<p><strong>Une application de bureau autonome</strong> : Grace a Electron 37, Novaskol s'installe et s'execute sur n'importe quel PC Windows sans necessite de serveur dedie ni de connexion Internet. L'installateur NSIS de 647 Mo contient PHP 8.2, Laravel, et SQLite.</p>
+</li>
+<li>
+<p><strong>Deux applications companion</strong> : Novaskol Connecte (mobile, React+Capacitor) et Novaskol Connecte Desktop (Electron) permettent aux utilisateurs mobiles et aux postes secondaires de travailler en collaboration.</p>
+</li>
+<li>
+<p><strong>Une synchronisation multi-appareils</strong> : Le systeme de synchronisation sur reseau local avec appairage, files d'attente hors-ligne, et resolution de conflits permet un travail collaboratif fluide.</p>
+</li>
+<li>
+<p><strong>Une interface intuitive</strong> : Adaptee a chaque profil d'utilisateur (admin, enseignant, parent, staff) avec un design moderne, theme sombre/clair, et support multilingue (6 langues).</p>
+</li>
+<li>
+<p><strong>Un deploiement simplifie</strong> : L'installateur Windows unique contient l'ensemble des composants necessaires (PHP, Laravel, extensions, base de donnees).</p>
+</li>
+</ol>
+<h3 id="difficultes-rencontrees">Difficultes rencontrees</h3>
+<p>La realisation de ce projet n'a pas ete sans difficultes. Parmi les principaux defis :</p>
+<ul>
+<li>
+<p><strong>Integration de PHP dans Electron</strong> : Le lancement et la gestion du cycle de vie du serveur PHP depuis Electron a necessite une gestion fine des processus fils (spawn), des chemins d'acces, et des droits utilisateur.</p>
+</li>
+<li>
+<p><strong>Packaging du runtime PHP</strong> : La creation d'un installateur incluant PHP 8.2 avec ses 19 extensions, MySQL portable, et l'ensemble des dependances Laravel, a exige une configuration precise du php.ini (extension_dir relatif, opcache, chemins absolus vs relatifs).</p>
+</li>
+<li>
+<p><strong>Synchronisation multi-appareils</strong> : La conception d'un mecanisme de synchronisation bidirectionnelle robuste avec UUIDs globaux, detection de conflits, et resolution a ete complexe.</p>
+</li>
+<li>
+<p><strong>Migration du code legacy</strong> : Une partie du code existait sous forme de scripts PHP non-Laravel (base MySQL <code>bulletin_system</code>). La migration progressive vers l'architecture Laravel a necessite une phase d'adaptation et de transformation des donnees.</p>
+</li>
+<li>
+<p><strong>Gestion des chemins dans php.ini</strong> : Les chemins absolus (extension_dir, error_log, upload_tmp_dir, session.save_path) ont cause des problemes de portabilite entre machines de developpement et machines cibles.</p>
+</li>
+</ul>
+<h3 id="competences-acquises">Compétences acquises</h3>
+<p>Ce projet m'a permis d'acquerir et de renforcer des competences cles, en prolongement de mon parcours CAN et de ma specialisation web :</p>
+<ul>
+<li><strong>Developpement web full-stack</strong> : Laravel (MVC, Eloquent ORM, migrations, Blade), PHP oriente objet, React 19</li>
+<li><strong>Applications de bureau hybrides</strong> : Electron, IPC, gestion de processus, packaging via electron-builder</li>
+<li><strong>Applications mobiles</strong> : React 19, Capacitor 8, PWA, IndexedDB, synchronisation hors-ligne</li>
+<li><strong>Bases de donnees</strong> : SQLite, MySQL/MariaDB, conception de schemas, optimisation de requetes</li>
+<li><strong>Modelisation et conception</strong> : UML (cas d'utilisation, diagrammes de sequence, d'activite, de classes)</li>
+<li><strong>Packaging et deploiement</strong> : electron-builder, NSIS, configuration d'installateur, runtime PHP portable</li>
+<li><strong>Scripting et automatisation</strong> : PowerShell, gestion des processus, configuration systeme</li>
+<li><strong>Gestion de projet</strong> : Planification, methodologie agile, documentation, versionnement Git</li>
+<li><strong>Integration des technologies</strong> : Capacite a assembler des briques technologiques diverses (PHP, Node.js, React, SQLite, Electron) en un produit coherent et fonctionnel</li>
+</ul>
+<h3 id="perspectives-devolution">Perspectives d'evolution</h3>
+<p>Plusieurs ameliorations et extensions peuvent etre envisagees :</p>
+<ol>
+<li>
+<p><strong>Application mobile native</strong> : Developper des applications iOS et Android natives avec React Native ou Flutter, avec fonctionnalites etendues (notifications push, biometric, camera).</p>
+</li>
+<li>
+<p><strong>Version cloud SaaS</strong> : Deployer une version centralisee avec hebergement cloud et abonnement, permettant la gestion de plusieurs etablissements.</p>
+</li>
+<li>
+<p><strong>Synchronisation Internet</strong> : Permettre la synchronisation entre etablissements distants via Internet avec chiffrement de bout en bout.</p>
+</li>
+<li>
+<p><strong>Intelligence artificielle</strong> : Integrer des modules d'IA pour la prediction des resultats scolaires, la detection precoce des difficultes, et la generation de recommandations personnalisees.</p>
+</li>
+<li>
+<p><strong>API publique</strong> : Exposer une API REST publique documentee pour permettre l'integration avec des systemes tiers (ENT, logiciels de cantine, bibliotheque).</p>
+</li>
+<li>
+<p><strong>Modules complementaires</strong> : Gestion de la bibliotheque, restauration scolaire, transport scolaire, infirmerie, gestion des stages.</p>
+</li>
+<li>
+<p><strong>Compatibilite multi-plateforme</strong> : Etendre l'application de bureau a macOS et Linux (electron-builder supporte ces cibles).</p>
+</li>
+<li>
+<p><strong>Tableaux de bord avances</strong> : Analytics avec tableaux de bord personnalisables, exports automatises, et visualisations interactives (grafana, metabase).</p>
+</li>
+<li>
+<p><strong>Mode multi-etablissement</strong> : Permettre la gestion de plusieurs etablissements depuis une meme installation.</p>
+</li>
+<li>
+<p><strong>Signature electronique</strong> : Integration de signature electronique pour les bulletins et documents officiels.</p>
+</li>
+</ol>
+<h3 id="mot-de-la-fin">Mot de la fin</h3>
+<p>La realisation de ce projet a ete pour moi bien plus qu'un exercice academique. Issu d'un parcours en Communication en Audiovisuelle et Numerique (CAN), je me suis tourne vers le web apres la L3, anime par l'envie de comprendre et de maitriser les technologies qui faconnent notre monde numerique. Novaskol represente l'aboutissement de cette transition : un systeme complet, du dossier de conception a l'installateur final, en passant par la base de donnees, le code et l'interface utilisateur.</p>
+<p>J'espere que cet outil contribuera a ameliorer la gestion et la qualite de l'enseignement dans les etablissements qui l'adopteront. Mais au-dela de l'outil lui-meme, ce projet restera pour moi la trace tangible d'un parcours, d'un choix et d'une volonte de laisser une empreinte dans le domaine qui me passionne : le web.</p>
+<p>Novaskol est un projet open source (licence MIT), dont le code source est librement accessible et modifiable. La communaute est encouragee a contribuer a son amelioration continue.</p>
+<hr />
+<h2 id="bibliographie">Bibliographie</h2>
+<h3 id="ouvrages-et-articles">Ouvrages et articles</h3>
+<p>[1] Kruchten, P. (1995). "4+1 View Model of Software Architecture." IEEE Software, 12(6), 42-50.</p>
+<p>[2] Gamma, E., Helm, R., Johnson, R., &amp; Vlissides, J. (1994). "Design Patterns: Elements of Reusable Object-Oriented Software." Addison-Wesley.</p>
+<p>[3] Booch, G., Rumbaugh, J., &amp; Jacobson, I. (2005). "The Unified Modeling Language User Guide." 2nd Edition. Addison-Wesley.</p>
+<p>[4] Roques, P. (2004). "UML par la pratique." 2e edition. Editions Eyrolles.</p>
+<p>[5] Fowler, M. (2002). "Patterns of Enterprise Application Architecture." Addison-Wesley.</p>
+<p>[6] Gardarin, G. (2000). "Internet/Intranet et les bases de donnees." Editions Eyrolles.</p>
+<p>[7] Comer, D. (2003). "Internet : Services et reseaux." Editions Dunod.</p>
+<p>[8] Otlet, J. (2002). "Architectures de Systemes d'Information." Livre Blanc OCTO.</p>
+<p>[9] Ullman, L. (2023). "PHP for the Web: Visual QuickStart Guide." 5th Edition. Peachpit Press.</p>
+<h3 id="documentation-technique">Documentation technique</h3>
+<p>[10] Laravel Documentation. "Laravel 12.x Documentation." https://laravel.com/docs/12.x</p>
+<p>[11] PHP Documentation. "PHP Manual." https://www.php.net/docs.php</p>
+<p>[12] Electron Documentation. "Electron Documentation." https://www.electronjs.org/docs</p>
+<p>[13] electron-builder Documentation. "electron-builder Documentation." https://www.electron.build/</p>
+<p>[14] SQLite Documentation. "SQLite Documentation." https://www.sqlite.org/docs.html</p>
+<p>[15] TailwindCSS Documentation. "TailwindCSS v4 Documentation." https://tailwindcss.com/docs</p>
+<p>[16] React Documentation. "React 19 Documentation." https://react.dev/</p>
+<p>[17] Capacitor Documentation. "Capacitor 8 Documentation." https://capacitorjs.com/docs</p>
+<p>[18] MySQL Documentation. "MySQL 8.0 Documentation." https://dev.mysql.com/doc/</p>
+<p>[19] DOMPDF. "Laravel DOMPDF." https://github.com/barryvdh/laravel-dompdf</p>
+<p>[20] PhpSpreadsheet. "PhpSpreadsheet Documentation." https://phpspreadsheet.readthedocs.io/</p>
+<h3 id="references-web">References web</h3>
+<p>[21] Wikipedia. "Architecture logicielle." https://fr.wikipedia.org/wiki/Architecture_logicielle</p>
+<p>[22] Wikipedia. "Client-serveur." https://fr.wikipedia.org/wiki/Client-serveur</p>
+<p>[23] Wikipedia. "PHP." https://fr.wikipedia.org/wiki/PHP</p>
+<p>[24] Wikipedia. "Laravel." https://fr.wikipedia.org/wiki/Laravel</p>
+<p>[25] Wikipedia. "Electron." https://fr.wikipedia.org/wiki/Electron_(framework)</p>
+<p>[26] Wikipedia. "UML." https://fr.wikipedia.org/wiki/UML_(informatique)</p>
+<p>[27] Wikipedia. "SQLite." https://fr.wikipedia.org/wiki/SQLite</p>
+<p>[28] Wikipedia. "Modele-Vue-Controleur." https://fr.wikipedia.org/wiki/Modèle-Vue-Contrôleur</p>
+<hr />
+<h2 id="annexes">Annexes</h2>
+<h3 id="annexe-a-generalites-sur-les-reseaux-informatiques">Annexe A : Generalites sur les reseaux informatiques</h3>
+<h4 id="a1-definition-dun-reseau">A.1 Definition d'un reseau</h4>
+<p>Un reseau informatique est un ensemble d'equipements informatiques relies entre eux pour echanger des informations. Les reseaux permettent le partage de ressources, la communication entre utilisateurs, et l'acces a des services centralises.</p>
+<h4 id="a2-interets-dun-reseau-informatique">A.2 Interets d'un reseau informatique</h4>
+<ul>
+<li>Partage de fichiers et de peripheriques (imprimantes, scanners)</li>
+<li>Communication entre utilisateurs (messagerie, chat)</li>
+<li>Centralisation des donnees (serveurs de fichiers, bases de donnees)</li>
+<li>Acces a Internet</li>
+<li>Travail collaboratif</li>
+</ul>
+<h4 id="a3-classification-des-reseaux">A.3 Classification des reseaux</h4>
+<ul>
+<li><strong>LAN (Local Area Network)</strong> : Reseau local, couvre une zone limitee (etablissement scolaire, entreprise)</li>
+<li><strong>MAN (Metropolitan Area Network)</strong> : Reseau metropolitain, couvre une ville</li>
+<li><strong>WAN (Wide Area Network)</strong> : Reseau etendu, couvre un pays ou le monde</li>
+</ul>
+<h4 id="a4-topologies-de-reseau">A.4 Topologies de reseau</h4>
+<ul>
+<li><strong>Topologie en bus</strong> : Tous les equipements sont connectes a un câble commun</li>
+<li><strong>Topologie en anneau</strong> : Chaque equipement est connecte a ses deux voisins</li>
+<li><strong>Topologie en etoile</strong> : Tous les equipements sont connectes a un commutateur central (topologie la plus courante)</li>
+</ul>
+<h4 id="a5-modele-osi">A.5 Modele OSI</h4>
+<p>Le modele OSI (Open Systems Interconnection) definit 7 couches de communication :</p>
+<ol>
+<li><strong>Physique</strong> : Transmission des bits sur le support</li>
+<li><strong>Liaison de donnees</strong> : Acces au support, detection d'erreurs</li>
+<li><strong>Reseau</strong> : Routage des paquets (IP)</li>
+<li><strong>Transport</strong> : Transport fiable des donnees (TCP)</li>
+<li><strong>Session</strong> : Gestion des sessions de communication</li>
+<li><strong>Presentation</strong> : Codage et decodage des donnees</li>
+<li><strong>Application</strong> : Interfaces avec les applications utilisateur (HTTP, FTP, SMTP)</li>
+</ol>
+<h4 id="a6-protocole-tcpip">A.6 Protocole TCP/IP</h4>
+<p>TCP/IP est le protocole fondamental d'Internet. Il combine :
+- <strong>IP (Internet Protocol)</strong> : Routage des paquets entre les machines
+- <strong>TCP (Transmission Control Protocol)</strong> : Transport fiable avec controle de flux et correction d'erreurs</p>
+<h3 id="annexe-b-uml-unified-modeling-language">Annexe B : UML — Unified Modeling Language</h3>
+<h4 id="b1-definition">B.1 Definition</h4>
+<p>UML (Unified Modeling Language) est un langage de modelisation graphique utilise en genie logiciel pour visualiser, specifier, construire et documenter les systemes d'information.</p>
+<h4 id="b2-diagrammes-uml-utilises-dans-novaskol">B.2 Diagrammes UML utilises dans Novaskol</h4>
+<p><strong>Diagramme de cas d'utilisation :</strong> Represente les fonctionnalites du systeme du point de vue des acteurs externes. Utilise pour definir le perimetre fonctionnel.</p>
+<p><strong>Diagramme de sequence :</strong> Montre les interactions entre objets au cours du temps. Utilise pour modeliser les processus d'authentification, saisie de notes, generation de bulletins.</p>
+<p><strong>Diagramme d'activite :</strong> Represente les flux de controle et de donnees. Utilise pour modeliser les processus metier (saisie notes, validation).</p>
+<p><strong>Diagramme de classes :</strong> Montre la structure statique du systeme (classes, attributs, methodes, relations). Utilise pour modeliser le schema conceptuel de la base de donnees.</p>
+<h4 id="b3-elements-duml">B.3 Elements d'UML</h4>
+<ul>
+<li><strong>Acteur</strong> : Entite qui interagit avec le systeme (utilisateur, systeme externe)</li>
+<li><strong>Cas d'utilisation</strong> : Fonctionnalite offerte par le systeme</li>
+<li><strong>Classe</strong> : Abstraction d'une entite du domaine (Eleve, Professeur, Note)</li>
+<li><strong>Relation</strong> : Association, inheritance, dependance, realisation</li>
+<li><strong>Message</strong> : Communication entre objets (synchrone, asynchrone)</li>
+<li><strong>Etat</strong> : Condition dans laquelle se trouve un objet</li>
+</ul>
+<h3 id="annexe-c-guide-dinstallation-de-novaskol">Annexe C : Guide d'installation de Novaskol</h3>
+<h4 id="c1-installation-locale-desktop">C.1 Installation locale (Desktop)</h4>
+<ol>
+<li>Telecharger <code>Novaskol-Setup-1.0.6.exe</code> (647 Mo)</li>
+<li>Executer l'installateur</li>
+<li>Suivre l'assistant d'installation (choix du repertoire, creation des raccourcis)</li>
+<li>Lancer Novaskol depuis le raccourci Bureau ou Menu Demarrer</li>
+<li>Au premier demarrage, l'application initialise automatiquement la base de donnees</li>
+<li>Creer un compte administrateur via le formulaire d'inscription</li>
+<li>Configurer l'etablissement (nom, logo)</li>
+</ol>
+<h4 id="c2-configuration-minimale-requise">C.2 Configuration minimale requise</h4>
+<ul>
+<li>Systeme d'exploitation : Windows 10/11 64-bit</li>
+<li>Processeur : Intel Core i3 ou equivalent</li>
+<li>RAM : 4 Go minimum (8 Go recommande)</li>
+<li>Espace disque : 2 Go disponibles</li>
+<li>Aucune connexion Internet requise</li>
+</ul>
+<h4 id="c3-installation-sur-hebergement-web">C.3 Installation sur hebergement web</h4>
+<ol>
+<li>Deployer les fichiers du projet sur le serveur web</li>
+<li>Configurer le fichier <code>.env</code> avec les parametres de la base de donnees MySQL</li>
+<li>Executer <code>php artisan migrate --force</code></li>
+<li>Executer <code>php artisan key:generate</code></li>
+<li>Configurer le serveur web (Apache/Nginx) pour pointer vers <code>public/</code></li>
+<li>Creer un compte administrateur</li>
+</ol>
+<h3 id="annexe-d-structure-du-paquet-de-distribution">Annexe D : Structure du paquet de distribution</h3>
+<p>Le paquet de distribution <code>novaskol-app-latest/</code> contient l'ensemble des fichiers necessaires au fonctionnement de l'application :</p>
+<p><strong>CODEBLOCK_29</strong></p>
+<h3 id="annexe-e-tableau-des-routes-api">Annexe E : Tableau des routes API</h3>
+<p>Les points d'acces API REST pour la synchronisation des appareils connectes :</p>
+<table>
+<thead>
+<tr>
+<th>Methode</th>
+<th>Route</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GET</td>
+<td>/reseau-local/ping</td>
+<td>Test de connexion au serveur</td>
+</tr>
+<tr>
+<td>GET</td>
+<td>/reseau-local/manifest-appareil</td>
+<td>Obtention du manifeste du serveur</td>
+</tr>
+<tr>
+<td>POST</td>
+<td>/reseau-local/appairer-appareil</td>
+<td>Appairage d'un nouvel appareil</td>
+</tr>
+<tr>
+<td>GET</td>
+<td>/reseau-local/bootstrap-appareil</td>
+<td>Recuperation des donnees initiales</td>
+</tr>
+<tr>
+<td>POST</td>
+<td>/reseau-local/recevoir-lot</td>
+<td>Reception d'un lot de modifications</td>
+</tr>
+<tr>
+<td>GET</td>
+<td>/reseau-local/appareil-connecte</td>
+<td>Page d'appairage appareil connecte</td>
+</tr>
+<tr>
+<td>OPTIONS</td>
+<td>/reseau-local/{any}</td>
+<td>Preflight CORS</td>
+</tr>
+<tr>
+<td>GET</td>
+<td>/connected/init</td>
+<td>Initialisation de l'appareil connecte</td>
+</tr>
+<tr>
+<td>GET</td>
+<td>/connected/sync/status</td>
+<td>Statut de la synchronisation</td>
+</tr>
+<tr>
+<td>POST</td>
+<td>/connected/sync/run</td>
+<td>Execution de la synchronisation</td>
+</tr>
+<tr>
+<td>POST</td>
+<td>/connected/disconnect</td>
+<td>Deconnexion de l'appareil</td>
+</tr>
+<tr>
+<td>POST</td>
+<td>/connected/switch-user</td>
+<td>Changement d'utilisateur connecte</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<p><em>Document genere le 18 juillet 2026</em>
+<em>Projet Novaskol - Version 1.0.6</em>
+<em>Conception et realisation d'une application de gestion scolaire hors-ligne avec Laravel, Electron et SQLite</em></p>
+</div>
+
+</div>
+</body>
+</html>

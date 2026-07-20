@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Services\Novaskol\ModuleRegistry;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Schema;
 
 class DashboardController extends Controller
@@ -21,6 +22,9 @@ class DashboardController extends Controller
         }
 
         $this->touchUserActivity();
+
+        $isConnected = config('novaskol.edition', 'principal') === 'connecte'
+            || File::exists(env('CONNECTED_PAIRED_PATH', storage_path('app/connected/paired.json')));
 
         $annees = $this->safeQuery('eleves', fn () => DB::table('eleves')
             ->select('annee_scolaire')
@@ -95,6 +99,7 @@ class DashboardController extends Controller
             'prochainEvent' => $this->safeQuery('evenements', fn () => DB::table('evenements')->whereDate('date_debut', '>=', today())->orderBy('date_debut')->first(), null),
             'notifications' => $this->safeQuery('notifications', fn () => DB::table('notifications')->orderByDesc('date_creation')->limit(10)->get(), collect()),
             'unreadCount' => $this->unreadNotificationsCount(),
+            'isConnected' => $isConnected,
             'mois' => $mois,
             'revenusMensuels' => $revenusMensuels,
             'depensesMensuelles' => $depensesMensuelles,

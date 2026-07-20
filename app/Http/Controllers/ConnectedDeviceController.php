@@ -8,7 +8,13 @@ class ConnectedDeviceController extends Controller
 {
     public function show()
     {
-        return redirect()->route('connected.app');
+        $pairedPath = env('CONNECTED_PAIRED_PATH', storage_path('app/connected/paired.json'));
+        $defaultServer = '';
+        if (File::exists($pairedPath)) {
+            $paired = json_decode(File::get($pairedPath), true);
+            $defaultServer = $paired['server_url'] ?? '';
+        }
+        return view('connected.setup', compact('defaultServer'));
     }
 
     public function app(?string $path = null)

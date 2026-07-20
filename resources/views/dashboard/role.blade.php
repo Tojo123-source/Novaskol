@@ -9,6 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="icon" type="image/png" href="{{ asset('novaskol-icon.png') }}">
     <script src="{{ asset('legacy/vendor/qrcode.min.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
     @include('modules.professeur.bulletin.partials.styles')
     <style>
         .role-hero{margin:96px 24px 24px 264px;padding:26px;border:1px solid var(--border);background:linear-gradient(135deg,var(--card),var(--surface));border-radius:8px;box-shadow:0 16px 36px var(--shadow-soft)}
@@ -91,7 +92,9 @@
         .id-expiry {font-size:.5rem;color:var(--nv-muted);text-align:center;margin-top:2px;}
 
         @media(max-width:1180px){.role-hero,.role-grid,.workspace,.espace-cards{margin-left:16px;margin-right:16px}.role-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.workspace{grid-template-columns:1fr}.role-hero{margin-top:98px}.module-list{grid-template-columns:1fr}.espace-cards{grid-template-columns:1fr}}
-        @media(max-width:700px){.role-grid{grid-template-columns:1fr}.role-hero{margin-top:122px;padding:18px}.role-hero h1{font-size:1.3rem}.role-card{padding:16px}}
+        .id-dl-btn{display:flex;align-items:center;justify-content:center;gap:4px;width:100%;margin-top:6px;padding:5px;font-size:.65rem;font-weight:600;border:1px solid var(--border);border-radius:6px;background:var(--nv-white);color:var(--nv-primary);cursor:pointer;transition:all .15s}
+        .id-dl-btn:hover{background:var(--nv-primary);color:var(--nv-white);border-color:var(--nv-primary)}
+        @media(max-width:700px){.role-grid{grid-template-columns:1fr}.role-hero{margin-top:122px;padding:18px}.role-hero h1{font-size:1.3rem}.role-card{padding:16px}.id-card{flex-wrap:wrap}.id-qr-wrap{flex:1;border-left:0;border-top:1px solid #e2e8f0;padding:12px 8px}}
     </style>
 </head>
 <body>
@@ -132,7 +135,14 @@
                             <div class="id-qr-box" id="qr-{{ $card['id'] }}" data-qr="novaskol:qr:v1:{{ $card['qr_token'] }}"></div>
                             <div class="id-expiry">Exp: {{ now()->addYear()->format('d/m/Y') }}</div>
                         </div>
+                    @else
+                        <div>
+                            <div class="id-qr-box" style="background:#f1f5f9;color:#94a3b8;font-size:.62rem;text-align:center;display:grid;place-items:center;width:108px;height:108px;border-radius:8px;line-height:1.4;">
+                                QR<br>non<br>disponible
+                            </div>
+                        </div>
                     @endif
+                    <button onclick="downloadCard(this)" class="id-dl-btn" title="Telecharger la carte"><i class="fa fa-download"></i></button>
                 </div>
             </article>
         @endforeach
@@ -213,6 +223,17 @@ document.addEventListener('DOMContentLoaded',()=>{
         if(u&&window.QRCode)new QRCode(q,{text:u,width:96,height:96,colorDark:'#0f2942',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.H})
     })
 })
+function downloadCard(btn){
+    const card=btn.closest('.id-card');
+    if(!card)return;
+    const name=card.querySelector('.id-name')?.textContent||'carte';
+    html2canvas(card,{scale:2,useCORS:true,backgroundColor:'#ffffff'}).then(canvas=>{
+        const a=document.createElement('a');
+        a.href=canvas.toDataURL('image/png');
+        a.download='carte-'+name.trim().replace(/\s+/g,'-')+'.png';
+        a.click();
+    })
+}
 </script>
 </body>
 </html>

@@ -1,12 +1,30 @@
 <!DOCTYPE html>
 <html lang="fr">
-<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Historique - Novaskol</title>
-<link rel="stylesheet" href="{{ asset('legacy/assets/fontawesome/css/all.min.css') }}">
-<style>:root{--bg:#0f172a;--surface:#1e293b;--text:#f1f5f9;--muted:#94a3b8;--line:#334155;--green:#22c55e;--blue:#3b82f6}*{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,sans-serif;background:var(--bg);color:var(--text)}.wrap{max-width:800px;margin:0 auto;padding:24px 16px}.back{color:var(--muted);text-decoration:none;font-size:.85rem;display:inline-flex;align-items:center;gap:6px;margin-bottom:16px}.back:hover{color:var(--text)}h1{font-size:1.15rem;margin:0 0 20px}.section{margin-bottom:28px}.section h2{font-size:.95rem;margin:0 0 10px;display:flex;align-items:center;gap:8px;color:var(--muted)}.item{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:10px 14px;margin-bottom:6px;display:flex;justify-content:space-between;align-items:center;font-size:.85rem}.item .date{color:var(--muted);font-size:.78rem}.btn{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:6px;font-size:.75rem;border:0;cursor:pointer;text-decoration:none;font-weight:600}.btn-outline{background:transparent;border:1px solid var(--line);color:var(--text)}.empty{text-align:center;padding:40px;color:var(--muted);font-size:.85rem}.pagination{display:flex;gap:6px;justify-content:center;margin-top:16px;flex-wrap:wrap}.pagination a,.pagination span{padding:5px 10px;border-radius:6px;background:var(--surface);border:1px solid var(--line);color:var(--text);text-decoration:none;font-size:.82rem}</style>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Historique - Novaskol</title>
+    <link rel="stylesheet" href="{{ asset('legacy/assets/fontawesome/css/all.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('legacy/fa/css/font-awesome.min.css') }}">
+    @include('modules.professeur.bulletin.partials.styles')
+    <style>
+        .student-wrap{max-width:800px;margin:88px 20px 20px 256px}
+        :root{--blue:#3b82f6;--muted:var(--text-sec);--line:var(--border);--green:var(--success)}
+        h1{font-size:1.15rem;margin:0 0 20px}.section{margin-bottom:28px}.section h2{font-size:.95rem;margin:0 0 10px;display:flex;align-items:center;gap:8px;color:var(--muted)}.item{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:10px 14px;margin-bottom:6px;display:flex;justify-content:space-between;align-items:center;font-size:.85rem}.item .date{color:var(--muted);font-size:.78rem}.btn{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:6px;font-size:.75rem;border:0;cursor:pointer;text-decoration:none;font-weight:600}.btn-outline{background:transparent;border:1px solid var(--line);color:var(--text)}.empty{text-align:center;padding:40px;color:var(--muted);font-size:.85rem}.pagination{display:flex;gap:6px;justify-content:center;margin-top:16px;flex-wrap:wrap}.pagination a,.pagination span{padding:5px 10px;border-radius:6px;background:var(--surface);border:1px solid var(--line);color:var(--text);text-decoration:none;font-size:.82rem}
+        @media(max-width:1180px){.student-wrap{margin-left:16px;margin-right:16px}}
+        @media(max-width:700px){.student-wrap{margin-top:100px}}
+    </style>
 </head>
 <body>
-<div class="wrap">
-    <a href="{{ route('eleve.portal') }}" class="back"><i class="fa fa-arrow-left"></i> Accueil</a>
+@include('modules.professeur.bulletin.partials.shell', ['activeModule' => 'eleve_historique'])
+<header>
+    <div class="header-left">
+        <button class="burger-menu" onclick="toggleSidebar()"><i class="fa fa-bars"></i></button>
+        <button id="fullscreen-btn" onclick="toggleFullscreen()"><i class="fa fa-expand"></i></button>
+    </div>
+    <div class="header-center">Mon historique</div>
+</header>
+<div class="student-wrap">
     <h1><i class="fa fa-history" style="color:var(--blue)"></i> Mon historique</h1>
 
     <div class="section">
@@ -47,5 +65,10 @@
         @endif
     </div>
 </div>
+<script>
+function toggleSub(e){const s=e.nextElementSibling,a=e.querySelector('.arrow');s.style.display=s.style.display==='block'?'none':'block';a.classList.toggle('fa-chevron-down');a.classList.toggle('fa-chevron-up')}
+function toggleSidebar(){document.getElementById('sidebar').classList.toggle('active');}
+function toggleFullscreen(){const i=document.getElementById('fullscreen-icon');if(!document.fullscreenElement){document.documentElement.requestFullscreen();i.classList.replace('fa-expand','fa-compress')}else{document.exitFullscreen();i.classList.replace('fa-compress','fa-expand')}}
+</script>
 </body>
 </html>

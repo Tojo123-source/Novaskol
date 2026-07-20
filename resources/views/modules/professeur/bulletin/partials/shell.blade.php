@@ -15,6 +15,7 @@
     } else {
         $userAvatarUrl = asset('legacy/uploads/avatars/'.$userAvatar);
     }
+    @if (in_array($currentRole, ['admin', 'staff', 'enseignant']))
     $latestNotifications = DB::table('notifications')
         ->where(function ($n) use ($currentUserId, $currentRole) {
             if ($currentRole === 'parent') {
@@ -38,6 +39,10 @@
             $q->where('lu', 0)->orWhere('statut', 'non lu');
         })
         ->count();
+    @else
+    $latestNotifications = collect();
+    $unreadNotifications = 0;
+    @endif
     $latestMessages = $currentUserId ? DB::table('messages as m')
         ->join('conversation_participants as cp', 'cp.conversation_id', '=', 'm.conversation_id')
         ->join('conversations as c', 'c.id', '=', 'm.conversation_id')
@@ -157,6 +162,23 @@
             <i class="fa fa-book"></i> <span>Bibliotheque</span>
         </a>
     @endif
+    @if ($currentRole === 'enseignant')
+        @php
+            $teacherSectionActive = in_array($activeModule ?? '', ['teacher_courses', 'teacher_exercices']);
+        @endphp
+        <div class="parent-menu" onclick="toggleSub(this)">
+            <span><i class="fa fa-graduation-cap"></i> Cours &amp; Exercices en ligne</span>
+            <i class="fa fa-chevron-down arrow"></i>
+        </div>
+        <div class="sub-menu" style="display:{{ $teacherSectionActive ? 'block' : 'none' }};">
+            <a href="{{ route('teacher.courses.index') }}" @class(['active' => ($activeModule ?? '') === 'teacher_courses'])>
+                <i class="fa fa-book"></i> <span>Mes cours</span>
+            </a>
+            <a href="{{ route('teacher.exercices.index') }}" @class(['active' => ($activeModule ?? '') === 'teacher_exercices'])>
+                <i class="fa fa-pencil-square-o"></i> <span>Mes exercices</span>
+            </a>
+        </div>
+    @endif
     @foreach ($moduleKeys as $moduleIndex => $module)
         @php
             $info = $modules[$module];
@@ -236,10 +258,13 @@
         </div>
     </div>
     <button class="global-icon-btn" type="button" title="Mode sombre / clair" data-theme-toggle data-action="theme" onclick="novaskolToggleTheme()"><i class="fa fa-moon"></i></button>
+    @if (in_array($currentRole, ['admin', 'staff', 'enseignant']))
     <button class="global-icon-btn" type="button" title="Notifications" data-action="notifications" onclick="novaskolToggleDrop('globalNotifications')"><i class="fa fa-bell"></i><span class="global-badge" data-notification-badge style="display:{{ $unreadNotifications > 0 ? 'flex' : 'none' }}">{{ $unreadNotifications }}</span></button>
+    @endif
     <button class="global-icon-btn" type="button" title="Messages" data-action="messages" onclick="novaskolToggleDrop('globalMessages')"><i class="fa fa-comments"></i><span class="global-badge" data-message-badge style="display:{{ $unreadMessages > 0 ? 'flex' : 'none' }}">{{ $unreadMessages }}</span></button>
     <button class="profile-trigger" type="button" title="Profil" data-action="profile" onclick="novaskolToggleDrop('globalProfile')"><img src="{{ $userAvatarUrl }}" alt="Profil"></button>
 </div>
+@if (in_array($currentRole, ['admin', 'staff', 'enseignant']))
 <div id="globalNotifications" class="global-dropdown">
     <div class="global-drop-head"><h3>Notifications</h3><a class="global-link" href="{{ $notificationLink }}">Voir tout</a></div>
     @forelse($latestNotifications as $notification)
@@ -258,6 +283,7 @@
         <div class="global-item">Aucune notification.</div>
     @endforelse
 </div>
+@endif
 <div id="globalMessages" class="global-dropdown">
     <div class="global-drop-head"><h3>Messages</h3><a class="global-link" href="{{ $messageLink }}">Ouvrir chat</a></div>
     @forelse($latestMessages as $message)

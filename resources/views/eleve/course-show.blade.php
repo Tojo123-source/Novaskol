@@ -1,18 +1,35 @@
 <!DOCTYPE html>
 <html lang="fr">
-<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>{{ $course->titre }} - Novaskol</title>
-<link rel="stylesheet" href="{{ asset('legacy/assets/fontawesome/css/all.min.css') }}">
-<style>:root{--bg:#0f172a;--surface:#1e293b;--surface2:#334155;--text:#f1f5f9;--muted:#94a3b8;--line:#334155;--green:#22c55e;--blue:#3b82f6;--orange:#f59e0b}*{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,sans-serif;background:var(--bg);color:var(--text)}.wrap{max-width:900px;margin:0 auto;padding:24px 16px}.back{color:var(--muted);text-decoration:none;font-size:.85rem;display:inline-flex;align-items:center;gap:6px;margin-bottom:16px}.back:hover{color:var(--text)}.header{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px 24px;margin-bottom:20px}.header h1{margin:0 0 4px;font-size:1.2rem;display:flex;align-items:center;gap:10px}.header .meta{color:var(--muted);font-size:.82rem;display:flex;gap:12px;flex-wrap:wrap}.fav-btn{background:none;border:0;color:var(--orange);cursor:pointer;font-size:1.2rem;padding:0}.chapitre-card{background:var(--surface);border:1px solid var(--line);border-radius:10px;margin-bottom:10px;overflow:hidden}.ch-h{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;cursor:pointer;gap:10px}.ch-h:hover{background:rgba(255,255,255,.03)}.ch-h .left{display:flex;align-items:center;gap:10px;flex:1;min-width:0}.ch-h .num{width:26px;height:26px;border-radius:50%;background:var(--surface2);display:grid;place-items:center;font-size:.78rem;font-weight:700;flex-shrink:0}.ch-h .num.done{background:var(--green)}.ch-h h3{margin:0;font-size:.9rem}.ch-content{display:none;padding:0 16px 16px;border-top:1px solid var(--line)}.ch-content.open{display:block;padding-top:12px}.fiche{display:flex;align-items:center;gap:10px;padding:6px 0;font-size:.82rem;color:var(--muted)}.fiche i{width:18px}.btn{display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border-radius:6px;font-weight:600;font-size:.78rem;border:0;cursor:pointer;text-decoration:none}.btn-primary{background:var(--blue);color:#fff}.btn-success{background:var(--green);color:#fff}.btn-outline{background:transparent;border:1px solid var(--line);color:var(--text)}.btn-sm{padding:4px 8px;font-size:.72rem}.flash{padding:10px 14px;border-radius:8px;margin-bottom:14px;font-size:.85rem}.flash-success{background:rgba(34,197,94,.12);color:var(--green);border:1px solid rgba(34,197,94,.2)}</style>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>{{ $course->titre }} - Novaskol</title>
+    <link rel="stylesheet" href="{{ asset('legacy/assets/fontawesome/css/all.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('legacy/fa/css/font-awesome.min.css') }}">
+    @include('modules.professeur.bulletin.partials.styles')
+    <style>
+        .student-wrap{max-width:900px;margin:88px 20px 20px 256px}
+        :root{--blue:#3b82f6;--orange:#f59e0b;--muted:var(--text-sec);--line:var(--border);--green:var(--success);--surface2:#334155}
+        .header-info{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px 24px;margin-bottom:20px}.header-info h1{margin:0 0 4px;font-size:1.2rem;display:flex;align-items:center;gap:10px}.header-info .meta{color:var(--muted);font-size:.82rem;display:flex;gap:12px;flex-wrap:wrap}.fav-btn{background:none;border:0;color:var(--orange);cursor:pointer;font-size:1.2rem;padding:0}.chapitre-card{background:var(--surface);border:1px solid var(--line);border-radius:10px;margin-bottom:10px;overflow:hidden}.ch-h{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;cursor:pointer;gap:10px}.ch-h:hover{background:rgba(255,255,255,.03)}.ch-h .left{display:flex;align-items:center;gap:10px;flex:1;min-width:0}.ch-h .num{width:26px;height:26px;border-radius:50%;background:var(--surface2);display:grid;place-items:center;font-size:.78rem;font-weight:700;flex-shrink:0}.ch-h .num.done{background:var(--green)}.ch-h h3{margin:0;font-size:.9rem}.ch-content{display:none;padding:0 16px 16px;border-top:1px solid var(--line)}.ch-content.open{display:block;padding-top:12px}.fiche{display:flex;align-items:center;gap:10px;padding:6px 0;font-size:.82rem;color:var(--muted)}.fiche i{width:18px}.btn{display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border-radius:6px;font-weight:600;font-size:.78rem;border:0;cursor:pointer;text-decoration:none}.btn-primary{background:var(--blue);color:#fff}.btn-success{background:var(--green);color:#fff}.btn-outline{background:transparent;border:1px solid var(--line);color:var(--text)}.btn-sm{padding:4px 8px;font-size:.72rem}.flash{padding:10px 14px;border-radius:8px;margin-bottom:14px;font-size:.85rem}.flash-success{background:rgba(34,197,94,.12);color:var(--green);border:1px solid rgba(34,197,94,.2)}.empty{text-align:center;padding:40px;color:var(--muted)}
+        @media(max-width:1180px){.student-wrap{margin-left:16px;margin-right:16px}}
+        @media(max-width:700px){.student-wrap{margin-top:100px}}
+    </style>
 </head>
 <body>
-<div class="wrap">
+@include('modules.professeur.bulletin.partials.shell', ['activeModule' => 'eleve_course'])
+<header>
+    <div class="header-left">
+        <button class="burger-menu" onclick="toggleSidebar()"><i class="fa fa-bars"></i></button>
+        <button id="fullscreen-btn" onclick="toggleFullscreen()"><i class="fa fa-expand"></i></button>
+    </div>
+    <div class="header-center">{{ $course->titre }}</div>
+</header>
+<div class="student-wrap">
     @if (session('success'))
         <div class="flash flash-success">{{ session('success') }}</div>
     @endif
 
-    <a href="{{ route('eleve.portal') }}" class="back"><i class="fa fa-arrow-left"></i> Accueil</a>
-
-    <div class="header">
+    <div class="header-info">
         <div style="display:flex;justify-content:space-between;align-items:start;gap:12px">
             <div style="flex:1">
                 <h1>{{ $course->titre }}
@@ -84,5 +101,10 @@
         </div>
     @endforeach
 </div>
+<script>
+function toggleSub(e){const s=e.nextElementSibling,a=e.querySelector('.arrow');s.style.display=s.style.display==='block'?'none':'block';a.classList.toggle('fa-chevron-down');a.classList.toggle('fa-chevron-up')}
+function toggleSidebar(){document.getElementById('sidebar').classList.toggle('active');}
+function toggleFullscreen(){const i=document.getElementById('fullscreen-icon');if(!document.fullscreenElement){document.documentElement.requestFullscreen();i.classList.replace('fa-expand','fa-compress')}else{document.exitFullscreen();i.classList.replace('fa-compress','fa-expand')}}
+</script>
 </body>
 </html>

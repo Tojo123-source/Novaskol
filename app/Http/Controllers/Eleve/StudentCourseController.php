@@ -42,7 +42,12 @@ class StudentCourseController extends Controller
             ->limit(5)
             ->get();
 
-        return view('eleve.portal', compact('eleve', 'classe', 'courses', 'favIds', 'progressions', 'exercicesRecents'));
+        return view('eleve.portal', compact('eleve', 'classe', 'courses', 'favIds', 'progressions', 'exercicesRecents') + [
+            'modules' => app(\App\Services\Novaskol\ModuleRegistry::class)->all(),
+            'ecole' => DB::table('ecole')->select('nom', 'logo')->first() ?: (object) ['nom' => 'Ecole', 'logo' => 'novaskol.png'],
+            'userPermissions' => [],
+            'activeModule' => 'eleve_portal',
+        ]);
     }
 
     public function courses()
@@ -59,7 +64,12 @@ class StudentCourseController extends Controller
         $favIds = DB::table('course_favoris')->where('eleve_id', $eleve->id)->pluck('course_id')->toArray();
         $matieres = DB::table('matieres')->orderBy('nom')->get();
 
-        return view('eleve.courses', compact('courses', 'favIds', 'matieres', 'search'));
+        return view('eleve.courses', compact('courses', 'favIds', 'matieres', 'search') + [
+            'modules' => app(\App\Services\Novaskol\ModuleRegistry::class)->all(),
+            'ecole' => DB::table('ecole')->select('nom', 'logo')->first() ?: (object) ['nom' => 'Ecole', 'logo' => 'novaskol.png'],
+            'userPermissions' => [],
+            'activeModule' => 'eleve_courses',
+        ]);
     }
 
     public function showCourse(int $id)
@@ -83,7 +93,12 @@ class StudentCourseController extends Controller
 
         $isFav = DB::table('course_favoris')->where('eleve_id', $eleve->id)->where('course_id', $id)->exists();
 
-        return view('eleve.course-show', compact('course', 'matiere', 'chapitres', 'isFav'));
+        return view('eleve.course-show', compact('course', 'matiere', 'chapitres', 'isFav') + [
+            'modules' => app(\App\Services\Novaskol\ModuleRegistry::class)->all(),
+            'ecole' => DB::table('ecole')->select('nom', 'logo')->first() ?: (object) ['nom' => 'Ecole', 'logo' => 'novaskol.png'],
+            'userPermissions' => [],
+            'activeModule' => 'eleve_course',
+        ]);
     }
 
     public function toggleFavori(int $courseId)
@@ -129,7 +144,12 @@ class StudentCourseController extends Controller
             ->orderByDesc('course_progression.created_at')
             ->get();
 
-        return view('eleve.historique', compact('submissions', 'progress'));
+        return view('eleve.historique', compact('submissions', 'progress') + [
+            'modules' => app(\App\Services\Novaskol\ModuleRegistry::class)->all(),
+            'ecole' => DB::table('ecole')->select('nom', 'logo')->first() ?: (object) ['nom' => 'Ecole', 'logo' => 'novaskol.png'],
+            'userPermissions' => [],
+            'activeModule' => 'eleve_historique',
+        ]);
     }
 
     public function rapport()
@@ -168,6 +188,11 @@ class StudentCourseController extends Controller
             ->orderBy('mois')
             ->get();
 
-        return view('eleve.rapport', compact('eleve', 'totalCourses', 'totalChapitres', 'completedChapitres', 'avgScore', 'parMatiere', 'moyenneNotes', 'evolution'));
+        return view('eleve.rapport', compact('eleve', 'totalCourses', 'totalChapitres', 'completedChapitres', 'avgScore', 'parMatiere', 'moyenneNotes', 'evolution') + [
+            'modules' => app(\App\Services\Novaskol\ModuleRegistry::class)->all(),
+            'ecole' => DB::table('ecole')->select('nom', 'logo')->first() ?: (object) ['nom' => 'Ecole', 'logo' => 'novaskol.png'],
+            'userPermissions' => [],
+            'activeModule' => 'eleve_rapport',
+        ]);
     }
 }

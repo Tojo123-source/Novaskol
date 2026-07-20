@@ -1,0 +1,2587 @@
+\documentclass[12pt,a4paper,twoside]{report}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{graphicx}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+\usepackage{geometry}
+\geometry{margin=2.5cm}
+\usepackage{setspace}
+\onehalfspacing
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+\setlength{\headheight}{14.5pt}
+\addtolength{\topmargin}{-2.5pt}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{enumitem}
+
+\definecolor{codebg}{RGB}{245,245,245}
+\definecolor{codeframe}{RGB}{200,200,200}
+
+\lstset{
+    basicstyle=\small\ttfamily,
+    backgroundcolor=\color{codebg},
+    frame=single,
+    rulecolor=\color{codeframe},
+    breaklines=true,
+    tabsize=4,
+    literate={é}{{\'e}}1 {è}{{\`e}}1 {ê}{{\^e}}1 {ë}{{\"e}}1 {û}{{\^u}}1 {ù}{{\`u}}1 {ü}{{\"u}}1 {î}{{\^i}}1 {ï}{{\"i}}1 {ô}{{\^o}}1 {ö}{{\"o}}1 {à}{{\`a}}1 {â}{{\^a}}1 {ç}{{\c{c}}}1 {œ}{{\oe}}1 {É}{{\'E}}1 {È}{{\`E}}1 {Ê}{{\^E}}1 {Ë}{{\"E}}1 {Û}{{\^U}}1 {Ù}{{\`U}}1 {Ü}{{\"U}}1 {Î}{{\^I}}1 {Ï}{{\"I}}1 {Ô}{{\^O}}1 {Ö}{{\"O}}1 {À}{{\`A}}1 {Â}{{\^A}}1 {Ç}{{\c{C}}}1
+}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[LE,RO]{\thepage}
+\fancyhead[RE]{\leftmark}
+\fancyhead[LO]{\rightmark}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0pt}
+
+\fancypagestyle{plain}{%
+    \fancyhf{}
+    \fancyhead[LE,RO]{\thepage}
+    \renewcommand{\headrulewidth}{0pt}
+}
+
+\titleformat{\chapter}[display]
+    {\normalfont\bfseries\LARGE}
+    {\chaptertitlename\ \thechapter}{20pt}{\LARGE}
+\titleformat{\section}{\normalfont\bfseries\Large}{\thesection}{1em}{}
+\titleformat{\subsection}{\normalfont\bfseries\large}{\thesubsection}{1em}{}
+
+\begin{document}
+
+\begin{titlepage}
+    \begin{center}
+        \vspace*{2cm}
+        {\Huge \textbf{Livre de Soutenance}}\\[1.5cm]
+        {\Large \textbf{Conception et réalisation d'une application de gestion scolaire hors-ligne avec Laravel, Electron et SQLite}}\\[2cm]
+        {\large Présenté par :}\\[0.3cm]
+        {\Large \textbf{Tojo Nambinina RANDRIAMIFALY}}\\[1.5cm]
+        {\large Encadré par :}\\[0.3cm]
+        {\Large \textit{Nom de l'encadrant}}\\[2cm]
+        \begin{tabular}{rl}
+            \textbf{Parcours :} & Communication en Audiovisuelle et Numérique (CAN)\\
+            \textbf{Spécialisation :} & Développement Web (après L3)\\
+            \textbf{Année universitaire :} & 2025--2026
+        \end{tabular}\\[2cm]
+        \vfill
+    \end{center}
+\end{titlepage}
+
+\chapter*{Remerciements}
+\addcontentsline{toc}{chapter}{Remerciements}
+
+En premier lieu, nous remercions Dieu tout-puissant de nous avoir donné la force, la patience et la détermination nécessaires pour mener à bien ce projet.
+
+Nous tenons à exprimer notre profonde gratitude à notre encadrant pour ses conseils précieux, sa disponibilité et son accompagnement tout au long de ce travail. Sa confiance et ses orientations éclairées ont grandement contribué à la réussite de ce projet.
+
+Nous remercions chaleureusement les membres du jury qui nous font l'honneur d'évaluer ce travail.
+
+Nos sincères remerciements vont également à toutes les personnes qui ont participé de près ou de loin à la réalisation de ce projet, en particulier les enseignants et le personnel administratif des établissements scolaires qui nous ont accordé de leur temps pour les entretiens et les tests.
+
+Enfin, nous exprimons notre reconnaissance à nos familles et à nos proches pour leur soutien indéfectible et leurs encouragements tout au long de notre parcours universitaire.
+
+\chapter*{Dédicaces}
+\addcontentsline{toc}{chapter}{Dédicaces}
+
+Je dédie ce modeste travail à :
+
+Mes chers parents, pour leur amour inconditionnel, leurs sacrifices et leur soutien permanent tout au long de mes études.
+
+Mes frères et sœurs, pour leur encouragement et leur présence à mes côtés.
+
+Tous mes amis et camarades de promotion, pour les moments partagés et l'entraide mutuelle.
+
+Tous ceux qui ont contribué, de près ou de loin, à la réalisation de ce projet.
+
+\tableofcontents
+\listoffigures
+\listoftables
+
+\chapter*{Introduction générale}
+\addcontentsline{toc}{chapter}{Introduction générale}
+
+L'informatique a profondément transformé notre société au cours des dernières décennies. La numérisation des processus administratifs et pédagogiques dans le domaine de l'éducation est devenue une nécessité incontournable pour améliorer l'efficacité, la transparence et la qualité du service rendu aux élèves, aux enseignants et aux parents.
+
+Dans de nombreux établissements scolaires, en particulier dans les pays en développement et les zones rurales, la gestion des notes, des absences, des emplois du temps et de la communication avec les parents s'effectue encore de manière manuelle ou semi-automatisée à l'aide d'outils disparates. Cette situation engendre des problèmes majeurs : perte de temps, erreurs de saisie, difficultés de suivi, absence de centralisation des données, et communication limitée entre les différents acteurs de la communauté éducative.
+
+Par ailleurs, les solutions de gestion scolaire existantes sur le marché présentent plusieurs limitations : elles sont souvent payantes, nécessitent une connexion Internet permanente, sont complexes à déployer, ou ne répondent pas aux spécificités du système éducatif local. La plupart des établissements scolaires ne disposent pas d'une infrastructure réseau fiable ni d'un accès Internet permanent, ce qui rend les solutions web traditionnelles inadaptées à leur contexte.
+
+C'est dans ce contexte que s'inscrit notre projet de fin d'études : concevoir et réaliser une application de gestion scolaire complète, fonctionnant hors-ligne, déployable localement sur un simple PC sans nécessité de serveur dédié ni de connexion Internet. L'application, baptisée \textbf{Novaskol}, se présente sous la forme d'une application de bureau autonome (Electron + Laravel) couplée à une application mobile companion pour les usages mobiles, avec un mécanisme de synchronisation multi-appareils sur le réseau local.
+
+\textbf{Note personnelle.} Mon parcours en Communication en Audiovisuelle et Numérique (CAN) m'a sensibilisé dès le début à la place du numérique dans notre société. Après la L3, j'ai naturellement orienté ma formation vers le développement web, fasciné par la capacité de créer des solutions accessibles, fonctionnelles et utiles. Bien que je ne vienne pas d'un cursus purement informatique, c'est précisément cette transition — du numérique vers la technique web — qui m'a poussé à choisir Novaskol comme projet. Je voyais dans ce système une opportunité de laisser une trace concrète, une solution que j'ai choisie, façonnée et portée de bout en bout, reflet de mon intérêt pour le web et de ma volonté de créer quelque chose qui a du sens.
+
+Notre problématique centrale peut être formulée ainsi : \textbf{Comment concevoir et développer un système de gestion scolaire complet, accessible hors-ligne, facile à déployer et à utiliser, qui réponde aux besoins des établissements scolaires en matière de gestion administrative, pédagogique et financière ?}
+
+Pour répondre à cette problématique, nous avons adopté une démarche méthodologique rigoureuse :
+\begin{enumerate}
+    \item \textbf{Analyse des besoins} auprès des acteurs du système éducatif (direction, enseignants, parents, personnel administratif)
+    \item \textbf{Étude comparative} des solutions existantes et des technologies disponibles
+    \item \textbf{Conception architecturale} et modélisation UML complète
+    \item \textbf{Développement itératif} avec des cycles de test fréquents (méthodologie agile)
+    \item \textbf{Packaging et déploiement} pour une distribution facilitée via un installateur Windows
+\end{enumerate}
+
+Les principales fonctionnalités offertes par Novaskol couvrent l'ensemble du cycle de gestion scolaire : inscription des élèves, gestion des classes et des matières, saisie et consultation des notes, génération de bulletins et de relevés, gestion des emplois du temps, suivi des présences par QR code, communication interne par messagerie instantanée, gestion financière (paiements, dépenses, salaires), gestion des ressources humaines, et synchronisation multi-appareils sur le réseau local.
+
+Le système est articulé autour de 45 modules fonctionnels répartis en 8 catégories, 67 tables de base de données, et 33 migrations Laravel, le tout embarqué dans une application de bureau Electron de 650 Mo.
+
+Ce mémoire est organisé en quatre chapitres :
+\begin{description}
+    \item[Le premier chapitre] présente l'état de l'art des technologies utilisées : architectures logicielles, modèle client/serveur, technologies web, frameworks PHP, systèmes de gestion de base de données, et applications de bureau hybrides.
+    \item[Le deuxième chapitre] est consacré à la présentation détaillée de Novaskol : son architecture globale, les technologies employées, sa base de données exhaustive, et l'ensemble de ses modules fonctionnels.
+    \item[Le troisième chapitre] détaille l'analyse et la conception du système à l'aide du langage UML : identification des acteurs, diagrammes de cas d'utilisation, de séquence, d'activité, et modèle conceptuel de données complet.
+    \item[Le quatrième chapitre] présente la réalisation pratique : environnement de développement, implémentation du backend et du frontend, application de bureau Electron avec son processus de démarrage, applications companion (mobile et desktop), processus de packaging et déploiement, et présentation des interfaces principales.
+\end{description}
+
+Enfin, une conclusion générale synthétise les résultats obtenus, les difficultés rencontrées, les compétences acquises, et propose des perspectives d'évolution pour le projet.
+
+% ======================================================================
+\chapter{État de l'art et technologies utilisées}
+% ======================================================================
+
+\section{Introduction}
+
+La réalisation d'un système d'information moderne pour la gestion scolaire nécessite une maîtrise approfondie des concepts architecturaux et des technologies disponibles. Ce chapitre présente les fondements théoriques sur lesquels repose notre projet Novaskol : les architectures logicielles, le modèle client/serveur, les technologies web, les systèmes de gestion de base de données, et les frameworks modernes de développement d'applications de bureau et mobiles.
+
+L'objectif de ce chapitre est de situer notre projet dans le paysage technologique actuel, de justifier nos choix techniques, et de fournir les bases conceptuelles nécessaires à la compréhension des chapitres suivants.
+
+\section{Architecture logicielle}
+
+\subsection{Définition}
+
+L'architecture logicielle est la structure fondamentale d'un système logiciel, comprenant ses composants, leurs relations mutuelles et avec l'environnement, ainsi que les principes guidant sa conception et son évolution. Une bonne architecture permet de répondre aux exigences fonctionnelles et non fonctionnelles du système tout en facilitant sa maintenance et son évolution.
+
+\subsection{Le modèle 4+1 vues de Philippe Kruchten}
+
+Selon Philippe Kruchten (1995), l'architecture d'un système logiciel peut être représentée selon cinq vues complémentaires, chacune décrivant un aspect particulier du système :
+
+\begin{description}
+    \item[Vue Logique :] La vue logique se concentre sur la modélisation des principaux éléments d'architecture et mécanismes logiciels. Elle comprend les modèles d'analyse et de conception du système, définissant les entités métier, leurs relations et leur comportement. Dans le cadre de Novaskol, cette vue correspond aux modèles métier : élèves, enseignants, classes, matières, notes, bulletins, etc.
+    \item[Vue Composants :] La vue composants identifie les modules logiciels qui implémentent les éléments définis dans la vue logique. Pour Novaskol, ces composants incluent les contrôleurs (30+), les services métier (9), les middlewares (3), les modèles Eloquent, et les modules fonctionnels de l'application.
+    \item[Vue Processus :] Cette vue définit les processus, la coordination et la synchronisation des tâches. Dans notre architecture, cela correspond au serveur PHP intégré, aux files d'attente (queues Laravel) pour les tâches asynchrones, à la synchronisation multi-appareils, et aux processus Electron (main process, renderer process).
+    \item[Vue Déploiement :] La vue déploiement précise l'architecture de production : ressources matérielles, implantation des composants, et configuration réseau. Novaskol peut être déployé selon trois modes : local (application de bureau autonome avec SQLite), hébergement (serveur web Apache/Nginx avec MySQL), ou hybride (desktop + appareils connectés).
+    \item[Vue Use-Cases :] Les cas d'utilisation constituent le fil conducteur qui relie les quatre autres vues. Ils expriment les besoins fonctionnels du système du point de vue des utilisateurs finaux.
+\end{description}
+
+\subsection{Le patron d'architecture MVC (Modèle-Vue-Contrôleur)}
+
+Le patron d'architecture MVC (Modèle-Vue-Contrôleur) est l'un des patrons d'architecture les plus utilisés dans le développement d'applications web. Il propose une séparation claire des responsabilités en trois composants distincts :
+
+\begin{description}
+    \item[Le Modèle (Model) :] Gère les données et la logique métier. Il encapsule l'accès à la base de données, les règles de validation, et les relations entre les entités. Dans Laravel, les modèles Eloquent ORM implémentent ce rôle, permettant d'interagir avec la base de données via une interface orientée objet.
+    \item[La Vue (View) :] Assure la présentation des données à l'utilisateur. Elle reçoit les données du contrôleur et les formate pour l'affichage. Novaskol utilise le moteur de templates Blade pour générer les interfaces HTML, avec TailwindCSS pour le style.
+    \item[Le Contrôleur (Controller) :] Fait le lien entre le modèle et la vue. Il traite les requêtes HTTP, orchestre la logique d'interaction, et prépare les données pour la vue.
+\end{description}
+
+\begin{verbatim}
++------------------+     +------------------+     +------------------+
+| Client           |---->| Controleur       |---->| Modele           |
+| (Navigateur)     |     | (Controller)     |     | (Model)          |
+|                  |<----|                  |<----|                  |
+|                  |     | Vue              |     | Base de          |
+|                  |     | (Blade)          |     | donnees          |
++------------------+     +------------------+     +------------------+
+\end{verbatim}
+
+\begin{center}
+\textbf{Figure I.1 : Schéma de l'architecture MVC (Modèle-Vue-Contrôleur)}
+\end{center}
+
+\section{Architectures distribuées}
+
+\subsection{Définition}
+
+Une architecture distribuée est une architecture dont les ressources ne se trouvent pas au même endroit ou sur la même machine. Les fonctions de l'application sont réparties entre plusieurs systèmes interconnectés par un réseau.
+
+\subsection{Types d'architectures distribuées}
+
+\begin{description}
+    \item[Architecture centralisée :] Toutes les ressources sont sur une seule machine. Le traitement, les données et la logique métier sont concentrés sur un seul système.
+    \item[Architecture client/serveur :] Répartition entre des clients (qui demandent des services) et un ou plusieurs serveurs (qui fournissent ces services).
+    \item[Architecture peer-to-peer (P2P) :] Chaque nœud est à la fois client et serveur.
+    \item[Architecture multi-tiers (n-tiers) :] L'application est divisée en plusieurs couches distinctes, chacune ayant une responsabilité spécifique.
+\end{description}
+
+\section{Modèle Client/Serveur}
+
+\subsection{Définition}
+
+Le modèle client/serveur est un modèle de communication où des machines clientes contactent un serveur pour obtenir des services. Un client envoie une requête au serveur, qui la traite et retourne une réponse.
+
+\subsection{Principe de fonctionnement}
+
+Le fonctionnement du modèle client/serveur suit un cycle requête-réponse en plusieurs étapes :
+\begin{enumerate}
+    \item Le client établit une connexion avec le serveur
+    \item Le client envoie une requête décrivant l'opération souhaitée
+    \item Le serveur traite la requête (accès à la base de données, calculs, etc.)
+    \item Le serveur renvoie la réponse au client
+    \item Le client traite la réponse et l'affiche à l'utilisateur
+\end{enumerate}
+
+\begin{verbatim}
++------------------+    Requete    +------------------+
+| Client           |-------------->| Serveur          |
+| (demande service)|               | (fournit service)|
+|                  |<--------------|                  |
++------------------+    Reponse    +------------------+
+\end{verbatim}
+
+\begin{center}
+\textbf{Figure I.2 : Principe de fonctionnement du Client/Serveur}
+\end{center}
+
+\subsection{Architecture à 2 niveaux (2-tiers)}
+
+Dans cette configuration, le client interagit directement avec le serveur de base de données.
+
+\begin{verbatim}
++------------------+    +------------------+
+| Client           |<-->| Serveur BDD      |
+| (IHM + Metier)   |    | (SQL)            |
++------------------+    +------------------+
+\end{verbatim}
+
+\begin{center}
+\textbf{Figure I.3 : Architecture à 2 niveaux}
+\end{center}
+
+\subsection{Architecture à 3 niveaux (3-tiers)}
+
+L'architecture à trois niveaux introduit un niveau intermédiaire, le serveur d'application (middleware), qui contient la logique métier :
+
+\begin{verbatim}
++------------------+    +------------------+    +------------------+
+| Niveau 1         |    | Niveau 2         |    | Niveau 3         |
+| Client           |<-->| Application      |<-->| Donnees          |
+| (Interface)      |    | (Logique metier) |    | (Base de donnees)|
++------------------+    +------------------+    +------------------+
+\end{verbatim}
+
+\begin{center}
+\textbf{Figure I.4 : Architecture à 3 niveaux}
+\end{center}
+
+Les avantages de cette architecture sont :
+\begin{itemize}
+    \item Séparation claire des responsabilités
+    \item Meilleure évolutivité (chaque niveau peut être mis à l'échelle indépendamment)
+    \item Maintenance facilitée
+    \item Sécurité renforcée
+\end{itemize}
+
+\textbf{Application dans Novaskol :}
+\begin{itemize}
+    \item \textbf{Niveau 1 (Client)} : Navigateur web ou fenêtre Electron
+    \item \textbf{Niveau 2 (Application)} : Serveur PHP/Laravel avec sa logique métier
+    \item \textbf{Niveau 3 (Données)} : Base de données SQLite ou MySQL
+\end{itemize}
+
+\subsection{Architecture multi-niveaux (n-tiers)}
+
+L'architecture multi-niveaux étend le modèle à 3 niveaux en décomposant davantage les couches. Novaskol, dans sa configuration Electron, utilise une variante de cette architecture avec les couches suivantes :
+\begin{itemize}
+    \item Couche présentation : Interface utilisateur (HTML/Blade)
+    \item Couche contrôle : Contrôleurs Laravel
+    \item Couche service : Services métier
+    \item Couche persistance : Modèles Eloquent
+    \item Couche données : SQLite/MySQL
+\end{itemize}
+
+\subsection{Middleware}
+
+Un middleware est un logiciel qui sert d'intermédiaire entre les différentes couches d'une architecture distribuée. Il facilite la communication, la gestion des transactions, et la coordination entre les composants.
+
+Dans Laravel, les middlewares sont des filtres HTTP qui s'exécutent avant ou après le traitement d'une requête. Novaskol utilise un middleware personnalisé \texttt{module.access} pour le contrôle d'accès basé sur les modules.
+
+\section{Internet et le Web}
+
+\subsection{Internet}
+
+Internet est un réseau mondial de réseaux interconnectés utilisant le protocole TCP/IP.
+
+\textbf{Principaux protocoles :}
+\begin{itemize}
+    \item \textbf{TCP/IP} : Protocole de base garantissant la transmission fiable des données
+    \item \textbf{HTTP/HTTPS} : Protocole de transfert hypertexte
+    \item \textbf{FTP} : Protocole de transfert de fichiers
+    \item \textbf{SMTP/POP3/IMAP} : Protocoles de messagerie électronique
+    \item \textbf{DNS} : Système de résolution de noms de domaine
+\end{itemize}
+
+\subsection{Intranet et Extranet}
+
+\begin{itemize}
+    \item \textbf{Intranet} : Réseau interne à une organisation utilisant les technologies Internet
+    \item \textbf{Extranet} : Extension de l'intranet permettant à des partenaires externes d'accéder à certaines ressources
+\end{itemize}
+
+\subsection{Le World Wide Web}
+
+\subsubsection{Sites web statiques}
+
+Composés de pages HTML pré-générées, servies telles quelles par le serveur web.
+
+\subsubsection{Sites web dynamiques}
+
+Les pages sont générées à la volée en fonction des paramètres de la requête et des données stockées en base. Ils utilisent des langages côté serveur (PHP, Python, Java, etc.).
+
+\subsection{Le protocole HTTP}
+
+HTTP (HyperText Transfer Protocol) est le protocole de communication utilisé par le Web. Novaskol utilise le serveur HTTP intégré de PHP (Artisan serve) pour le mode local, et peut être déployé sous Apache ou Nginx pour le mode hébergé.
+
+\subsection{REST API}
+
+REST (Representational State Transfer) est un style d'architecture pour les systèmes hypermédia distribués. Novaskol expose des API RESTful pour la synchronisation entre l'application desktop et les applications mobiles Connecte.
+
+\section{Technologies de développement web}
+
+\subsection{PHP}
+
+\subsubsection{Présentation}
+
+PHP (Hypertext Preprocessor) est un langage de programmation côté serveur, spécialement conçu pour le développement d'applications web. Créé par Rasmus Lerdorf en 1994, PHP est aujourd'hui l'un des langages les plus utilisés pour le développement web.
+
+\subsubsection{PHP 8.2}
+
+La version 8.2 de PHP, utilisée dans Novaskol, apporte des améliorations significatives :
+\begin{itemize}
+    \item \textbf{Type system amélioré} : Types d'union, type mixed, types statiques
+    \item \textbf{JIT (Just-In-Time Compilation)} : Compilation à la volée pour des performances accrues
+    \item \textbf{Named arguments} : Arguments nommés pour les fonctions
+    \item \textbf{Match expression} : Alternative améliorée au switch
+    \item \textbf{Readonly classes} : Classes immutables
+    \item \textbf{Performance} : Jusqu'à 3$\times$ plus rapide que PHP 7.x
+\end{itemize}
+
+\subsubsection{Avantages de PHP pour Novaskol}
+
+\begin{itemize}
+    \item Large communauté et écosystème riche
+    \item Support natif de SQLite (extension PDO\_SQLITE)
+    \item Facilité d'apprentissage et de déploiement
+    \item Compatibilité avec tous les hébergeurs
+    \item Performances accrues avec PHP 8.x
+    \item Bibliothèque standard riche
+\end{itemize}
+
+\subsection{Laravel}
+
+\subsubsection{Présentation}
+
+Laravel est un framework PHP open-source, créé par Taylor Otwell en 2011, qui suit le patron d'architecture MVC. Il est aujourd'hui le framework PHP le plus populaire.
+
+\subsubsection{Version utilisée : Laravel 12}
+
+Laravel 12, utilisé dans Novaskol, offre les fonctionnalités suivantes :
+
+\begin{description}
+    \item[Eloquent ORM :] Mappage objet-relationnel intuitif.
+    \item[Blade Template Engine :] Moteur de templates performant avec héritage de vues, sections, composants.
+    \item[Migration System :] Versionnement du schéma de base de données.
+    \item[Artisan CLI :] Outil en ligne de commande pour les tâches courantes.
+    \item[Queues :] Gestion de tâches asynchrones.
+    \item[Security :] Protection intégrée contre les vulnérabilités web courantes.
+    \item[Testing :] PHPUnit intégré avec des helpers de test.
+\end{description}
+
+\subsubsection{Fonctionnalités clés utilisées dans Novaskol}
+
+\begin{itemize}
+    \item Service Providers
+    \item Middleware (module.access)
+    \item Event \& Listeners
+    \item Filesystem
+    \item Cache
+    \item Validation
+    \item Mail (notifications)
+    \item Routing
+\end{itemize}
+
+\subsection{Comparaison des frameworks PHP}
+
+\begin{table}[h]
+\centering
+\caption{Comparaison des frameworks PHP}
+\begin{tabular}{lcccc}
+\toprule
+Critère & Laravel & Symfony & CodeIgniter & CakePHP \\
+\midrule
+Courbe d'apprentissage & Facile & Modérée & Facile & Modérée \\
+Performance & Bonne & Bonne & Très bonne & Bonne \\
+ORM & Eloquent & Doctrine & Custom & CakePHP ORM \\
+Templating & Blade & Twig & Custom & Custom \\
+Communauté & Très large & Large & Modérée & Modérée \\
+Version actuelle & 12.x & 7.x & 4.x & 5.x \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Node.js et npm}
+
+Node.js est un environnement d'exécution JavaScript côté serveur. npm est le gestionnaire de paquets associé.
+
+Dans Novaskol, ils sont utilisés pour :
+\begin{itemize}
+    \item Le processus principal Electron
+    \item Les outils de build (Vite, TailwindCSS, electron-builder)
+    \item La gestion des dépendances frontend
+    \item Les scripts de développement et de build
+\end{itemize}
+
+\subsection{Vite}
+
+Vite est un outil de build moderne qui offre un développement rapide avec rechargement à chaud (HMR). Novaskol utilise Vite 7 pour compiler les assets CSS (TailwindCSS) et JavaScript.
+
+\subsection{TailwindCSS}
+
+TailwindCSS est un framework CSS utilitaire avec une approche "utility-first". Version 4 utilisée dans Novaskol, avec configuration automatique.
+
+\section{Systèmes de Gestion de Base de Données (SGBD)}
+
+\subsection{Définition}
+
+Un Système de Gestion de Base de Données (SGBD) est un logiciel permettant de stocker, manipuler et interroger des données de manière structurée. Il assure la persistance, l'intégrité, la sécurité et la gestion des accès concurrents.
+
+\subsection{SQLite}
+
+SQLite est un SGBD relationnel embarqué, léger et sans serveur, stockant les données dans un fichier unique.
+
+\textbf{Caractéristiques :}
+\begin{itemize}
+    \item Aucune configuration serveur nécessaire
+    \item Base de données = fichier unique
+    \item Performant pour applications mono-utilisateur
+    \item Supporté nativement par PHP
+    \item Taille maximale : 281 To
+\end{itemize}
+
+\textbf{Utilisation dans Novaskol :} Base de données par défaut pour le mode hors-ligne.
+
+\subsection{MySQL/MariaDB}
+
+MySQL est un SGBD relationnel client/serveur. MariaDB est un fork communautaire.
+
+\textbf{Caractéristiques :}
+\begin{itemize}
+    \item Architecture client/serveur avec processus dédié
+    \item Gestion multi-utilisateurs avancée
+    \item Performances élevées
+    \item Transactions ACID
+    \item Procédures stockées, triggers, vues
+\end{itemize}
+
+\textbf{Utilisation dans Novaskol :} Déploiements hébergés et installations multi-utilisateurs.
+
+\section{Applications de bureau hybrides}
+
+\subsection{Electron}
+
+Electron est un framework open-source (GitHub, 2013) permettant de créer des applications de bureau multiplateformes avec HTML/CSS/JavaScript. Utilise Chromium pour le rendu et Node.js pour les API système.
+
+\textbf{Version utilisée :} Electron 37.2.1
+
+\textbf{Architecture :}
+\begin{itemize}
+    \item \textbf{Main process (Node.js)} : Cycle de vie, fenêtres, API système, IPC
+    \item \textbf{Renderer process (Chromium)} : Interface web, accès limité système
+\end{itemize}
+
+\begin{verbatim}
++--------------------------------------------------------+
+|              APPLICATION ELECTRON                        |
+|  +------------------+    +--------------------------+  |
+|  | Main Process     |<-->| Renderer Process          |  |
+|  | (Node.js)        | IPC| (Chromium)               |  |
+|  | - Fenetres       |    | - HTML/CSS/JS            |  |
+|  | - Systeme        |    | - Interface web          |  |
+|  | - Fichiers       |    |                          |  |
+|  +------------------+    +--------------------------+  |
++--------------------------------------------------------+
+\end{verbatim}
+
+\begin{center}
+\textbf{Figure I.5 : Architecture d'une application Electron}
+\end{center}
+
+\textbf{Avantages pour Novaskol :}
+\begin{itemize}
+    \item Packaging complet PHP + Laravel
+    \item Déploiement simplifié (installateur unique)
+    \item Fonctionnement hors-ligne
+    \item Accès API système
+    \item Expérience native
+\end{itemize}
+
+\subsection{electron-builder}
+
+Outil de packaging pour applications Electron. Version 26.0.12 utilisée avec cible NSIS Windows.
+
+\textbf{Configuration :}
+\begin{itemize}
+    \item Installateur non one-click avec choix du répertoire
+    \item Raccourcis Bureau et Menu Démarrer
+    \item Ressources Laravel intégrées
+\end{itemize}
+
+\subsection{Capacitor}
+
+Capacitor est un framework de développement d'applications mobiles hybrides, développé par l'équipe Ionic.
+
+\textbf{Version utilisée :} Capacitor 8.3.3
+
+\textbf{Avantages :}
+\begin{itemize}
+    \item Accès aux API natives (appareil photo, notifications, etc.)
+    \item Génération de builds Android et iOS à partir d'une base de code web
+    \item Performance proche du natif
+\end{itemize}
+
+\section{Conclusion}
+
+Ce chapitre nous a permis de poser les bases théoriques et technologiques de notre projet. Le modèle client/serveur à 3 niveaux, couplé à l'architecture MVC de Laravel, constitue le socle architectural de Novaskol. Le choix des technologies (PHP 8.2, Laravel 12, SQLite, Electron 37, Capacitor 8) a été guidé par les impératifs de simplicité de déploiement, de fonctionnement hors-ligne, de maintenabilité et d'évolutivité.
+
+% ======================================================================
+\chapter{Architecture et technologies de Novaskol}
+% ======================================================================
+
+\section{Introduction}
+
+Ce chapitre est consacré à la présentation détaillée de Novaskol : son contexte, son architecture globale, ses composants technologiques, sa base de données exhaustive, et l'ensemble des modules fonctionnels qui le composent.
+
+\section{Présentation du projet Novaskol}
+
+\subsection{Contexte et objectifs}
+
+Novaskol est un système de gestion scolaire complet conçu pour répondre aux besoins des établissements d'enseignement primaire, secondaire et technique. Le projet est né du constat que de nombreuses écoles, en particulier dans les zones à connectivité Internet limitée, ne disposent pas d'outils numériques adaptés à leur contexte.
+
+L'auteur du projet est \textbf{Tojo Nambinina RANDRIAMIFALY}, et le projet est publié sous licence MIT.
+
+\textbf{Objectifs principaux :}
+\begin{enumerate}
+    \item Fournir un outil de gestion scolaire complet et accessible hors-ligne
+    \item Simplifier le déploiement via une application de bureau autonome
+    \item Permettre une synchronisation multi-appareils sur le réseau local
+    \item Offrir une interface adaptée à chaque profil d'utilisateur
+    \item Garantir la sécurité et l'intégrité des données
+    \item Assurer la portabilité sur Windows 10/11
+\end{enumerate}
+
+\subsection{Spécifications techniques}
+
+\begin{table}[h]
+\centering
+\caption{Spécifications techniques de Novaskol}
+\begin{tabular}{lp{10cm}}
+\toprule
+Spécification & Valeur \\
+\midrule
+Version & 1.0.6 \\
+Backend & Laravel 12.x (PHP 8.2+) \\
+Application de bureau & Electron 37.2.1 \\
+Base de données & SQLite (défaut) / MySQL 8.0 / MariaDB \\
+Application mobile & React 19 + Capacitor 8 (Android + PWA) \\
+Companion Desktop & Electron 37 (Windows) \\
+Licence & MIT \\
+Auteur & Tojo Nambinina RANDRIAMIFALY \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Architecture globale du système}
+
+\subsection{Vue d'ensemble}
+
+L'architecture de Novaskol est organisée en plusieurs couches interconnectées, formant un écosystème complet de gestion scolaire :
+
+\begin{verbatim}
++----------------------------------------------------------------------------------+
+|                         APPLICATION DE BUREAU (Electron)                          |
+|  +---------------------------------------------------------------------------+   |
+|  |                         PROCESSUS PRINCIPAL (main.cjs)                    |   |
+|  |  - Splash screen (460x360, frameless)                                     |   |
+|  |  - Gestion du cycle de vie du serveur PHP                                 |   |
+|  |  - Communication IPC via contextBridge (preload.cjs)                      |   |
+|  |  - Fenetre principale (1440x920, min 1220x760)                            |   |
+|  |  - Instance unique via app.requestSingleInstanceLock()                    |   |
+|  +---------------------------------------------------------------------------+   |
+|                                   |                                                |
+|                                   v                                                |
+|  +---------------------------------------------------------------------------+   |
+|  |                         LARAVEL BACKEND (PHP 8.2.0)                       |   |
+|  |  +----------------+  +----------------+  +-----------------------------+  |   |
+|  |  | Controleurs    |  | Services       |  | Middleware & Auth           |  |   |
+|  |  | (30 fichiers)  |  | (9 fichiers)   |  | (module.access)            |  |   |
+|  |  +----------------+  +----------------+  +-----------------------------+  |   |
+|  |  +----------------+  +----------------+  +-----------------------------+  |   |
+|  |  | Routes (web)   |  | Models (ORM)   |  | Artisan Commands            |  |   |
+|  |  | (287 lignes)   |  | (Eloquent)     |  | (novaskol:prepare, etc.)   |  |   |
+|  |  +----------------+  +----------------+  +-----------------------------+  |   |
+|  |  +----------------+  +----------------+  +-----------------------------+  |   |
+|  |  | Vue Blade      |  | Assets CSS/JS  |  | Config (novaskol, app, etc)|  |   |
+|  |  | (66 fichiers)  |  | (Vite+Tailwind)|  |                             |  |   |
+|  |  +----------------+  +----------------+  +-----------------------------+  |   |
+|  +---------------------------------------------------------------------------+   |
+|                                   |                                                |
+|                                   v                                                |
+|  +---------------------------------------------------------------------------+   |
+|  |                      BASE DE DONNEES (SQLite / MySQL)                     |   |
+|  |                     ~42 tables, 33 migrations Laravel                     |   |
+|  +---------------------------------------------------------------------------+   |
++----------------------------------------------------------------------------------+
+          |                                                ^
+          |                 Reseau Local                   |
+          v                                                |
++--------------------------+    +-------------------------------+
+| NOVASKOL CONNECTE        |    | NOVASKOL CONNECTE DESKTOP    |
+| (Mobile - React 19       |    | (Application de bureau       |
+|  Capacitor 8 - Android)  |<-->|  companion Electron)         |
+| Version 0.2.0            |    | Version 1.0.0                |
+| Pairing + Sync + Offline |    | Pairing + Sync + PHP emb.    |
++--------------------------+    +-------------------------------+
+\end{verbatim}
+
+\begin{center}
+\textbf{Figure II.1 : Architecture globale de Novaskol}
+\end{center}
+
+\subsection{L'application de bureau Electron (Novaskol Desktop)}
+
+\subsubsection{Composants embarqués}
+
+\begin{itemize}
+    \item \textbf{Serveur PHP portable} : PHP 8.2.0 avec 19 extensions activées
+    \item \textbf{Serveur MySQL/MariaDB portable} : MySQL 8.0.31
+    \item \textbf{Application Laravel complète} avec toutes ses dépendances PHP
+    \item \textbf{Base de données SQLite} par défaut, sans configuration
+\end{itemize}
+
+\subsubsection{Processus de démarrage}
+
+Le processus de démarrage de l'application suit une séquence précise :
+\begin{enumerate}
+    \item L'utilisateur lance \texttt{Novaskol.exe}
+    \item Une fenêtre de démarrage (splash screen) s'affiche
+    \item Le processus principal Electron localise le binaire PHP
+    \item Le fichier \texttt{.env} est configuré automatiquement
+    \item La clé d'application (APP\_KEY) est générée si absente
+    \item Les migrations de base de données sont exécutées
+    \item Le serveur PHP intégré est démarré
+    \item L'application attend que le serveur HTTP réponde
+    \item La fenêtre principale charge l'URL
+\end{enumerate}
+
+\begin{verbatim}
++----------+    +----------+    +----------+    +----------+    +----------+
+| Lancement|--->| Splash   |--->| Init PHP |--->| Migrate  |--->| PHP Serve|
+| .exe     |    | Screen   |    | + .env   |    | BDD      |    | :8001    |
++----------+    +----------+    +----------+    +----------+    +----------+
+                                                                      |
++----------+    +----------+    +----------+    +----------+          |
+| Ping OK  |<---| Wait     |<---| Health   |<---| PHP Art. |<---------+
+|          |    | 120s max |    | Check    |    | serve    |
++----------+    +----------+    +----------+    +----------+
+      |
+      v
++----------+
+| Fenetre  |
+| Princip. |
++----------+
+\end{verbatim}
+
+\begin{center}
+\textbf{Figure II.2 : Processus de démarrage de l'application Electron}
+\end{center}
+
+\subsubsection{Communication IPC}
+
+La communication entre le processus principal (Node.js) et le processus de rendu (Chromium) s'effectue via un pont IPC sécurisé utilisant \texttt{contextBridge} :
+
+\begin{lstlisting}[language=JavaScript]
+// preload.cjs - Pont IPC securise
+contextBridge.exposeInMainWorld('desktopShell', {
+    onSplashStatus: (cb) => ipcRenderer.on('splash-status', (_, m) => cb(m)),
+    getMeta: () => ipcRenderer.invoke('desktop:get-meta'),
+    print: () => ipcRenderer.send('print'),
+    printHtml: (html) => ipcRenderer.send('print-html', html)
+});
+\end{lstlisting}
+
+\subsubsection{Gestion du cycle de vie}
+
+\begin{itemize}
+    \item \textbf{Démarrage} : Splash screen $\rightarrow$ Initialisation $\rightarrow$ Fenêtre principale
+    \item \textbf{Fermeture} : Boîte de confirmation $\rightarrow$ Arrêt du serveur PHP $\rightarrow$ Nettoyage
+    \item \textbf{Instance unique} : Lock d'instance pour éviter les lancements multiples
+\end{itemize}
+
+\subsection{La synchronisation multi-appareils}
+
+\subsubsection{Processus d'appairage}
+
+\begin{enumerate}
+    \item L'appareil secondaire scanne un QR code ou saisit un code d'appairage
+    \item Il ping le serveur principal via \texttt{/reseau-local/manifest-appareil}
+    \item Il envoie ses informations (UUID, type, plateforme, etc.)
+    \item Le serveur vérifie le code et autorise la connexion
+    \item Les données initiales sont transférées (bootstrap)
+\end{enumerate}
+
+\subsubsection{Synchronisation bidirectionnelle}
+
+\begin{itemize}
+    \item \textbf{Push} : L'appareil connecté envoie ses modifications locales au serveur principal
+    \item \textbf{Pull} : L'appareil connecté récupère les modifications des autres appareils
+    \item \textbf{Intervalle} : Synchronisation automatique toutes les 5 minutes
+    \item \textbf{File d'attente} : Les modifications sont mises en file d'attente en cas de déconnexion
+\end{itemize}
+
+\subsubsection{Gestion des conflits}
+
+\begin{enumerate}
+    \item Les deux versions sont conservées (locale et entrante)
+    \item Un ticket de conflit est créé dans la table \texttt{sync\_conflicts}
+    \item L'administrateur peut résoudre le conflit manuellement
+    \item La résolution choisie est propagée aux autres appareils
+\end{enumerate}
+
+\subsection{Modes de déploiement}
+
+\begin{table}[h]
+\centering
+\caption{Modes de déploiement}
+\begin{tabular}{lll}
+\toprule
+Mode & Base de données & Usage \\
+\midrule
+Local (Desktop) & SQLite & École individuelle, hors-ligne \\
+Hébergement & MySQL/MariaDB & Accès web permanent \\
+Hybride & SQLite + Sync réseau & Multi-poste local \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Technologies et outils utilisés}
+
+\subsection{Backend}
+
+\begin{table}[h]
+\centering
+\caption{Technologies backend}
+\begin{tabular}{ll}
+\toprule
+Technologie & Rôle \\
+\midrule
+PHP 8.2.0 & Langage serveur \\
+Laravel 12 & Framework MVC \\
+Composer 2.x & Gestionnaire de dépendances PHP \\
+barryvdh/laravel-dompdf ^2.3 & Génération de PDF \\
+phpoffice/phpspreadsheet ^5.7 & Manipulation de fichiers Excel \\
+chillerlan/php-qrcode ^5.0 & Génération de QR codes \\
+laravel/pint & Correcteur de style \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Frontend}
+
+\begin{table}[h]
+\centering
+\caption{Technologies frontend}
+\begin{tabular}{ll}
+\toprule
+Technologie & Rôle \\
+\midrule
+Blade & Moteur de templates Laravel \\
+TailwindCSS 4 & Framework CSS utilitaire \\
+Vite 7 & Outil de build \\
+JavaScript (vanilla + jQuery 3.6) & Interactivité client \\
+Chart.js 4 & Graphiques statistiques \\
+FullCalendar 6 & Calendrier interactif \\
+Font Awesome 6 & Icônes \\
+SweetAlert2 11.x & Boîtes de dialogue \\
+Axios & Requêtes HTTP \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Desktop}
+
+\begin{table}[h]
+\centering
+\caption{Technologies desktop}
+\begin{tabular}{ll}
+\toprule
+Technologie & Rôle \\
+\midrule
+Electron 37.2.1 & Framework d'application de bureau \\
+electron-builder 26.0.12 & Packaging NSIS \\
+Node.js 22 & Environnement d'exécution \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Mobile}
+
+\begin{table}[h]
+\centering
+\caption{Technologies mobile}
+\begin{tabular}{ll}
+\toprule
+Technologie & Rôle \\
+\midrule
+React 19 & Framework d'interface utilisateur \\
+Capacitor 8.3.3 & Pont natif pour applications mobiles \\
+Vite 8 & Outil de build \\
+Service Worker & Cache hors-ligne PWA \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Architecture détaillée de la base de données}
+
+\subsection{Présentation}
+
+La base de données de Novaskol comprend environ 42 tables organisées en plusieurs domaines fonctionnels. Le système de migration de Laravel (33 migrations) permet de versionner et de déployer le schéma automatiquement.
+
+\subsection{Liste des tables principales}
+
+\begin{longtable}{cll}
+\caption{Liste des tables principales de la base de données}\\
+\toprule
+\textbf{\#} & \textbf{Table} & \textbf{Objectif} \\
+\midrule
+\endfirsthead
+\multicolumn{3}{c}{Suite de la liste des tables}\\
+\toprule
+\textbf{\#} & \textbf{Table} & \textbf{Objectif} \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+1 & utilisateurs & Utilisateurs de l'application \\
+2 & ecole & Informations sur l'établissement \\
+3 & parametres & Paramètres de configuration \\
+4 & permissions & Permissions d'accès aux modules \\
+5 & classes & Classes (nom, niveau) \\
+6 & eleves & Élèves inscrits \\
+7 & matieres & Matières enseignées \\
+8 & classe\_matieres & Association classe-matière (coefficient) \\
+9 & professeurs & Enseignants \\
+10 & professeurs\_classes & Affectation enseignant-classe-matière \\
+11 & notes & Notes des élèves \\
+12 & bulletins & Bulletins de notes \\
+13 & emploi\_du\_temps & Emploi du temps \\
+14 & evenements & Événements du calendrier scolaire \\
+15 & presence\_eleves & Présence des élèves \\
+16 & parents & Parents/tuteurs \\
+17 & parent\_eleves & Lien parent-élève \\
+18 & enseignants & Table enseignants alternative \\
+19 & staff & Personnel non enseignant \\
+20 & departements & Départements \\
+21 & conversations & Conversations \\
+22 & conversation\_participants & Participants aux conversations \\
+23 & messages & Messages \\
+24 & notifications & Notifications système \\
+25 & types\_paiements & Types de paiement \\
+26 & paiements & Paiements effectués \\
+27 & depenses & Dépenses \\
+28 & salaires\_assignes & Salaires du personnel \\
+29 & roles & Rôles utilisateur \\
+30 & dossiers & Dossiers documentaires \\
+31 & fichiers & Fichiers dans les dossiers \\
+32 & equipements & Équipements / inventaire \\
+33 & salles & Salles \\
+34 & reservations & Réservations de salles \\
+35 & licence & Licence logicielle \\
+36 & sync\_devices & Appareils connectés \\
+37 & sync\_batches & Lots de synchronisation \\
+38 & sync\_changes & Modifications synchronisées \\
+39 & sync\_conflicts & Conflits de synchronisation \\
+40 & sync\_record\_keys & Clés UUID synchronisées \\
+41 & teacher\_lessons & Plans de cours des enseignants \\
+42 & teacher\_tasks & Tâches des enseignants \\
+\end{longtable}
+
+\subsection{Dictionnaire des données}
+
+\textbf{Table \texttt{eleves}} :
+\begin{longtable}{lll}
+\caption{Dictionnaire de la table eleves}\\
+\toprule
+Champ & Type & Description \\
+\midrule
+\endfirsthead
+\multicolumn{3}{c}{Suite de la table eleves}\\
+\toprule
+Champ & Type & Description \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+id & BIGINT PK & Identifiant unique \\
+prenom & VARCHAR(100) & Prénom de l'élève \\
+nom & VARCHAR(100) & Nom de l'élève \\
+date\_naissance & DATE & Date de naissance \\
+lieu\_naissance & VARCHAR(150) & Lieu de naissance \\
+adresse & VARCHAR(255) & Adresse de l'élève \\
+numero\_acte & VARCHAR(100) & Numéro d'acte de naissance \\
+id\_classe & BIGINT FK & Classe de l'élève \\
+matricule & VARCHAR(100) & Matricule unique \\
+annee\_scolaire & VARCHAR(20) & Année scolaire \\
+genre & ENUM('F','G') & Genre \\
+statut & ENUM('nouveau','passant','redoublant') & Statut \\
+photo & VARCHAR(255) & Photo d'identité \\
+qr\_token & VARCHAR(100) & Token QR pour carte \\
+\end{longtable}
+
+\textbf{Table \texttt{notes}} :
+\begin{table}[h]
+\centering
+\caption{Dictionnaire de la table notes}
+\begin{tabular}{lll}
+\toprule
+Champ & Type & Description \\
+\midrule
+id & BIGINT PK & Identifiant unique \\
+eleve\_id & BIGINT FK & Élève concerné \\
+matiere\_id & BIGINT FK & Matière \\
+professeur\_id & BIGINT FK & Professeur \\
+valeur & FLOAT & Note (0-20) \\
+trimestre & INTEGER & Trimestre (1-3) \\
+coeffecient & FLOAT & Coefficient \\
+periode & VARCHAR(10) & Période \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{Table \texttt{bulletins}} :
+\begin{table}[h]
+\centering
+\caption{Dictionnaire de la table bulletins}
+\begin{tabular}{lll}
+\toprule
+Champ & Type & Description \\
+\midrule
+id & BIGINT PK & Identifiant unique \\
+id\_eleve & BIGINT FK & Élève \\
+trimestre & INTEGER & Trimestre \\
+moyenne & FLOAT & Moyenne générale \\
+mention & VARCHAR(100) & Mention obtenue \\
+appreciation & TEXT & Appréciation \\
+annee\_scolaire & VARCHAR(20) & Année scolaire \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Relations principales}
+
+\begin{itemize}
+    \item Un \textbf{Élève} appartient à une \textbf{Classe} (N:1 via \texttt{id\_classe})
+    \item Une \textbf{Classe} a plusieurs \textbf{Matières} (N:N via \texttt{classe\_matieres})
+    \item Un \textbf{Professeur} enseigne dans plusieurs \textbf{Classes} et \textbf{Matières} (N:N via \texttt{professeurs\_classes})
+    \item Un \textbf{Élève} a plusieurs \textbf{Notes} par matière (1:N)
+    \item Un \textbf{Bulletin} est lié à un \textbf{Élève} et un trimestre (N:1)
+    \item Un \textbf{Parent} est lié à plusieurs \textbf{Élèves} (N:N via \texttt{parent\_eleves})
+    \item Un \textbf{Message} appartient à une \textbf{Conversation} (N:1)
+    \item Un \textbf{Paiement} est lié à un \textbf{Type de paiement} (N:1)
+\end{itemize}
+
+\subsection{Système de synchronisation}
+
+Les tables de synchronisation forment un système robuste de réplication de données :
+\begin{itemize}
+    \item \texttt{sync\_devices} : Enregistre chaque appareil connecté
+    \item \texttt{sync\_batches} : Regroupe les modifications par lot
+    \item \texttt{sync\_changes} : Stocke chaque modification
+    \item \texttt{sync\_conflicts} : Enregistre les conflits
+    \item \texttt{sync\_record\_keys} : Maintient la correspondance IDs locaux / UUIDs globaux
+\end{itemize}
+
+\section{Modules et fonctionnalités}
+
+Novaskol propose 45 modules fonctionnels répartis en 8 catégories.
+
+\subsection{Administration générale}
+
+\begin{table}[h]
+\centering
+\caption{Modules d'administration générale}
+\begin{tabular}{lll}
+\toprule
+Module & Route & Description \\
+\midrule
+Dashboard / Accueil & /dashboard & Tableau de bord avec statistiques \\
+École & /ecole & Gestion des informations de l'établissement \\
+Paramètres & /parametres & Configuration système, sauvegardes \\
+Comptes utilisateurs & /comptes-utilisateurs & Gestion des comptes \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Gestion des inscriptions}
+
+\begin{table}[h]
+\centering
+\caption{Modules de gestion des inscriptions}
+\begin{tabular}{lll}
+\toprule
+Module & Route & Description \\
+\midrule
+Inscription & /inscription & Enregistrement des élèves, import Excel \\
+Liste des classes & /classes & CRUD des classes \\
+Matières & /matieres & Gestion des matières, coefficients \\
+Dépôt de dossier & /depot-dossier & Gestion des documents administratifs \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Gestion pédagogique}
+
+\begin{table}[h]
+\centering
+\caption{Modules de gestion pédagogique}
+\begin{tabular}{lll}
+\toprule
+Module & Route & Description \\
+\midrule
+Notes & /notes & Saisie des notes par matière et trimestre \\
+Bulletins & /bulletin & Génération de bulletins \\
+Résultats & /resultats & Consultation des résultats \\
+Examens blancs & /examen-blanc & Gestion des examens blancs \\
+Emploi du temps & /emploi-du-temps & Planification des cours \\
+Présence élèves & /presence-etudiant & Suivi des présences par QR code \\
+Calendrier & /calendrier & Calendrier des événements scolaires \\
+Carte scolaire & /cartes & Génération de cartes avec QR code \\
+Espace enseignant & /enseignant/espace & Plans de cours, progressions \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Communication}
+
+\begin{table}[h]
+\centering
+\caption{Modules de communication}
+\begin{tabular}{lll}
+\toprule
+Module & Route & Description \\
+\midrule
+Messagerie générale & /communication & Chat général \\
+Messagerie privée & /chat-prive & Chat privé 1-1 \\
+Messagerie groupe & /chat-groupe & Chat de groupe \\
+Notifications & /notifications & Notifications système \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Gestion des ressources humaines}
+
+\begin{table}[h]
+\centering
+\caption{Modules RH}
+\begin{tabular}{lll}
+\toprule
+Module & Route & Description \\
+\midrule
+Enseignants & /enseignants & Gestion des enseignants \\
+Personnels & /staff & Gestion du personnel non enseignant \\
+Présence personnels & /presence & Suivi des présences enseignants \\
+Permissions & /permissions & Contrôle d'accès aux modules \\
+Gestion ressources & /gestion-ressource & Salles, équipements, ressources \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Gestion financière}
+
+\begin{table}[h]
+\centering
+\caption{Modules financiers}
+\begin{tabular}{lll}
+\toprule
+Module & Route & Description \\
+\midrule
+Types de paiement & /detail-paiement/type & Configuration frais de scolarité \\
+Comptabilité & /comptable & Enregistrement des paiements \\
+Liste des paiements & /liste-paiements & Consultation des transactions \\
+Factures & /facture & Génération de factures et reçus \\
+Rapports comptables & /rapport-comptable & États financiers \\
+Salaires & /detail-paiement/salaires & Gestion des salaires \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Portail parents}
+
+\begin{table}[h]
+\centering
+\caption{Modules portail parents}
+\begin{tabular}{lll}
+\toprule
+Module & Route & Description \\
+\midrule
+Espace parent & /parent/espace & Suivi résultats, présence, paiements \\
+Communication parent & /parent/responsable-chat & Chat avec les enseignants \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Système}
+
+\begin{table}[h]
+\centering
+\caption{Modules système}
+\begin{tabular}{lll}
+\toprule
+Module & Route & Description \\
+\midrule
+Diagnostics & /diagnostic-systeme & Vérification état du système \\
+Sauvegardes & /sauvegardes & Création, téléchargement, restauration \\
+Réseau local & /reseau-local & Appairage, synchronisation \\
+Guide d'utilisation & /guide-utilisation & Aide intégrée \\
+À propos & /apropos-novaskol & Informations version \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Conclusion}
+
+Ce chapitre a présenté l'architecture globale et les composants de Novaskol. Le système combine un backend Laravel robuste, une application de bureau Electron autonome embarquant PHP et SQLite, et deux applications companion. Avec 45 modules fonctionnels couvrant 8 domaines et une base de données de 42 tables, Novaskol offre une couverture complète des besoins de gestion d'un établissement scolaire.
+
+% ======================================================================
+\chapter{Analyse et conception}
+% ======================================================================
+
+\section{Introduction}
+
+Ce chapitre est consacré à l'analyse et à la conception du système Novaskol à l'aide du langage de modélisation UML (Unified Modeling Language). Nous présentons successivement l'analyse des besoins, l'identification des acteurs, les diagrammes de cas d'utilisation, les diagrammes de séquence, les diagrammes d'activité, et le modèle conceptuel de données.
+
+\begin{verbatim}
++------------------+    +------------------+    +------------------+
+| Analyse des      |--->| Modelisation     |--->| Modelisation     |
+| besoins          |    | dynamique        |    | statique         |
+| (Acteurs, CU)   |    | (Sequence,       |    | (Classe,         |
+|                  |    |  Activite)       |    |  Base de donnees)|
++------------------+    +------------------+    +------------------+
+\end{verbatim}
+
+\begin{center}
+\textbf{Figure III.1 : Démarche de modélisation de l'application}
+\end{center}
+
+\section{Analyse des besoins}
+
+\subsection{Besoins fonctionnels}
+
+\begin{longtable}{clp{7cm}}
+\caption{Besoins fonctionnels détaillés}\\
+\toprule
+ID & Besoin & Module concerné \\
+\midrule
+\endfirsthead
+\multicolumn{3}{c}{Suite des besoins fonctionnels}\\
+\toprule
+ID & Besoin & Module concerné \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+BF01 & Authentification & Auth \\
+BF02 & Gestion des profils & Comptes \\
+BF03 & Gestion des élèves & Inscription \\
+BF04 & Gestion des classes & Classes \\
+BF05 & Gestion des matières & Matières \\
+BF06 & Saisie des notes & Notes \\
+BF07 & Génération de bulletins & Bulletin \\
+BF08 & Emploi du temps & Emploi du temps \\
+BF09 & Suivi des présences & Présence \\
+BF10 & Communication & Communication \\
+BF11 & Gestion financière & Comptable \\
+BF12 & Gestion RH & RH \\
+BF13 & Calendrier & Calendrier \\
+BF14 & Sauvegardes & Sauvegardes \\
+BF15 & Synchronisation & Réseau local \\
+BF16 & Rapports & Rapports \\
+\end{longtable}
+
+\subsection{Besoins non fonctionnels}
+
+\begin{table}[h]
+\centering
+\caption{Besoins non fonctionnels}
+\begin{tabular}{cll}
+\toprule
+ID & Besoin & Priorité \\
+\midrule
+BNF01 & Hors-ligne & Haute \\
+BNF02 & Performance ($<2$s) & Haute \\
+BNF03 & Sécurité (bcrypt, accès contrôlés) & Haute \\
+BNF04 & Portabilité Windows 10/11 & Haute \\
+BNF05 & Évolutivité & Moyenne \\
+BNF06 & Maintenabilité (MVC, PSR-4) & Moyenne \\
+BNF07 & Sauvegarde automatique & Haute \\
+BNF08 & Interface intuitive & Haute \\
+BNF09 & Multilingue (6 langues) & Basse \\
+BNF10 & Sécurité des accès & Haute \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Identification des acteurs}
+
+\begin{table}[h]
+\centering
+\caption{Identification des acteurs}
+\begin{tabular}{lp{5cm}p{5cm}}
+\toprule
+Acteur & Description & Cas d'utilisation principaux \\
+\midrule
+Administrateur & Gère l'ensemble du système & Gestion complète \\
+Enseignant & Saisit les notes, gère les présences & Saisie notes, présence \\
+Élève & Consulte ses notes, emploi du temps & Consultation \\
+Parent & Consulte les résultats de ses enfants & Consultation, communication \\
+Agent de scolarité & Gère les inscriptions, paiements & Inscription, paiements \\
+Chef d'établissement & Supervise, consulte les rapports & Rapports, supervision \\
+Personnel (staff) & Gère les ressources, logistique & RH, ressources \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Correspondance acteurs-tâches}
+
+\begin{table}[h]
+\centering
+\caption{Correspondance acteurs-tâches}
+\footnotesize
+\begin{tabular}{lccccccc}
+\toprule
+Tâche & Admin & Ens. & Élève & Parent & Scol. & Chef & Staff \\
+\midrule
+Authentification & X & X & X & X & X & X & X \\
+Gestion élèves & X &  &  &  & X & X &  \\
+Saisie notes &  & X &  &  &  & X &  \\
+Consultation notes & X & X & X & X & X & X & X \\
+Bulletins & X & X &  & X & X & X &  \\
+Emploi du temps & X & X & X & X & X & X &  \\
+Présence élèves & X & X &  & X &  & X &  \\
+Communication & X & X & X & X & X & X & X \\
+Paiements & X &  &  & X & X & X &  \\
+Gestion RH & X &  &  &  &  & X &  \\
+Rapports & X &  &  &  & X & X &  \\
+Paramètres & X &  &  &  &  &  &  \\
+Synchronisation & X &  &  &  &  &  &  \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Diagrammes de cas d'utilisation}
+
+\subsection{Diagramme de contexte}
+
+\begin{verbatim}
++------------------+         +---------------------------+
+| Administrateur   |<------->|                           |
++------------------+         |                           |
+                             |       SYSTEME             |
++------------------+         |       NOVASKOL            |
+| Enseignant       |<------->|                           |
++------------------+         |    - Authentification     |
+                             |    - Gestion eleves       |
++------------------+         |    - Saisie notes         |
+| Eleve            |<------->|    - Bulletins            |
++------------------+         |    - Emploi du temps      |
+                             |    - Presence             |
++------------------+         |    - Communication        |
+| Parent           |<------->|    - Paiements            |
++------------------+         |    - Synchronisation      |
+                             |    - Rapports             |
++------------------+         |                           |
+| Agent scolarite  |<------->|                           |
++------------------+         +---------------------------+
+
++------------------+
+| Personnel (Staff)|
++------------------+
+\end{verbatim}
+
+\begin{center}
+\textbf{Figure III.2 : Diagramme de contexte}
+\end{center}
+
+\subsection{Cas d'utilisation par acteur}
+
+\textbf{Administrateur :}
+\begin{itemize}
+    \item Gérer l'établissement
+    \item Gérer les utilisateurs
+    \item Gérer la base de données (sauvegardes, restauration)
+    \item Configurer les paramètres système
+    \item Accéder au diagnostic système
+    \item Gérer la synchronisation réseau
+    \item Consulter les rapports
+\end{itemize}
+
+\textbf{Enseignant :}
+\begin{itemize}
+    \item S'authentifier
+    \item Consulter son emploi du temps
+    \item Saisir les notes des élèves
+    \item Gérer les présences des élèves
+    \item Planifier les cours
+    \item Communiquer via la messagerie
+    \item Générer des bulletins
+\end{itemize}
+
+\textbf{Parent :}
+\begin{itemize}
+    \item Consulter les notes de son enfant
+    \item Consulter les présences
+    \item Consulter les bulletins
+    \item Communiquer avec les enseignants
+    \item Consulter les paiements
+\end{itemize}
+
+\subsection{Diagramme de cas d'utilisation -- Authentification}
+
+\begin{verbatim}
++--------------------------------------------+
+|            SYSTEME NOVASKOL                 |
+|  +--------------------------------------+  |
+|  |  S'authentifier  <------  Acteur     |  |
+|  |       |                              |  |
+|  |       +--- <<include>> --> Verifier  |  |
+|  |       |                  identifiants|  |
+|  |       |                              |  |
+|  |       +--- <<include>> --> Gerer     |  |
+|  |                            session   |  |
+|  +--------------------------------------+  |
+|  +--------------------------------------+  |
+|  |  Gerer mot de passe                  |  |
+|  +--------------------------------------+  |
++--------------------------------------------+
+\end{verbatim}
+
+\begin{center}
+\textbf{Figure III.3 : Diagramme de cas d'utilisation -- Authentification}
+\end{center}
+
+\subsection{Diagramme de cas d'utilisation -- Saisie des notes}
+
+\begin{verbatim}
++--------------------------------------------+
+|            SYSTEME NOVASKOL                 |
+|  +--------------------------------------+  |
+|  |  Saisir notes  <------ Enseignant   |  |
+|  |       |                              |  |
+|  |       +--- <<include>> --> Verifier  |  |
+|  |       |                  permissions |  |
+|  |       |                              |  |
+|  |       +--- <<include>> --> Charger   |  |
+|  |       |                  liste eleves|  |
+|  |       |                              |  |
+|  |       +--- <<include>> --> Valider   |  |
+|  |                            notes     |  |
+|  |       |                              |  |
+|  |       +--- <<include>> --> Calculer  |  |
+|  |                            moyennes  |  |
+|  +--------------------------------------+  |
+|  +--------------------------------------+  |
+|  |  Selectionner classe + matiere       |  |
+|  +--------------------------------------+  |
++--------------------------------------------+
+\end{verbatim}
+
+\begin{center}
+\textbf{Figure III.4 : Diagramme de cas d'utilisation -- Saisie des notes}
+\end{center}
+
+\section{Diagrammes de séquence}
+
+\subsection{Diagramme de séquence -- Authentification}
+
+\begin{verbatim}
+Utilisateur     Controleur     Base de donnees    Session
+    |               |                 |               |
+    |-- email, pwd, role -->|          |               |
+    |               |-- SELECT -------->|              |
+    |               |<-- user data -----|              |
+    |               |-- Verifier hash --|              |
+    |               |                  |               |
+    |               | (si valide)      |               |
+    |               |-- Creer session --------------->|
+    |               |-- Charger perms ->|              |
+    |               |<-- permissions ---|              |
+    |<-- Redirection dashboard --------|               |
+    |               |                  |               |
+    |               | (si invalide)    |               |
+    |<-- Message d'erreur -------------|               |
+\end{verbatim}
+
+\begin{center}
+\textbf{Figure III.5 : Diagramme de séquence -- Authentification}
+\end{center}
+
+\subsection{Diagramme de séquence -- Saisie des notes}
+
+\begin{verbatim}
+Enseignant     Controleur     BDD (notes)    BDD (eleves)
+    |               |               |               |
+    |-- classe, matiere, trim -->|  |               |
+    |               |-- SELECT eleves -------------->|
+    |               |<-- liste eleves ---------------|
+    |<-- affichage formulaire ------|               |
+    |-- notes eleves -------------->|               |
+    |               |-- Verifier permissions         |
+    |               |-- Valider notes                |
+    |               |-- INSERT notes -->|            |
+    |               |<-- OK ------------|            |
+    |<-- Confirmation --------------|               |
+\end{verbatim}
+
+\begin{center}
+\textbf{Figure III.6 : Diagramme de séquence -- Saisie des notes}
+\end{center}
+
+\subsection{Diagramme de séquence -- Génération de bulletin}
+
+\begin{verbatim}
+Utilisateur     Controleur     Service        BDD
+    |               |               |           |
+    |-- classe, trimestre -------->|           |
+    |               |-- Charger notes -------->|
+    |               |<-- notes ---------------|
+    |               |-- Calculer moyennes      |
+    |               |   par matiere            |
+    |               |-- Calculer moyenne       |
+    |               |   generale               |
+    |               |-- Calculer rang          |
+    |               |-- Determiner mention     |
+    |               |-- Generer HTML bulletin  |
+    |<-- Affichage bulletin ------|           |
+    |               |               |           |
+    |-- Export PDF --------------->|           |
+    |               |-- DOMPDF::loadView()     |
+    |<-- Telechargement PDF -------|           |
+\end{verbatim}
+
+\begin{center}
+\textbf{Figure III.7 : Diagramme de séquence -- Génération de bulletin}
+\end{center}
+
+\subsubsection{Algorithme de calcul du bulletin}
+
+\begin{enumerate}
+    \item Récupération de toutes les notes de l'élève pour le trimestre
+    \item Calcul de la moyenne par matière
+    \item Calcul de la moyenne générale
+    \item Calcul du rang (classement des élèves par moyenne générale)
+    \item Détermination de la mention en fonction de la moyenne
+    \item Génération du bulletin en HTML, puis export PDF via DOMPDF
+\end{enumerate}
+
+\subsection{Diagramme de séquence -- Synchronisation}
+
+\begin{verbatim}
+Appareil        Appareil        Serveur         BDD
+Connecte        Principal       (API)           (Princ.)
+    |               |               |               |
+    |-- POST /appairer-appareil --->|               |
+    |               |-- Verifier code appairage     |
+    |               |<-- OK + UUID  |               |
+    |               |               |               |
+    |-- GET /bootstrap-appareil --->|               |
+    |<-- Donnees initiales --------|               |
+    |               |               |               |
+    |-- POST /recevoir-lot -------->|               |
+    |               |-- Verifier conflits          |
+    |               |-- Appliquer modifications    |
+    |<-- Resultat sync ------------|               |
+\end{verbatim}
+
+\begin{center}
+\textbf{Figure III.8 : Diagramme de séquence -- Synchronisation}
+\end{center}
+
+\section{Diagrammes d'activité}
+
+\subsection{Diagramme d'activité -- Authentification}
+
+\begin{verbatim}
++--------+
+| Debut  |
++--------+
+    |
+    v
++------------------+
+| Saisie           |
+| identifiants     |
++------------------+
+    |
+    v
++------------------+
+| Verification     |
++------------------+
+    |
+    +-------+-------+
+    |               |
+    v               v
++------------+   +------------+
+| Identif.   |   | Identif.   |
+| valides    |   | invalides  |
++------------+   +------------+
+    |               |
+    v               v
++------------+   +------------+
+| Creation   |   | Message    |
+| session    |   | d'erreur   |
++------------+   +------------+
+    |               |
+    v               |
++------------------+ |
+| Redirection      | |
+| tableau de bord  | |
++------------------+ |
+    |                |
+    +-------+--------+
+            |
+            v
+        +--------+
+        | Fin    |
+        +--------+
+\end{verbatim}
+
+\begin{center}
+\textbf{Figure III.9 : Diagramme d'activité -- Authentification}
+\end{center}
+
+\subsection{Diagramme d'activité -- Saisie des notes}
+
+\begin{verbatim}
++--------+
+| Debut  |
++--------+
+    |
+    v
++------------------+
+| Authentification |
+| Enseignant       |
++------------------+
+    |
+    v
++------------------+
+| Verification     |
+| permissions      |
+| module notes     |
++------------------+
+    |
+    v
++------------------+
+| Selection        |
+| classe + matiere |
++------------------+
+    |
+    v
++------------------+
+| Chargement       |
+| liste eleves     |
++------------------+
+    |
+    v
++------------------+
+| Saisie notes     |
+| pour chaque      |
+| eleve            |
++------------------+
+    |
+    v
++------------------+
+| Validation       |
+| notes (0-20,     |
+| format)          |
++------------------+
+    |
+    +-------+-------+
+    |               |
+    v               v
++------------+   +------------+
+| Notes OK   |   | Erreur     |
+|            |   | validation |
++------------+   +------------+
+    |               |
+    v               v
++------------+   +------------+
+| Enreg.     |   | Message    |
+| BDD        |   | d'erreur   |
++------------+   +------------+
+    |               |
+    v               |
++------------+      |
+| Accuse     |      |
+| reception  |      |
++------------+      |
+    |               |
+    +-------+-------+
+            |
+            v
+        +--------+
+        | Fin    |
+        +--------+
+\end{verbatim}
+
+\begin{center}
+\textbf{Figure III.10 : Diagramme d'activité -- Saisie des notes}
+\end{center}
+
+\section{Modèle conceptuel de données}
+
+\subsection{Diagramme de classe global}
+
+Le diagramme de classe présente les principales entités du système et leurs relations.
+
+\textbf{Entités principales :}
+\begin{enumerate}
+    \item \textbf{Ecole} : représente l'établissement scolaire
+    \item \textbf{Classe} : groupe d'élèves avec un niveau
+    \item \textbf{Élève} : apprenant inscrit dans une classe
+    \item \textbf{Professeur} : enseignant
+    \item \textbf{Matière} : discipline enseignée avec coefficient
+    \item \textbf{Note} : évaluation d'un élève dans une matière
+    \item \textbf{Bulletin} : relevé de notes périodique
+    \item \textbf{PresenceEleve} : enregistrement d'assiduité
+    \item \textbf{EmploiDuTemps} : planification des cours
+    \item \textbf{Parent} : représentant légal de l'élève
+    \item \textbf{Utilisateur} : personne ayant accès au système
+    \item \textbf{Permission} : droit d'accès à un module
+    \item \textbf{Paiement} : transaction financière
+    \item \textbf{Message} : communication entre utilisateurs
+    \item \textbf{Conversation} : groupe de discussion
+    \item \textbf{Événement} : événement du calendrier scolaire
+    \item \textbf{Staff} : personnel non enseignant
+    \item \textbf{Département} : unité organisationnelle
+    \item \textbf{SyncDevice} : appareil connecté pour synchronisation
+\end{enumerate}
+
+\subsection{Relations principales}
+
+\begin{itemize}
+    \item \textbf{Ecole} 1 --- N \textbf{Classe}
+    \item \textbf{Classe} 1 --- N \textbf{Élève}
+    \item \textbf{Classe} N --- N \textbf{Matière} (via \textbf{ClasseMatière})
+    \item \textbf{Professeur} N --- N \textbf{Classe} (via \textbf{ProfesseurClasse})
+    \item \textbf{Élève} 1 --- N \textbf{Note}
+    \item \textbf{Élève} 1 --- N \textbf{Bulletin}
+    \item \textbf{Parent} N --- N \textbf{Élève} (via \textbf{ParentEleve})
+    \item \textbf{Conversation} 1 --- N \textbf{Message}
+    \item \textbf{Élève} 1 --- N \textbf{Paiement}
+    \item \textbf{Professeur} 1 --- N \textbf{TeacherLesson}
+\end{itemize}
+
+\subsection{Schéma relationnel simplifié}
+
+\begin{verbatim}
+ECOLE (id, nom, logo)
+  |
+  +-- CLASSE (id, nom, niveau)
+        |
+        +-- ELEVE (id, matricule, nom, prenom, date_naissance,
+        |          adresse, telephone, genre, statut, id_classe)
+        |
+        +-- CLASSE_MATIERE (id_classe, id_matiere, coefficient)
+        |
+        +-- EMPLOI_DU_TEMPS (id, jour, heure_debut, heure_fin,
+        |                    id_classe, id_matiere, id_professeur)
+        |
+        +-- PRESENCE_ELEVE (id, date_jour, session_jour, statut,
+                            eleve_id, classe_id, annee_scolaire)
+
+PROFESSEUR (id, nom, prenom, email, telephone, specialisation)
+  |
+  +-- PROFESSEUR_CLASSE (id, professeur_id, classe_id, matiere_id)
+  |
+  +-- NOTE (id, valeur, trimestre, coefficient, eleve_id,
+  |         matiere_id, professeur_id)
+  |
+  +-- TEACHER_LESSON (id, titre, rubrique, date_prevue, statut)
+
+MATIERE (id, nom, code)
+
+BULLETIN (id, trimestre, moyenne, mention, appreciation, id_eleve)
+
+PARENT (id, nom, prenom, lien, telephone, email)
+  |
+  +-- PARENT_ELEVE (parent_id, eleve_id)
+
+UTILISATEUR (id, nom, email, mot_de_passe, role, avatar)
+  |
+  +-- PERMISSION (utilisateur_id, module, role, acces)
+
+CONVERSATION (id, type, name, is_announcement)
+  |
+  +-- MESSAGE (id, conversation_id, sender_type, sender_id, content)
+
+TYPE_PAIEMENT (id, nom, montant, mois, id_classe)
+  |
+  +-- PAIEMENT (id, type_id, personne_id, montant, mois, statut)
+
+STAFF (id, nom, prenom, poste, departement_id, salaire_base)
+
+SYNC_DEVICE (id, uuid, nom, type_appareil, role_sync, autorise)
+  |
+  +-- SYNC_BATCH (id, uuid, device_uuid, direction, statut)
+        |
+        +-- SYNC_CHANGE (id, uuid, batch_uuid, table_name,
+                         record_uuid, operation, payload_json)
+\end{verbatim}
+
+\begin{center}
+\textbf{Figure III.11 : Schéma relationnel simplifié}
+\end{center}
+
+\section{Conclusion}
+
+Ce chapitre a présenté l'analyse et la conception du système Novaskol en utilisant le langage UML. Nous avons identifié 16 besoins fonctionnels et 10 besoins non fonctionnels, défini 7 acteurs avec leurs cas d'utilisation, modélisé les interactions dynamiques via des diagrammes de séquence et d'activité, et établi le modèle conceptuel de données avec toutes les entités et leurs relations.
+
+% ======================================================================
+\chapter{Réalisation}
+% ======================================================================
+
+\section{Introduction}
+
+Ce chapitre présente la phase de réalisation de Novaskol. Nous décrivons en détail l'environnement de développement, l'implémentation du backend Laravel avec ses contrôleurs, services et middlewares, le frontend avec ses vues Blade, l'application de bureau Electron, les applications companion, le processus de packaging et de déploiement, et les interfaces principales de l'application.
+
+\section{Environnement de développement}
+
+\subsection{Outils de développement}
+
+\begin{table}[h]
+\centering
+\caption{Outils de développement}
+\begin{tabular}{lll}
+\toprule
+Outil & Version & Utilisation \\
+\midrule
+Visual Studio Code & Dernière & Éditeur de code principal \\
+PHP & 8.2.0 & Langage serveur \\
+Composer & 2.x & Gestionnaire de dépendances PHP \\
+Node.js & 22.x & Exécution JavaScript \\
+npm & 10.x & Gestionnaire de paquets \\
+Git & 2.x & Contrôle de version \\
+WampServer & 3.x & Environnement PHP local (dev) \\
+Electron & 37.2.1 & Framework desktop \\
+electron-builder & 26.0.12 & Packaging d'installateur \\
+Laravel Pint & Dernière & Correcteur de style \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Structure du projet}
+
+\begin{verbatim}
+novaskol-laravel/
++-- app/                       # Code source Laravel
+|   +-- Console/Commands/      # Commandes Artisan
+|   +-- Http/
+|   |   +-- Controllers/      # 30 controleurs
+|   |   +-- Middleware/        # 3 middlewares
+|   +-- Models/                # Modeles Eloquent
+|   +-- Services/              # 9 services metier
++-- apps/                      # Applications companion
+|   +-- novaskol-connecte/     # Mobile React + Capacitor
+|   +-- novaskol-connecte-desktop/ # Desktop companion Electron
++-- config/                    # Configuration Laravel
++-- database/                  # Base de donnees
+|   +-- migrations/            # 33 migrations
++-- desktop/                   # Application Electron principale
+|   +-- main.cjs               # Processus principal (220 lignes)
+|   +-- preload.cjs            # Pont IPC
++-- public/                    # Fichiers publics
++-- resources/                 # Vue Blade, CSS, JS
+|   +-- views/                 # 66 templates Blade
++-- routes/                    # Definition des routes
+|   +-- web.php                # 287 lignes de routes
++-- tools/                     # Outils de build et runtime
+|   +-- runtime/               # PHP 8.2 portable + MySQL
+|   +-- windows/               # Scripts PowerShell
++-- vendor/                    # Dependances PHP
+\end{verbatim}
+
+\begin{center}
+\textbf{Figure IV.1 : Arborescence complète du projet}
+\end{center}
+
+\subsection{Processus de développement}
+
+Le développement a suivi une approche itérative avec des cycles de 2 semaines :
+\begin{enumerate}
+    \item Phase d'analyse : Recueil des besoins, spécifications
+    \item Phase de conception : Modélisation UML, architecture technique
+    \item Phase d'implémentation : Codage des modules fonctionnels
+    \item Phase de test : Tests unitaires, tests d'intégration
+    \item Phase de validation : Tests utilisateurs, corrections
+    \item Phase de packaging : Build, déploiement, documentation
+\end{enumerate}
+
+\section{Implémentation du backend Laravel}
+
+\subsection{Architecture des contrôleurs}
+
+Les contrôleurs sont organisés par domaine fonctionnel. Novaskol compte 30 fichiers de contrôleurs :
+
+\begin{verbatim}
+app/Http/Controllers/
++-- Auth/
+|   +-- LegacyAuthController.php
++-- Dashboard/
+|   +-- DashboardController.php
+|   +-- RoleDashboardController.php
++-- Connected/
+|   +-- ConnectedInitController.php
+|   +-- ConnectedSyncController.php
++-- AccountingController.php    # Comptabilite
++-- BulletinController.php     # Bulletins
++-- ClassroomController.php    # Classes
++-- CommunicationController.php # Messagerie
++-- GradeController.php        # Notes
++-- StudentController.php      # Eleves
++-- SubjectController.php      # Matieres
++-- ScheduleController.php     # Emploi du temps
+... (30 fichiers au total)
+\end{verbatim}
+
+\subsection{Système d'authentification}
+
+Le système d'authentification est basé sur les sessions PHP et la table \texttt{utilisateurs} :
+
+\begin{lstlisting}[language=PHP]
+// Verification des identifiants
+$user = DB::table('utilisateurs')
+    ->where('email', $request->email)
+    ->where('role', $request->role)
+    ->first();
+
+if ($user && Hash::check($request->password, $user->password)) {
+    session([
+        'utilisateur_id'    => $user->id,
+        'utilisateur_nom'   => $user->nom,
+        'utilisateur_email' => $user->email,
+        'utilisateur_role'  => $user->role
+    ]);
+    return redirect('/dashboard');
+}
+\end{lstlisting}
+
+\subsection{Middleware de contrôle d'accès}
+
+Le middleware \texttt{module.access} est le mécanisme central de contrôle d'accès :
+
+\begin{lstlisting}[language=PHP]
+// Middleware module.access
+$permission = DB::table('permissions')
+    ->where('utilisateur_id', session('utilisateur_id'))
+    ->where('module', $module)
+    ->where('acces', true)
+    ->exists();
+
+if (!$permission) {
+    abort(403, 'Acces non autorise');
+}
+\end{lstlisting}
+
+\textbf{Exemples d'utilisation dans les routes :}
+\begin{lstlisting}[language=PHP]
+Route::get('/notes', [GradeController::class, 'index'])
+    ->middleware('module.access:notes');
+
+Route::get('/bulletin', [BulletinController::class, 'index'])
+    ->middleware('module.access:bulletin');
+\end{lstlisting}
+
+\subsection{Services métier}
+
+Les services métier encapsulent la logique complexe :
+\begin{itemize}
+    \item \textbf{BulletinCalculator} : Calcul des moyennes, rang, mention
+    \item \textbf{QrCodeService} : Génération de QR codes
+    \item \textbf{ConnectedLocalSynchronizer} : Synchronisation bidirectionnelle
+    \item \textbf{ModuleRegistry} : Enregistrement des modules
+    \item \textbf{RelationalDeleteService} : Suppression en cascade
+    \item \textbf{SyncService} : Gestion des lots de synchronisation
+    \item \textbf{ExportService} : Export des données (Excel, PDF)
+\end{itemize}
+
+\subsection{Génération de PDF}
+
+\begin{lstlisting}[language=PHP]
+$pdf = Pdf::loadView('modules.professeur.bulletin.pdf', [
+    'eleve'     => $eleve,
+    'notes'     => $notes,
+    'moyennes'  => $moyennes,
+    'trimestre' => $trimestre
+]);
+return $pdf->download("bulletin-{$eleve->mat_etud}.pdf");
+\end{lstlisting}
+
+\section{Implémentation du frontend}
+
+\subsection{Architecture des vues}
+
+Le frontend utilise le moteur de templates Blade de Laravel avec 66 fichiers de vue organisés par module fonctionnel.
+
+\subsection{Design et thème}
+
+\begin{itemize}
+    \item \textbf{Thème sombre} par défaut avec mode clair activable
+    \item \textbf{Palette de couleurs} : Fond sombre (\texttt{\#080e18}), accent vert (\texttt{\#00c853})
+    \item \textbf{Design responsive} grâce à TailwindCSS
+    \item \textbf{Notifications} SweetAlert2 pour les interactions utilisateur
+\end{itemize}
+
+\subsection{Composants d'interface}
+
+\begin{itemize}
+    \item Barre latérale : Navigation principale avec sous-menus
+    \item En-tête fixe : Notifications, sélection langue, profil
+    \item Tableau de bord : Widgets statistiques, graphiques Chart.js
+    \item Tableaux de données : Listes avec recherche, tri, pagination
+    \item Formulaires : Saisie avec validation client et serveur
+    \item Calendrier : FullCalendar pour les événements
+    \item Chat : Interface de messagerie avec réactions
+\end{itemize}
+
+\subsection{Internationalisation}
+
+Le système supporte 6 langues : Français, Anglais, Allemand, Malgache, Espagnol, Portugais.
+
+\section{Application de bureau Electron}
+
+\subsection{Fichiers clés}
+
+\begin{table}[h]
+\centering
+\caption{Fichiers clés de l'application Electron}
+\begin{tabular}{lll}
+\toprule
+Fichier & Taille & Rôle \\
+\midrule
+\texttt{desktop/main.cjs} & 220 lignes & Processus principal Electron \\
+\texttt{desktop/preload.cjs} & 16 lignes & Pont IPC sécurisé \\
+\texttt{desktop/ui/splash.html} & 135 lignes & Interface de démarrage \\
+\texttt{desktop/package.json} & 51 lignes & Configuration build \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Processus principal (main.cjs)}
+
+\begin{lstlisting}[language=JavaScript]
+async function startNovaskol(r) {
+    // 1. Configurer l'environnement
+    ensureLayout(r);
+    configureEnv(r);
+    ensureAppKey(r);
+
+    // 2. Installer les dependances si necessaire
+    if (!fs.existsSync(path.join(r, 'vendor'))) {
+        runComposerInstall(r);
+    }
+
+    // 3. Executer les migrations
+    runPhpArtisan(r, 'migrate --force');
+
+    // 4. Demarrer le serveur PHP
+    phpProcess = spawn(getPhp(r), [
+        path.join(r, 'artisan'),
+        'serve', '--host=0.0.0.0', '--port=8001'
+    ], { cwd: r, windowsHide: true });
+
+    // 5. Attendre que le serveur reponde
+    await waitForHttp('http://127.0.0.1:8001', 120000);
+
+    // 6. Ouvrir la fenetre principale
+    mainWindow.loadURL('http://127.0.0.1:8001');
+}
+\end{lstlisting}
+
+\subsection{Fonctionnalités du processus principal}
+
+\begin{enumerate}
+    \item \textbf{Single-instance lock} : empêche le lancement multiple
+    \item \textbf{Résolution du runtime PHP} : 4 stratégies
+    \item \textbf{Fenêtre splash} : 460$\times$360, frameless, thème sombre
+    \item \textbf{Fenêtre principale} : 1440$\times$920 (min 1220$\times$760)
+    \item \textbf{Configuration .env} automatique
+    \item \textbf{Migration forcée} au démarrage
+    \item \textbf{Health check} : Ping HTTP jusqu'à 120 secondes
+    \item \textbf{Fermeture} : Confirmation utilisateur, arrêt PHP
+\end{enumerate}
+
+\subsection{Pont IPC}
+
+\begin{lstlisting}[language=JavaScript]
+contextBridge.exposeInMainWorld('desktopShell', {
+    onSplashStatus(callback) {
+        ipcRenderer.on('splash-status', (_event, message) => callback(message));
+    },
+    async getMeta() {
+        return ipcRenderer.invoke('desktop:get-meta');
+    },
+    print() {
+        ipcRenderer.send('print');
+    },
+    printHtml(html) {
+        ipcRenderer.send('print-html', html);
+    }
+});
+\end{lstlisting}
+
+\subsection{Configuration electron-builder}
+
+\begin{lstlisting}[language=JSON]
+{
+    "build": {
+        "appId": "com.novaskol.desktop",
+        "productName": "Novaskol",
+        "directories": {
+            "output": "../storage/app/desktop-dist"
+        },
+        "extraResources": [{
+            "from": "../storage/app/distribution/novaskol-app-latest",
+            "to": "seed/novaskol",
+            "filter": ["**/*"]
+        }],
+        "win": { "target": ["nsis"] },
+        "nsis": {
+            "oneClick": false,
+            "allowToChangeInstallationDirectory": true,
+            "createDesktopShortcut": true,
+            "createStartMenuShortcut": true
+        }
+    }
+}
+\end{lstlisting}
+
+\section{Application mobile companion (Novaskol Connecte)}
+
+\subsection{Architecture}
+
+Novaskol Connecte est une application mobile hybride développée avec React 19, Vite 8, et Capacitor 8 pour Android.
+
+\textbf{Caractéristiques techniques :}
+\begin{itemize}
+    \item Version : 0.2.0
+    \item Framework : React 19
+    \item Build : Vite 8
+    \item Natif : Capacitor 8.3.3 (Android)
+    \item Offline : Service Worker + localStorage
+\end{itemize}
+
+\subsection{Fonctionnalités}
+
+\begin{itemize}
+    \item Consultation des notes et bulletins
+    \item Suivi des présences
+    \item Messagerie
+    \item Calendrier scolaire
+    \item Gestion des élèves (CRUD)
+    \item Calcul de bulletins côté client
+    \item Synchronisation hors-ligne
+    \item Appairage par QR code
+\end{itemize}
+
+\section{Application de bureau Connecte Desktop}
+
+\subsection{Architecture}
+
+Novaskol Connecte Desktop est une application Electron companion pour PC secondaire, embarquant son propre serveur PHP/Laravel.
+
+\textbf{Caractéristiques techniques :}
+\begin{itemize}
+    \item Version : 1.0.0
+    \item Framework : Electron 37.2.1
+    \item Backend : PHP 8.2 + Laravel embarqué
+    \item Autosync : Toutes les 5 minutes
+\end{itemize}
+
+\subsection{Différences avec la version mobile}
+
+\begin{table}[h]
+\centering
+\caption{Comparaison Connecte Mobile vs Desktop}
+\begin{tabular}{lll}
+\toprule
+Aspect & Connecte Mobile & Connecte Desktop \\
+\midrule
+Technologie & React 19 + Capacitor & Electron + PHP embarqué \\
+Backend & Externe (HTTP) & Local (PHP serveur) \\
+Stockage & localStorage & SQLite locale \\
+Sync & Push/Pull HTTP & PHP + sync automatique \\
+Autonomie & Nécessite serveur principal & Autonome (seed Laravel) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Processus de packaging et déploiement}
+
+\subsection{Application de bureau (Electron + electron-builder)}
+
+Le processus de build et packaging suit les étapes suivantes :
+\begin{enumerate}
+    \item \textbf{Préparation} : \texttt{php artisan novaskol:prepare-installer-source --with-vendor}
+    \item \textbf{Copie du runtime} : PHP portable + MySQL portable
+    \item \textbf{Installation des dépendances npm} dans \texttt{desktop/}
+    \item \textbf{Build Electron} : \texttt{npm run build} (electron-builder --win nsis)
+    \item \textbf{Résultat} : \texttt{Novaskol Setup 1.0.6.exe} ($\sim$647 Mo)
+\end{enumerate}
+
+\subsection{PHP Runtime portable}
+
+\begin{itemize}
+    \item PHP 8.2.0 avec 19 extensions chargées
+    \item \texttt{extension\_dir="ext"} (chemin relatif)
+    \item Opcache activé avec JIT tracing
+    \item \texttt{memory\_limit=128M}
+    \item \texttt{max\_execution\_time=120}
+\end{itemize}
+
+\subsection{Installateur NSIS}
+
+\begin{itemize}
+    \item Assistant d'installation graphique
+    \item Choix du répertoire d'installation
+    \item Raccourcis Bureau et Menu Démarrer
+    \item Désinstallation propre
+\end{itemize}
+
+\subsection{Modes de déploiement}
+
+\begin{table}[h]
+\centering
+\caption{Modes de déploiement}
+\begin{tabular}{lll}
+\toprule
+Mode & Base de données & Installation \\
+\midrule
+Local (Desktop) & SQLite & Installateur NSIS \\
+Hébergement & MySQL/MariaDB & Déploiement FTP/CLI \\
+Hybride & SQLite + Sync réseau & Desktop + Connecte \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Interfaces principales}
+
+\subsection{Page d'authentification}
+\begin{itemize}
+    \item Logo et nom de l'application
+    \item Formulaire de connexion avec sélection du rôle
+    \item Fonctionnalités principales
+    \item Options multilingues (6 langues)
+\end{itemize}
+
+\subsection{Tableau de bord}
+\begin{itemize}
+    \item Widgets statistiques (élèves, enseignants, classes)
+    \item Graphiques d'évolution (Chart.js)
+    \item Événements du calendrier à venir
+    \item Notifications récentes
+\end{itemize}
+
+\subsection{Saisie des notes}
+\begin{itemize}
+    \item Sélection de la classe et de la matière
+    \item Liste des élèves avec notes existantes
+    \item Saisie avec validation automatique (0-20)
+    \item Calcul automatique des moyennes
+\end{itemize}
+
+\subsection{Génération de bulletins}
+\begin{itemize}
+    \item Calcul automatique des moyennes par matière
+    \item Moyenne générale et rang
+    \item Mention et appréciation automatiques
+    \item Export PDF (via DOMPDF)
+\end{itemize}
+
+\subsection{Emploi du temps}
+\begin{itemize}
+    \item Vue hebdomadaire par classe
+    \item Affectation des matières et professeurs
+    \item Intégration FullCalendar
+\end{itemize}
+
+\subsection{Messagerie interne}
+\begin{itemize}
+    \item Conversations privées et de groupe
+    \item Envoi de messages textes et fichiers
+    \item Réactions par emojis
+    \item Statut de saisie
+\end{itemize}
+
+\subsection{Gestion des présences par QR code}
+\begin{itemize}
+    \item Génération de cartes d'identification avec QR code
+    \item Scan de QR code
+    \item Sessions matin et après-midi
+    \item Statistiques de présence
+\end{itemize}
+
+\section{Conclusion}
+
+Ce chapitre a présenté la réalisation complète de Novaskol. L'implémentation couvre l'ensemble des 45 modules fonctionnels à travers une architecture modulaire et évolutive. Le backend Laravel avec ses 30 contrôleurs, 9 services et 3 middlewares constitue le c ur du système. Le frontend offre 66 vues Blade avec un design moderne et responsive. L'application de bureau Electron permet un déploiement simplifié et un fonctionnement complètement hors-ligne. Le packaging via electron-builder produit un installateur Windows autonome de 647 Mo.
+
+% ======================================================================
+\chapter*{Conclusion générale}
+\addcontentsline{toc}{chapter}{Conclusion générale}
+% ======================================================================
+
+Le travail présenté dans ce mémoire avait pour objectif la conception et la réalisation d'un système de gestion scolaire complet, fonctionnant hors-ligne, facile à déployer et à utiliser. Nous avons conçu et développé \textbf{Novaskol}, une application qui répond aux besoins spécifiques des établissements scolaires en matière de gestion administrative, pédagogique et financière.
+
+\section*{Résultats obtenus}
+
+Au terme de ce projet, nous avons atteint les objectifs fixés :
+
+\begin{enumerate}
+    \item \textbf{Un système complet} : 45 modules fonctionnels couvrant l'ensemble des besoins de gestion scolaire.
+    \item \textbf{Une architecture robuste} : Basée sur Laravel 12 et PHP 8.2 avec Eloquent ORM, architecture MVC.
+    \item \textbf{Une base de données exhaustive} : 42 tables avec 33 migrations Laravel.
+    \item \textbf{Une application de bureau autonome} : Electron 37, installateur NSIS de 647 Mo.
+    \item \textbf{Deux applications companion} : Novaskol Connecte (mobile) et Connecte Desktop.
+    \item \textbf{Une synchronisation multi-appareils} : Réseau local avec appairage et résolution de conflits.
+    \item \textbf{Une interface intuitive} : Adaptée à chaque profil d'utilisateur, design moderne.
+    \item \textbf{Un déploiement simplifié} : Installateur Windows unique contenant tous les composants.
+\end{enumerate}
+
+\section*{Difficultés rencontrées}
+
+\begin{itemize}
+    \item Intégration de PHP dans Electron : gestion des processus fils, chemins d'accès
+    \item Packaging du runtime PHP : configuration du php.ini avec chemins relatifs
+    \item Synchronisation multi-appareils : UUIDs globaux, détection de conflits
+    \item Migration du code legacy : base MySQL \texttt{bulletin\_system} vers Laravel
+    \item Gestion des chemins dans php.ini : portabilité entre machines
+\end{itemize}
+
+\section*{Compétences acquises}
+
+Ce projet m'a permis d'acquérir et de renforcer des compétences clés, en prolongement de mon parcours CAN et de ma spécialisation web :
+
+\begin{itemize}
+    \item Développement web full-stack : Laravel (MVC, Eloquent ORM, migrations, Blade), PHP orienté objet, React 19
+    \item Applications de bureau hybrides : Electron, IPC, gestion de processus, packaging via electron-builder
+    \item Applications mobiles : React 19, Capacitor 8, PWA, IndexedDB, synchronisation hors-ligne
+    \item Bases de données : SQLite, MySQL/MariaDB, conception de schémas, optimisation de requêtes
+    \item Modélisation et conception : UML (cas d'utilisation, diagrammes de séquence, d'activité, de classes)
+    \item Packaging et déploiement : electron-builder, NSIS, configuration d'installateur, runtime PHP portable
+    \item Scripting et automatisation : PowerShell, gestion des processus, configuration système
+    \item Gestion de projet : Planification, méthodologie agile, documentation, versionnement Git
+    \item Intégration des technologies : capacité à assembler des briques technologiques diverses (PHP, Node.js, React, SQLite, Electron) en un produit cohérent et fonctionnel
+\end{itemize}
+
+\section*{Perspectives d'évolution}
+
+\begin{enumerate}
+    \item Application mobile native (iOS/Android) avec React Native ou Flutter
+    \item Version cloud SaaS avec hébergement multi-établissements
+    \item Synchronisation Internet avec chiffrement de bout en bout
+    \item Intelligence artificielle pour la prédiction des résultats scolaires
+    \item API REST publique documentée pour l'intégration avec des systèmes tiers
+    \item Modules complémentaires : bibliothèque, restauration, transport
+    \item Compatibilité multi-plateforme (macOS, Linux)
+    \item Tableaux de bord avancés avec analytics
+    \item Mode multi-établissement
+    \item Signature électronique pour les documents officiels
+\end{enumerate}
+
+\section*{Mot de la fin}
+
+La réalisation de ce projet a été pour moi bien plus qu'un exercice académique. Issu d'un parcours en Communication en Audiovisuelle et Numérique (CAN), je me suis tourné vers le web après la L3, animé par l'envie de comprendre et de maîtriser les technologies qui façonnent notre monde numérique. Novaskol représente l'aboutissement de cette transition : un système complet, du dossier de conception à l'installateur final, en passant par la base de données, le code et l'interface utilisateur.
+
+J'espère que cet outil contribuera à améliorer la gestion et la qualité de l'enseignement dans les établissements qui l'adopteront. Mais au-delà de l'outil lui-même, ce projet restera pour moi la trace tangible d'un parcours, d'un choix et d'une volonté de laisser une empreinte dans le domaine qui me passionne : le web.
+
+Novaskol est un projet open source (licence MIT), dont le code source est librement accessible et modifiable. La communauté est encouragée à contribuer à son amélioration continue.
+
+\begin{thebibliography}{99}
+
+\section*{Ouvrages et articles}
+\addcontentsline{toc}{section}{Ouvrages et articles}
+
+\bibitem{kruchten1995}
+Kruchten, P. (1995). ``4+1 View Model of Software Architecture.'' \textit{IEEE Software}, 12(6), 42-50.
+
+\bibitem{gamma1994}
+Gamma, E., Helm, R., Johnson, R., \& Vlissides, J. (1994). \textit{Design Patterns: Elements of Reusable Object-Oriented Software}. Addison-Wesley.
+
+\bibitem{booch2005}
+Booch, G., Rumbaugh, J., \& Jacobson, I. (2005). \textit{The Unified Modeling Language User Guide}. 2nd Edition. Addison-Wesley.
+
+\bibitem{roques2004}
+Roques, P. (2004). \textit{UML par la pratique}. 2e édition. Éditions Eyrolles.
+
+\bibitem{fowler2002}
+Fowler, M. (2002). \textit{Patterns of Enterprise Application Architecture}. Addison-Wesley.
+
+\bibitem{gardarin2000}
+Gardarin, G. (2000). \textit{Internet/Intranet et les bases de données}. Éditions Eyrolles.
+
+\bibitem{comer2003}
+Comer, D. (2003). \textit{Internet : Services et réseaux}. Éditions Dunod.
+
+\bibitem{otlet2002}
+Otlet, J. (2002). \textit{Architectures de Systèmes d'Information}. Livre Blanc OCTO.
+
+\bibitem{ullman2023}
+Ullman, L. (2023). \textit{PHP for the Web: Visual QuickStart Guide}. 5th Edition. Peachpit Press.
+
+\section*{Documentation technique}
+\addcontentsline{toc}{section}{Documentation technique}
+
+\bibitem{laravel}
+Laravel Documentation. \textit{Laravel 12.x Documentation}. \url{https://laravel.com/docs/12.x}
+
+\bibitem{php}
+PHP Documentation. \textit{PHP Manual}. \url{https://www.php.net/docs.php}
+
+\bibitem{electron}
+Electron Documentation. \textit{Electron Documentation}. \url{https://www.electronjs.org/docs}
+
+\bibitem{electronbuilder}
+electron-builder Documentation. \textit{electron-builder Documentation}. \url{https://www.electron.build/}
+
+\bibitem{sqlite}
+SQLite Documentation. \textit{SQLite Documentation}. \url{https://www.sqlite.org/docs.html}
+
+\bibitem{tailwindcss}
+TailwindCSS Documentation. \textit{TailwindCSS v4 Documentation}. \url{https://tailwindcss.com/docs}
+
+\bibitem{react}
+React Documentation. \textit{React 19 Documentation}. \url{https://react.dev/}
+
+\bibitem{capacitor}
+Capacitor Documentation. \textit{Capacitor 8 Documentation}. \url{https://capacitorjs.com/docs}
+
+\bibitem{mysql}
+MySQL Documentation. \textit{MySQL 8.0 Documentation}. \url{https://dev.mysql.com/doc/}
+
+\bibitem{dompdf}
+DOMPDF. \textit{Laravel DOMPDF}. \url{https://github.com/barryvdh/laravel-dompdf}
+
+\bibitem{phpspreadsheet}
+PhpSpreadsheet. \textit{PhpSpreadsheet Documentation}. \url{https://phpspreadsheet.readthedocs.io/}
+
+\section*{Références web}
+\addcontentsline{toc}{section}{Références web}
+
+\bibitem{wikiarchi}
+Wikipedia. ``Architecture logicielle.'' \url{https://fr.wikipedia.org/wiki/Architecture_logicielle}
+
+\bibitem{wikics}
+Wikipedia. ``Client-serveur.'' \url{https://fr.wikipedia.org/wiki/Client-serveur}
+
+\bibitem{wikiphp}
+Wikipedia. ``PHP.'' \url{https://fr.wikipedia.org/wiki/PHP}
+
+\bibitem{wikilaravel}
+Wikipedia. ``Laravel.'' \url{https://fr.wikipedia.org/wiki/Laravel}
+
+\bibitem{wikielectron}
+Wikipedia. ``Electron.'' \url{https://fr.wikipedia.org/wiki/Electron_(framework)}
+
+\bibitem{wikiuml}
+Wikipedia. ``UML.'' \url{https://fr.wikipedia.org/wiki/UML_(informatique)}
+
+\bibitem{wikisqlite}
+Wikipedia. ``SQLite.'' \url{https://fr.wikipedia.org/wiki/SQLite}
+
+\bibitem{wikimvc}
+Wikipedia. ``Modèle-Vue-Contrôleur.'' \url{https://fr.wikipedia.org/wiki/Modèle-Vue-Contrôleur}
+
+\end{thebibliography}
+
+% ======================================================================
+\appendix
+\chapter{Généralités sur les réseaux informatiques}
+% ======================================================================
+
+\section{Définition d'un réseau}
+
+Un réseau informatique est un ensemble d'équipements informatiques reliés entre eux pour échanger des informations. Les réseaux permettent le partage de ressources, la communication entre utilisateurs, et l'accès à des services centralisés.
+
+\section{Intérêts d'un réseau informatique}
+
+\begin{itemize}
+    \item Partage de fichiers et de périphériques
+    \item Communication entre utilisateurs
+    \item Centralisation des données
+    \item Accès à Internet
+    \item Travail collaboratif
+\end{itemize}
+
+\section{Classification des réseaux}
+
+\begin{itemize}
+    \item \textbf{LAN (Local Area Network)} : Réseau local, couvre une zone limitée
+    \item \textbf{MAN (Metropolitan Area Network)} : Réseau métropolitain
+    \item \textbf{WAN (Wide Area Network)} : Réseau étendu
+\end{itemize}
+
+\section{Topologies de réseau}
+
+\begin{itemize}
+    \item Topologie en bus
+    \item Topologie en anneau
+    \item Topologie en étoile (la plus courante)
+\end{itemize}
+
+\section{Modèle OSI}
+
+Le modèle OSI (Open Systems Interconnection) définit 7 couches de communication :
+\begin{enumerate}
+    \item Physique : Transmission des bits sur le support
+    \item Liaison de données : Accès au support, détection d'erreurs
+    \item Réseau : Routage des paquets (IP)
+    \item Transport : Transport fiable des données (TCP)
+    \item Session : Gestion des sessions de communication
+    \item Présentation : Codage et décodage des données
+    \item Application : Interfaces avec les applications utilisateur (HTTP, FTP, SMTP)
+\end{enumerate}
+
+\section{Protocole TCP/IP}
+
+TCP/IP est le protocole fondamental d'Internet. Il combine :
+\begin{itemize}
+    \item \textbf{IP (Internet Protocol)} : Routage des paquets entre les machines
+    \item \textbf{TCP (Transmission Control Protocol)} : Transport fiable avec contrôle de flux
+\end{itemize}
+
+% ======================================================================
+\chapter{UML -- Unified Modeling Language}
+% ======================================================================
+
+\section{Définition}
+
+UML (Unified Modeling Language) est un langage de modélisation graphique utilisé en génie logiciel pour visualiser, spécifier, construire et documenter les systèmes d'information.
+
+\section{Diagrammes UML utilisés dans Novaskol}
+
+\begin{description}
+    \item[Diagramme de cas d'utilisation :] Représente les fonctionnalités du système du point de vue des acteurs externes.
+    \item[Diagramme de séquence :] Montre les interactions entre objets au cours du temps.
+    \item[Diagramme d'activité :] Représente les flux de contrôle et de données.
+    \item[Diagramme de classes :] Montre la structure statique du système.
+\end{description}
+
+\section{Éléments d'UML}
+
+\begin{itemize}
+    \item \textbf{Acteur} : Entité qui interagit avec le système
+    \item \textbf{Cas d'utilisation} : Fonctionnalité offerte par le système
+    \item \textbf{Classe} : Abstraction d'une entité du domaine
+    \item \textbf{Relation} : Association, inheritance, dépendance, réalisation
+    \item \textbf{Message} : Communication entre objets
+    \item \textbf{État} : Condition dans laquelle se trouve un objet
+\end{itemize}
+
+% ======================================================================
+\chapter{Guide d'installation de Novaskol}
+% ======================================================================
+
+\section{Installation locale (Desktop)}
+
+\begin{enumerate}
+    \item Télécharger \texttt{Novaskol-Setup-1.0.6.exe} (647 Mo)
+    \item Exécuter l'installateur
+    \item Suivre l'assistant d'installation
+    \item Lancer Novaskol depuis le raccourci Bureau ou Menu Démarrer
+    \item Au premier démarrage, l'application initialise automatiquement la base de données
+    \item Créer un compte administrateur
+    \item Configurer l'établissement
+\end{enumerate}
+
+\section{Configuration minimale requise}
+
+\begin{itemize}
+    \item Système d'exploitation : Windows 10/11 64-bit
+    \item Processeur : Intel Core i3 ou équivalent
+    \item RAM : 4 Go minimum (8 Go recommandé)
+    \item Espace disque : 2 Go disponibles
+    \item Aucune connexion Internet requise
+\end{itemize}
+
+\section{Installation sur hébergement web}
+
+\begin{enumerate}
+    \item Déployer les fichiers du projet sur le serveur web
+    \item Configurer le fichier \texttt{.env}
+    \item Exécuter \texttt{php artisan migrate --force}
+    \item Exécuter \texttt{php artisan key:generate}
+    \item Configurer le serveur web (Apache/Nginx)
+    \item Créer un compte administrateur
+\end{enumerate}
+
+% ======================================================================
+\chapter{Structure du paquet de distribution}
+% ======================================================================
+
+Le paquet de distribution \texttt{novaskol-app-latest/} contient l'ensemble des fichiers nécessaires :
+
+\begin{verbatim}
+novaskol-app-latest/
++-- app/                    # Code Laravel
++-- bootstrap/              # Bootstrap Laravel
++-- config/                 # Fichiers de configuration
++-- database/               # Migrations et dumps
++-- public/                 # Point d'entree web
++-- resources/              # Vues Blade et assets
++-- routes/                 # Routes de l'application
++-- storage/                # Stockage (logs, cache)
++-- tools/                  # Outils
+|   +-- runtime/
+|       +-- php/           # PHP 8.2.0 portable
+|       +-- mysql/         # MySQL 8.0.31 portable
++-- vendor/                 # Dependances PHP (Composer)
++-- main.cjs                # Processus principal Electron
++-- preload.cjs             # Pont IPC
++-- composer.json           # Dependances PHP
++-- package.json            # Dependances Node.js
+\end{verbatim}
+
+% ======================================================================
+\chapter{Tableau des routes API}
+% ======================================================================
+
+Points d'accès API REST pour la synchronisation des appareils connectés :
+
+\begin{longtable}{lll}
+\caption{Routes API de synchronisation}\\
+\toprule
+Méthode & Route & Description \\
+\midrule
+\endfirsthead
+\multicolumn{3}{c}{Suite des routes API}\\
+\toprule
+Méthode & Route & Description \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+GET & /reseau-local/ping & Test de connexion au serveur \\
+GET & /reseau-local/manifest-appareil & Manifeste du serveur \\
+POST & /reseau-local/appairer-appareil & Appairage d'un nouvel appareil \\
+GET & /reseau-local/bootstrap-appareil & Données initiales \\
+POST & /reseau-local/recevoir-lot & Réception d'un lot de modifications \\
+GET & /reseau-local/appareil-connecte & Page d'appairage \\
+OPTIONS & /reseau-local/{any} & Preflight CORS \\
+GET & /connected/init & Initialisation appareil connecté \\
+GET & /connected/sync/status & Statut de la synchronisation \\
+POST & /connected/sync/run & Exécution de la synchronisation \\
+POST & /connected/disconnect & Déconnexion de l'appareil \\
+POST & /connected/switch-user & Changement d'utilisateur connecté \\
+\end{longtable}
+
+\end{document}

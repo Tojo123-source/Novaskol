@@ -23,10 +23,25 @@ class ConnectedInitController extends Controller
                 'line' => $e->getLine(),
                 'trace' => $e->getTraceAsString(),
             ]);
+            try {
+                file_put_contents(
+                    storage_path('logs/connected-init-error.log'),
+                    '[' . now() . '] ' . $e->getMessage() . ' in ' . $e->getFile() . ':' . $e->getLine() . "\n" . $e->getTraceAsString() . "\n\n",
+                    FILE_APPEND
+                );
+            } catch (\Throwable $logErr) {}
             if ($request->expectsJson()) {
                 return response()->json(['success' => false, 'message' => 'Erreur interne: ' . $e->getMessage()], 500);
             }
-            return response()->view('errors.500', ['message' => $e->getMessage()], 500);
+
+            try {
+                $pairedPath = env('CONNECTED_PAIRED_PATH', storage_path('app/connected/paired.json'));
+                if (File::exists($pairedPath)) {
+                    File::delete($pairedPath);
+                }
+            } catch (\Throwable $pErr) {}
+
+            return redirect('/appareil-connecte');
         }
     }
 
@@ -80,16 +95,13 @@ class ConnectedInitController extends Controller
             $email = $userInfo['email'];
             $role = $userInfo['role'] ?? 'admin';
 
-            $existing = DB::table('utilisateurs')
-                ->where('email', $email)
-                ->where('role', $role)
-                ->first();
+            $existingByEmail = DB::table('utilisateurs')->where('email', $email)->first();
 
-            if ($existing) {
+            if ($existingByEmail) {
                 DB::table('utilisateurs')
-                    ->where('id', $existing->id)
-                    ->update($userData);
-                $userId = $existing->id;
+                    ->where('id', $existingByEmail->id)
+                    ->update($userData + ['role' => $role]);
+                $userId = $existingByEmail->id;
             } else {
                 $userId = DB::table('utilisateurs')->insertGetId(
                     ['email' => $email] + $userData

@@ -711,7 +711,7 @@ class CommunicationController extends Controller
 
     private function ensureSession(): void
     {
-        abort_unless(session()->has('utilisateur') && in_array($this->userRole(), ['admin', 'enseignant', 'parent', 'staff'], true), 403);
+        abort_unless(session()->has('utilisateur') && in_array($this->userRole(), ['admin', 'enseignant', 'parent', 'staff', 'eleve'], true), 403);
     }
 
     private function userId(): int

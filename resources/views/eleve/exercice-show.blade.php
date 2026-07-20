@@ -1,12 +1,31 @@
 <!DOCTYPE html>
 <html lang="fr">
-<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>{{ $exercice->titre }} - Novaskol</title>
-<link rel="stylesheet" href="{{ asset('legacy/assets/fontawesome/css/all.min.css') }}">
-<style>:root{--bg:#0f172a;--surface:#1e293b;--text:#f1f5f9;--muted:#94a3b8;--line:#334155;--green:#22c55e;--blue:#3b82f6;--orange:#f59e0b}*{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,sans-serif;background:var(--bg);color:var(--text)}.wrap{max-width:700px;margin:0 auto;padding:24px 16px}.header{text-align:center;margin-bottom:24px}.header h1{font-size:1.2rem;margin:0}.header .meta{color:var(--muted);font-size:.82rem;margin-top:4px}.timer{font-size:1.1rem;font-weight:700;color:var(--orange)}.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:20px;margin-bottom:14px}.card .q-num{color:var(--muted);font-size:.8rem;margin-bottom:4px}.card .question{font-size:.95rem;margin-bottom:12px;line-height:1.5}.options label{display:flex;align-items:center;gap:8px;padding:8px 12px;margin-bottom:4px;border-radius:6px;border:1px solid var(--line);cursor:pointer;font-size:.88rem;transition:border-color .15s}.options label:hover{border-color:var(--blue)}.options input{width:auto;margin:0}.reponse-texte{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--text);font:inherit;outline:none}.btn{display:inline-flex;align-items:center;gap:6px;padding:10px 20px;border-radius:8px;font-weight:600;font-size:.9rem;border:0;cursor:pointer;text-decoration:none}.btn-primary{background:var(--blue);color:#fff}.btn-primary:hover{background:#2563eb}.btn-success{background:var(--green);color:#fff}.actions{text-align:center;margin-top:20px}.flash{padding:10px 14px;border-radius:8px;margin-bottom:14px;font-size:.85rem}.flash-warn{background:rgba(245,158,11,.12);color:var(--orange);border:1px solid rgba(245,158,11,.2)}</style>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>{{ $exercice->titre }} - Novaskol</title>
+    <link rel="stylesheet" href="{{ asset('legacy/assets/fontawesome/css/all.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('legacy/fa/css/font-awesome.min.css') }}">
+    @include('modules.professeur.bulletin.partials.styles')
+    <style>
+        .student-wrap{max-width:700px;margin:88px 20px 20px 256px}
+        :root{--blue:#3b82f6;--orange:#f59e0b;--muted:var(--text-sec);--line:var(--border);--green:var(--success)}
+        .header-info{text-align:center;margin-bottom:24px}.header-info h1{font-size:1.2rem;margin:0}.header-info .meta{color:var(--muted);font-size:.82rem;margin-top:4px}.timer{font-size:1.1rem;font-weight:700;color:var(--orange)}.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:20px;margin-bottom:14px}.card .q-num{color:var(--muted);font-size:.8rem;margin-bottom:4px}.card .question{font-size:.95rem;margin-bottom:12px;line-height:1.5}.options label{display:flex;align-items:center;gap:8px;padding:8px 12px;margin-bottom:4px;border-radius:6px;border:1px solid var(--line);cursor:pointer;font-size:.88rem;transition:border-color .15s}.options label:hover{border-color:var(--blue)}.options input{width:auto;margin:0}.reponse-texte{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--text);font:inherit;outline:none}.btn{display:inline-flex;align-items:center;gap:6px;padding:10px 20px;border-radius:8px;font-weight:600;font-size:.9rem;border:0;cursor:pointer;text-decoration:none}.btn-primary{background:var(--blue);color:#fff}.btn-primary:hover{background:#2563eb}.btn-success{background:var(--green);color:#fff}.actions{text-align:center;margin-top:20px}.flash{padding:10px 14px;border-radius:8px;margin-bottom:14px;font-size:.85rem}.flash-warn{background:rgba(245,158,11,.12);color:var(--orange);border:1px solid rgba(245,158,11,.2)}
+        @media(max-width:1180px){.student-wrap{margin-left:16px;margin-right:16px}}
+        @media(max-width:700px){.student-wrap{margin-top:100px}}
+    </style>
 </head>
 <body>
-<div class="wrap">
-    <div class="header">
+@include('modules.professeur.bulletin.partials.shell', ['activeModule' => 'eleve_exercice'])
+<header>
+    <div class="header-left">
+        <button class="burger-menu" onclick="toggleSidebar()"><i class="fa fa-bars"></i></button>
+        <button id="fullscreen-btn" onclick="toggleFullscreen()"><i class="fa fa-expand"></i></button>
+    </div>
+    <div class="header-center">{{ $exercice->titre }}</div>
+</header>
+<div class="student-wrap">
+    <div class="header-info">
         <h1>{{ $exercice->titre }}</h1>
         <div class="meta">
             <span>{{ $ch->titre }}</span>
@@ -80,5 +99,10 @@
 })();
 </script>
 @endif
+<script>
+function toggleSub(e){const s=e.nextElementSibling,a=e.querySelector('.arrow');s.style.display=s.style.display==='block'?'none':'block';a.classList.toggle('fa-chevron-down');a.classList.toggle('fa-chevron-up')}
+function toggleSidebar(){document.getElementById('sidebar').classList.toggle('active');}
+function toggleFullscreen(){const i=document.getElementById('fullscreen-icon');if(!document.fullscreenElement){document.documentElement.requestFullscreen();i.classList.replace('fa-expand','fa-compress')}else{document.exitFullscreen();i.classList.replace('fa-compress','fa-expand')}}
+</script>
 </body>
 </html>

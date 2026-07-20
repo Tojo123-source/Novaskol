@@ -9,6 +9,7 @@
     @include('modules.professeur.bulletin.partials.styles')
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="{{ asset('legacy/vendor/qrcode.min.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
     <style>
         :root { --nv-primary: #0f2942; --nv-gold: #c9a84c; }
         body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); }
@@ -70,6 +71,8 @@
         .empty-state { padding: 16px; text-align: center; color: var(--text-sec); font-size: .82rem; }
 
         @media(max-width:1180px) { .student-wrap { margin-left: 16px; margin-right: 16px; } .portal-grid { grid-template-columns: 1fr; } .id-card-preview { flex-wrap: wrap; } .id-card-preview .qr-wrap { flex: 1; } }
+        .id-dl-btn{display:flex;align-items:center;justify-content:center;gap:4px;width:100%;margin-top:6px;padding:5px;font-size:.65rem;font-weight:600;border:1px solid #e2e8f0;border-radius:6px;background:#fff;color:var(--nv-primary);cursor:pointer;transition:all .15s}
+        .id-dl-btn:hover{background:var(--nv-primary);color:#fff;border-color:var(--nv-primary)}
         @media(max-width:700px) { .student-wrap { margin-top: 100px; } .info-grid { grid-template-columns: 1fr; } .quick-links a { width: 100%; justify-content: center; } }
     </style>
 </head>
@@ -123,7 +126,14 @@
                             <div class="qr-box" id="qrStudent{{ $eleve->id }}" data-qr="novaskol:qr:v1:{{ $qrToken }}"></div>
                             <div class="expiry">Exp: {{ now()->addYear()->format('d/m/Y') }}</div>
                         </div>
+                    @else
+                        <div>
+                            <div class="qr-box" style="background:#f1f5f9;color:#94a3b8;font-size:.65rem;text-align:center;display:grid;place-items:center;width:110px;height:110px;border-radius:8px;line-height:1.4;">
+                                QR<br>non<br>disponible
+                            </div>
+                        </div>
                     @endif
+                    <button onclick="downloadStudentCard(this)" class="id-dl-btn" title="Telecharger la carte"><i class="fa fa-download"></i></button>
                 </div>
             </div>
         </div>
@@ -249,6 +259,17 @@ document.addEventListener('DOMContentLoaded',()=>{
         if(u&&window.QRCode)new QRCode(q,{text:u,width:100,height:100,colorDark:'#0f2942',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.H})
     })
 })
+function downloadStudentCard(btn){
+    const card=btn.closest('.id-card-preview');
+    if(!card)return;
+    const name=card.querySelector('.name')?.textContent||'carte';
+    html2canvas(card,{scale:2,useCORS:true,backgroundColor:'#ffffff'}).then(canvas=>{
+        const a=document.createElement('a');
+        a.href=canvas.toDataURL('image/png');
+        a.download='carte-'+name.trim().replace(/\s+/g,'-')+'.png';
+        a.click();
+    })
+}
 function toggleSub(e){const s=e.nextElementSibling,a=e.querySelector('.arrow');s.style.display=s.style.display==='block'?'none':'block';a.classList.toggle('fa-chevron-down');a.classList.toggle('fa-chevron-up')}
 function toggleSidebar(){document.getElementById('sidebar').classList.toggle('active');}
 function toggleFullscreen(){const i=document.getElementById('fullscreen-icon');if(!document.fullscreenElement){document.documentElement.requestFullscreen();i.classList.replace('fa-expand','fa-compress')}else{document.exitFullscreen();i.classList.replace('fa-compress','fa-expand')}}

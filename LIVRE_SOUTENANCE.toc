@@ -1,0 +1,178 @@
+\babel@toc {french}{}\relax 
+\contentsline {chapter}{Remerciements}{2}{chapter*.1}%
+\contentsline {chapter}{Dédicaces}{3}{chapter*.2}%
+\contentsline {chapter}{Introduction générale}{11}{chapter*.6}%
+\contentsline {chapter}{\numberline {1}État de l'art et technologies utilisées}{14}{chapter.1}%
+\contentsline {section}{\numberline {1.1}Introduction}{14}{section.1.1}%
+\contentsline {section}{\numberline {1.2}Architecture logicielle}{14}{section.1.2}%
+\contentsline {subsection}{\numberline {1.2.1}Définition}{14}{subsection.1.2.1}%
+\contentsline {subsection}{\numberline {1.2.2}Le modèle 4+1 vues de Philippe Kruchten}{14}{subsection.1.2.2}%
+\contentsline {subsection}{\numberline {1.2.3}Le patron d'architecture MVC (Modèle-Vue-Contrôleur)}{15}{subsection.1.2.3}%
+\contentsline {section}{\numberline {1.3}Architectures distribuées}{16}{section.1.3}%
+\contentsline {subsection}{\numberline {1.3.1}Définition}{16}{subsection.1.3.1}%
+\contentsline {subsection}{\numberline {1.3.2}Types d'architectures distribuées}{16}{subsection.1.3.2}%
+\contentsline {section}{\numberline {1.4}Modèle Client/Serveur}{16}{section.1.4}%
+\contentsline {subsection}{\numberline {1.4.1}Définition}{16}{subsection.1.4.1}%
+\contentsline {subsection}{\numberline {1.4.2}Principe de fonctionnement}{16}{subsection.1.4.2}%
+\contentsline {subsection}{\numberline {1.4.3}Architecture à 2 niveaux (2-tiers)}{17}{subsection.1.4.3}%
+\contentsline {subsection}{\numberline {1.4.4}Architecture à 3 niveaux (3-tiers)}{17}{subsection.1.4.4}%
+\contentsline {subsection}{\numberline {1.4.5}Architecture multi-niveaux (n-tiers)}{18}{subsection.1.4.5}%
+\contentsline {subsection}{\numberline {1.4.6}Middleware}{18}{subsection.1.4.6}%
+\contentsline {section}{\numberline {1.5}Internet et le Web}{18}{section.1.5}%
+\contentsline {subsection}{\numberline {1.5.1}Internet}{18}{subsection.1.5.1}%
+\contentsline {subsection}{\numberline {1.5.2}Intranet et Extranet}{19}{subsection.1.5.2}%
+\contentsline {subsection}{\numberline {1.5.3}Le World Wide Web}{19}{subsection.1.5.3}%
+\contentsline {subsubsection}{Sites web statiques}{19}{subsection.1.5.3}%
+\contentsline {subsubsection}{Sites web dynamiques}{19}{subsection.1.5.3}%
+\contentsline {subsection}{\numberline {1.5.4}Le protocole HTTP}{19}{subsection.1.5.4}%
+\contentsline {subsection}{\numberline {1.5.5}REST API}{19}{subsection.1.5.5}%
+\contentsline {section}{\numberline {1.6}Technologies de développement web}{19}{section.1.6}%
+\contentsline {subsection}{\numberline {1.6.1}PHP}{19}{subsection.1.6.1}%
+\contentsline {subsubsection}{Présentation}{19}{subsection.1.6.1}%
+\contentsline {subsubsection}{PHP 8.2}{20}{subsection.1.6.1}%
+\contentsline {subsubsection}{Avantages de PHP pour Novaskol}{20}{subsection.1.6.1}%
+\contentsline {subsection}{\numberline {1.6.2}Laravel}{20}{subsection.1.6.2}%
+\contentsline {subsubsection}{Présentation}{20}{subsection.1.6.2}%
+\contentsline {subsubsection}{Version utilisée : Laravel 12}{20}{subsection.1.6.2}%
+\contentsline {subsubsection}{Fonctionnalités clés utilisées dans Novaskol}{21}{subsection.1.6.2}%
+\contentsline {subsection}{\numberline {1.6.3}Comparaison des frameworks PHP}{21}{subsection.1.6.3}%
+\contentsline {subsection}{\numberline {1.6.4}Node.js et npm}{21}{subsection.1.6.4}%
+\contentsline {subsection}{\numberline {1.6.5}Vite}{21}{subsection.1.6.5}%
+\contentsline {subsection}{\numberline {1.6.6}TailwindCSS}{22}{subsection.1.6.6}%
+\contentsline {section}{\numberline {1.7}Systèmes de Gestion de Base de Données (SGBD)}{22}{section.1.7}%
+\contentsline {subsection}{\numberline {1.7.1}Définition}{22}{subsection.1.7.1}%
+\contentsline {subsection}{\numberline {1.7.2}SQLite}{22}{subsection.1.7.2}%
+\contentsline {subsection}{\numberline {1.7.3}MySQL/MariaDB}{22}{subsection.1.7.3}%
+\contentsline {section}{\numberline {1.8}Applications de bureau hybrides}{23}{section.1.8}%
+\contentsline {subsection}{\numberline {1.8.1}Electron}{23}{subsection.1.8.1}%
+\contentsline {subsection}{\numberline {1.8.2}electron-builder}{23}{subsection.1.8.2}%
+\contentsline {subsection}{\numberline {1.8.3}Capacitor}{24}{subsection.1.8.3}%
+\contentsline {section}{\numberline {1.9}Conclusion}{24}{section.1.9}%
+\contentsline {chapter}{\numberline {2}Architecture et technologies de Novaskol}{25}{chapter.2}%
+\contentsline {section}{\numberline {2.1}Introduction}{25}{section.2.1}%
+\contentsline {section}{\numberline {2.2}Présentation du projet Novaskol}{25}{section.2.2}%
+\contentsline {subsection}{\numberline {2.2.1}Contexte et objectifs}{25}{subsection.2.2.1}%
+\contentsline {subsection}{\numberline {2.2.2}Spécifications techniques}{26}{subsection.2.2.2}%
+\contentsline {section}{\numberline {2.3}Architecture globale du système}{26}{section.2.3}%
+\contentsline {subsection}{\numberline {2.3.1}Vue d'ensemble}{26}{subsection.2.3.1}%
+\contentsline {subsection}{\numberline {2.3.2}L'application de bureau Electron (Novaskol Desktop)}{27}{subsection.2.3.2}%
+\contentsline {subsubsection}{Composants embarqués}{27}{subsection.2.3.2}%
+\contentsline {subsubsection}{Processus de démarrage}{27}{subsection.2.3.2}%
+\contentsline {subsubsection}{Communication IPC}{28}{Item.25}%
+\contentsline {subsubsection}{Gestion du cycle de vie}{29}{lstnumber.-1.7}%
+\contentsline {subsection}{\numberline {2.3.3}La synchronisation multi-appareils}{29}{subsection.2.3.3}%
+\contentsline {subsubsection}{Processus d'appairage}{29}{subsection.2.3.3}%
+\contentsline {subsubsection}{Synchronisation bidirectionnelle}{29}{Item.30}%
+\contentsline {subsubsection}{Gestion des conflits}{29}{Item.30}%
+\contentsline {subsection}{\numberline {2.3.4}Modes de déploiement}{29}{subsection.2.3.4}%
+\contentsline {section}{\numberline {2.4}Technologies et outils utilisés}{30}{section.2.4}%
+\contentsline {subsection}{\numberline {2.4.1}Backend}{30}{subsection.2.4.1}%
+\contentsline {subsection}{\numberline {2.4.2}Frontend}{30}{subsection.2.4.2}%
+\contentsline {subsection}{\numberline {2.4.3}Desktop}{30}{subsection.2.4.3}%
+\contentsline {subsection}{\numberline {2.4.4}Mobile}{31}{subsection.2.4.4}%
+\contentsline {section}{\numberline {2.5}Architecture détaillée de la base de données}{31}{section.2.5}%
+\contentsline {subsection}{\numberline {2.5.1}Présentation}{31}{subsection.2.5.1}%
+\contentsline {subsection}{\numberline {2.5.2}Liste des tables principales}{31}{subsection.2.5.2}%
+\contentsline {subsection}{\numberline {2.5.3}Dictionnaire des données}{32}{subsection.2.5.3}%
+\contentsline {subsection}{\numberline {2.5.4}Relations principales}{34}{subsection.2.5.4}%
+\contentsline {subsection}{\numberline {2.5.5}Système de synchronisation}{34}{subsection.2.5.5}%
+\contentsline {section}{\numberline {2.6}Modules et fonctionnalités}{34}{section.2.6}%
+\contentsline {subsection}{\numberline {2.6.1}Administration générale}{34}{subsection.2.6.1}%
+\contentsline {subsection}{\numberline {2.6.2}Gestion des inscriptions}{35}{subsection.2.6.2}%
+\contentsline {subsection}{\numberline {2.6.3}Gestion pédagogique}{35}{subsection.2.6.3}%
+\contentsline {subsection}{\numberline {2.6.4}Communication}{35}{subsection.2.6.4}%
+\contentsline {subsection}{\numberline {2.6.5}Gestion des ressources humaines}{36}{subsection.2.6.5}%
+\contentsline {subsection}{\numberline {2.6.6}Gestion financière}{36}{subsection.2.6.6}%
+\contentsline {subsection}{\numberline {2.6.7}Portail parents}{36}{subsection.2.6.7}%
+\contentsline {subsection}{\numberline {2.6.8}Système}{36}{subsection.2.6.8}%
+\contentsline {section}{\numberline {2.7}Conclusion}{36}{section.2.7}%
+\contentsline {chapter}{\numberline {3}Analyse et conception}{38}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Introduction}{38}{section.3.1}%
+\contentsline {section}{\numberline {3.2}Analyse des besoins}{38}{section.3.2}%
+\contentsline {subsection}{\numberline {3.2.1}Besoins fonctionnels}{38}{subsection.3.2.1}%
+\contentsline {subsection}{\numberline {3.2.2}Besoins non fonctionnels}{39}{subsection.3.2.2}%
+\contentsline {section}{\numberline {3.3}Identification des acteurs}{40}{section.3.3}%
+\contentsline {subsection}{\numberline {3.3.1}Correspondance acteurs-tâches}{40}{subsection.3.3.1}%
+\contentsline {section}{\numberline {3.4}Diagrammes de cas d'utilisation}{40}{section.3.4}%
+\contentsline {subsection}{\numberline {3.4.1}Diagramme de contexte}{40}{subsection.3.4.1}%
+\contentsline {subsection}{\numberline {3.4.2}Cas d'utilisation par acteur}{41}{subsection.3.4.2}%
+\contentsline {subsection}{\numberline {3.4.3}Diagramme de cas d'utilisation -- Authentification}{42}{subsection.3.4.3}%
+\contentsline {subsection}{\numberline {3.4.4}Diagramme de cas d'utilisation -- Saisie des notes}{42}{subsection.3.4.4}%
+\contentsline {section}{\numberline {3.5}Diagrammes de séquence}{43}{section.3.5}%
+\contentsline {subsection}{\numberline {3.5.1}Diagramme de séquence -- Authentification}{43}{subsection.3.5.1}%
+\contentsline {subsection}{\numberline {3.5.2}Diagramme de séquence -- Saisie des notes}{43}{subsection.3.5.2}%
+\contentsline {subsection}{\numberline {3.5.3}Diagramme de séquence -- Génération de bulletin}{44}{subsection.3.5.3}%
+\contentsline {subsubsection}{Algorithme de calcul du bulletin}{44}{subsection.3.5.3}%
+\contentsline {subsection}{\numberline {3.5.4}Diagramme de séquence -- Synchronisation}{45}{subsection.3.5.4}%
+\contentsline {section}{\numberline {3.6}Diagrammes d'activité}{45}{section.3.6}%
+\contentsline {subsection}{\numberline {3.6.1}Diagramme d'activité -- Authentification}{45}{subsection.3.6.1}%
+\contentsline {subsection}{\numberline {3.6.2}Diagramme d'activité -- Saisie des notes}{46}{subsection.3.6.2}%
+\contentsline {section}{\numberline {3.7}Modèle conceptuel de données}{48}{section.3.7}%
+\contentsline {subsection}{\numberline {3.7.1}Diagramme de classe global}{48}{subsection.3.7.1}%
+\contentsline {subsection}{\numberline {3.7.2}Relations principales}{49}{subsection.3.7.2}%
+\contentsline {subsection}{\numberline {3.7.3}Schéma relationnel simplifié}{49}{subsection.3.7.3}%
+\contentsline {section}{\numberline {3.8}Conclusion}{51}{section.3.8}%
+\contentsline {chapter}{\numberline {4}Réalisation}{52}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Introduction}{52}{section.4.1}%
+\contentsline {section}{\numberline {4.2}Environnement de développement}{52}{section.4.2}%
+\contentsline {subsection}{\numberline {4.2.1}Outils de développement}{52}{subsection.4.2.1}%
+\contentsline {subsection}{\numberline {4.2.2}Structure du projet}{52}{subsection.4.2.2}%
+\contentsline {subsection}{\numberline {4.2.3}Processus de développement}{53}{subsection.4.2.3}%
+\contentsline {section}{\numberline {4.3}Implémentation du backend Laravel}{54}{section.4.3}%
+\contentsline {subsection}{\numberline {4.3.1}Architecture des contrôleurs}{54}{subsection.4.3.1}%
+\contentsline {subsection}{\numberline {4.3.2}Système d'authentification}{54}{subsection.4.3.2}%
+\contentsline {subsection}{\numberline {4.3.3}Middleware de contrôle d'accès}{55}{subsection.4.3.3}%
+\contentsline {subsection}{\numberline {4.3.4}Services métier}{55}{subsection.4.3.4}%
+\contentsline {subsection}{\numberline {4.3.5}Génération de PDF}{56}{subsection.4.3.5}%
+\contentsline {section}{\numberline {4.4}Implémentation du frontend}{56}{section.4.4}%
+\contentsline {subsection}{\numberline {4.4.1}Architecture des vues}{56}{subsection.4.4.1}%
+\contentsline {subsection}{\numberline {4.4.2}Design et thème}{56}{subsection.4.4.2}%
+\contentsline {subsection}{\numberline {4.4.3}Composants d'interface}{56}{subsection.4.4.3}%
+\contentsline {subsection}{\numberline {4.4.4}Internationalisation}{56}{subsection.4.4.4}%
+\contentsline {section}{\numberline {4.5}Application de bureau Electron}{57}{section.4.5}%
+\contentsline {subsection}{\numberline {4.5.1}Fichiers clés}{57}{subsection.4.5.1}%
+\contentsline {subsection}{\numberline {4.5.2}Processus principal (main.cjs)}{57}{subsection.4.5.2}%
+\contentsline {subsection}{\numberline {4.5.3}Fonctionnalités du processus principal}{58}{subsection.4.5.3}%
+\contentsline {subsection}{\numberline {4.5.4}Pont IPC}{58}{subsection.4.5.4}%
+\contentsline {subsection}{\numberline {4.5.5}Configuration electron-builder}{58}{subsection.4.5.5}%
+\contentsline {section}{\numberline {4.6}Application mobile companion (Novaskol Connecte)}{59}{section.4.6}%
+\contentsline {subsection}{\numberline {4.6.1}Architecture}{59}{subsection.4.6.1}%
+\contentsline {subsection}{\numberline {4.6.2}Fonctionnalités}{59}{subsection.4.6.2}%
+\contentsline {section}{\numberline {4.7}Application de bureau Connecte Desktop}{60}{section.4.7}%
+\contentsline {subsection}{\numberline {4.7.1}Architecture}{60}{subsection.4.7.1}%
+\contentsline {subsection}{\numberline {4.7.2}Différences avec la version mobile}{60}{subsection.4.7.2}%
+\contentsline {section}{\numberline {4.8}Processus de packaging et déploiement}{60}{section.4.8}%
+\contentsline {subsection}{\numberline {4.8.1}Application de bureau (Electron + electron-builder)}{60}{subsection.4.8.1}%
+\contentsline {subsection}{\numberline {4.8.2}PHP Runtime portable}{60}{subsection.4.8.2}%
+\contentsline {subsection}{\numberline {4.8.3}Installateur NSIS}{61}{subsection.4.8.3}%
+\contentsline {subsection}{\numberline {4.8.4}Modes de déploiement}{61}{subsection.4.8.4}%
+\contentsline {section}{\numberline {4.9}Interfaces principales}{61}{section.4.9}%
+\contentsline {subsection}{\numberline {4.9.1}Page d'authentification}{61}{subsection.4.9.1}%
+\contentsline {subsection}{\numberline {4.9.2}Tableau de bord}{61}{subsection.4.9.2}%
+\contentsline {subsection}{\numberline {4.9.3}Saisie des notes}{62}{subsection.4.9.3}%
+\contentsline {subsection}{\numberline {4.9.4}Génération de bulletins}{62}{subsection.4.9.4}%
+\contentsline {subsection}{\numberline {4.9.5}Emploi du temps}{62}{subsection.4.9.5}%
+\contentsline {subsection}{\numberline {4.9.6}Messagerie interne}{62}{subsection.4.9.6}%
+\contentsline {subsection}{\numberline {4.9.7}Gestion des présences par QR code}{62}{subsection.4.9.7}%
+\contentsline {section}{\numberline {4.10}Conclusion}{62}{section.4.10}%
+\contentsline {chapter}{Conclusion générale}{64}{chapter*.7}%
+\contentsline {section}{Ouvrages et articles}{67}{chapter*.8}%
+\contentsline {section}{Documentation technique}{67}{chapter*.8}%
+\contentsline {section}{Références web}{68}{chapter*.8}%
+\contentsline {chapter}{\numberline {A}Généralités sur les réseaux informatiques}{69}{appendix.A}%
+\contentsline {section}{\numberline {A.1}Définition d'un réseau}{69}{section.A.1}%
+\contentsline {section}{\numberline {A.2}Intérêts d'un réseau informatique}{69}{section.A.2}%
+\contentsline {section}{\numberline {A.3}Classification des réseaux}{69}{section.A.3}%
+\contentsline {section}{\numberline {A.4}Topologies de réseau}{69}{section.A.4}%
+\contentsline {section}{\numberline {A.5}Modèle OSI}{70}{section.A.5}%
+\contentsline {section}{\numberline {A.6}Protocole TCP/IP}{70}{section.A.6}%
+\contentsline {chapter}{\numberline {B}UML -- Unified Modeling Language}{71}{appendix.B}%
+\contentsline {section}{\numberline {B.1}Définition}{71}{section.B.1}%
+\contentsline {section}{\numberline {B.2}Diagrammes UML utilisés dans Novaskol}{71}{section.B.2}%
+\contentsline {section}{\numberline {B.3}Éléments d'UML}{71}{section.B.3}%
+\contentsline {chapter}{\numberline {C}Guide d'installation de Novaskol}{72}{appendix.C}%
+\contentsline {section}{\numberline {C.1}Installation locale (Desktop)}{72}{section.C.1}%
+\contentsline {section}{\numberline {C.2}Configuration minimale requise}{72}{section.C.2}%
+\contentsline {section}{\numberline {C.3}Installation sur hébergement web}{72}{section.C.3}%
+\contentsline {chapter}{\numberline {D}Structure du paquet de distribution}{73}{appendix.D}%
+\contentsline {chapter}{\numberline {E}Tableau des routes API}{74}{appendix.E}%

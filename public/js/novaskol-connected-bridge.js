@@ -99,6 +99,24 @@
         node.title = waiting > 0 ? `${waiting} action(s) en attente de synchronisation` : 'Donnees locales a jour. Cliquer pour verifier.';
     }
 
+    async function pingPrincipal() {
+        const p = profile();
+        const serverUrl = p?.server_url;
+        if (!serverUrl) return false;
+        try {
+            const controller = new AbortController();
+            const timeout = setTimeout(() => controller.abort(), 5000);
+            const r = await fetch(`${serverUrl.replace(/\/+$/, '')}/reseau-local/ping`, {
+                method: 'GET',
+                signal: controller.signal
+            });
+            clearTimeout(timeout);
+            return r.ok;
+        } catch {
+            return false;
+        }
+    }
+
     async function refreshBootstrap() {
         const p = profile();
         const uuid = p?.device?.uuid;
@@ -159,12 +177,20 @@
 
     async function syncNow() {
         try {
+            if (!navigator.onLine) {
+                throw new Error('Pas de connexion reseau. Connectez-vous au meme WiFi que le serveur principal.');
+            }
+            const reachable = await pingPrincipal();
+            if (!reachable) {
+                throw new Error('Serveur principal inaccessible. Verifiez que les deux appareils sont sur le meme reseau WiFi.');
+            }
             await pushQueue();
             await refreshBootstrap();
             renderStatus();
         } catch (error) {
             log({ type: 'error', success: false, message: error.message });
             renderStatus();
+            throw error;
         }
     }
 
@@ -176,6 +202,7 @@
         pushQueue,
         refreshBootstrap,
         syncNow,
+        pingPrincipal,
         status: () => ({
             connected: !!profile(),
             online: navigator.onLine,
@@ -188,9 +215,9 @@
         if (!profile()) return;
         renderStatus();
         refreshBootstrap().catch(() => renderStatus());
-        setInterval(() => syncNow(), 180000);
+        setInterval(() => syncNow().catch(() => {}), 180000);
     });
-    window.addEventListener('online', syncNow);
+    window.addEventListener('online', () => syncNow().catch(() => {}));
     window.addEventListener('offline', renderStatus);
     window.addEventListener('storage', event => {
         if ([keys.profile, keys.queue, keys.bootstrap].includes(event.key)) renderStatus();
