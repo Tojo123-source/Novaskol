@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Services\ActivityLogger;
+use App\Services\Novaskol\ModuleRegistry;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -15,7 +16,7 @@ class ExerciseManagementController extends Controller
         return $u;
     }
 
-    public function index(Request $request)
+    public function index(Request $request, ModuleRegistry $modules)
     {
         $user = $this->ensureTeacher();
         $courseId = (int) $request->query('course_id', 0);
@@ -38,16 +39,26 @@ class ExerciseManagementController extends Controller
             }
         }
 
-        return view('teacher.exercices.index', compact('courses', 'exercices', 'courseId'));
+        return view('teacher.exercices.index', compact('courses', 'exercices', 'courseId') + [
+            'modules' => $modules->all(),
+            'ecole' => DB::table('ecole')->select('nom', 'logo')->first() ?: (object) ['nom' => 'Ecole', 'logo' => 'novaskol.png'],
+            'userPermissions' => [],
+            'activeModule' => 'teacher_exercices',
+        ]);
     }
 
-    public function create(Request $request, int $chapitreId)
+    public function create(Request $request, int $chapitreId, ModuleRegistry $modules)
     {
         $this->ensureTeacher();
         $ch = DB::table('course_chapitres')->where('id', $chapitreId)->firstOrFail();
         $course = DB::table('courses')->where('id', $ch->course_id)->firstOrFail();
 
-        return view('teacher.exercices.create', compact('ch', 'course'));
+        return view('teacher.exercices.create', compact('ch', 'course') + [
+            'modules' => $modules->all(),
+            'ecole' => DB::table('ecole')->select('nom', 'logo')->first() ?: (object) ['nom' => 'Ecole', 'logo' => 'novaskol.png'],
+            'userPermissions' => [],
+            'activeModule' => 'teacher_exercices',
+        ]);
     }
 
     public function store(Request $request)
@@ -95,7 +106,7 @@ class ExerciseManagementController extends Controller
             ->with('success', 'Exercice cree avec ' . count($data['questions']) . ' questions.');
     }
 
-    public function edit(int $id)
+    public function edit(int $id, ModuleRegistry $modules)
     {
         $this->ensureTeacher();
         $exercice = DB::table('exercices')->where('id', $id)->firstOrFail();
@@ -103,7 +114,12 @@ class ExerciseManagementController extends Controller
         $course = DB::table('courses')->where('id', $ch->course_id)->firstOrFail();
         $questions = DB::table('exercice_questions')->where('exercice_id', $id)->orderBy('ordre')->get();
 
-        return view('teacher.exercices.edit', compact('exercice', 'ch', 'course', 'questions'));
+        return view('teacher.exercices.edit', compact('exercice', 'ch', 'course', 'questions') + [
+            'modules' => $modules->all(),
+            'ecole' => DB::table('ecole')->select('nom', 'logo')->first() ?: (object) ['nom' => 'Ecole', 'logo' => 'novaskol.png'],
+            'userPermissions' => [],
+            'activeModule' => 'teacher_exercices',
+        ]);
     }
 
     public function update(Request $request, int $id)

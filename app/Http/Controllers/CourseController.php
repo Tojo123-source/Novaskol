@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Services\ActivityLogger;
+use App\Services\Novaskol\ModuleRegistry;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
@@ -16,7 +17,7 @@ class CourseController extends Controller
         return $u;
     }
 
-    public function index(Request $request)
+    public function index(Request $request, ModuleRegistry $modules)
     {
         $user = $this->ensureTeacher();
         $matiereId = (int) $request->query('matiere_id', 0);
@@ -28,7 +29,12 @@ class CourseController extends Controller
             ->get();
         $matieres = DB::table('matieres')->orderBy('nom')->get();
 
-        return view('teacher.courses.index', compact('courses', 'matieres', 'matiereId'));
+        return view('teacher.courses.index', compact('courses', 'matieres', 'matiereId') + [
+            'modules' => $modules->all(),
+            'ecole' => DB::table('ecole')->select('nom', 'logo')->first() ?: (object) ['nom' => 'Ecole', 'logo' => 'novaskol.png'],
+            'userPermissions' => [],
+            'activeModule' => 'teacher_courses',
+        ]);
     }
 
     public function store(Request $request)
@@ -53,7 +59,7 @@ class CourseController extends Controller
         return redirect()->route('teacher.courses.show', $id)->with('success', 'Cours cree.');
     }
 
-    public function show(int $id)
+    public function show(int $id, ModuleRegistry $modules)
     {
         $user = $this->ensureTeacher();
         $course = DB::table('courses')->where('id', $id)->where('enseignant_id', $user['id'])->firstOrFail();
@@ -64,7 +70,12 @@ class CourseController extends Controller
         }
         $matieres = DB::table('matieres')->orderBy('nom')->get();
 
-        return view('teacher.courses.show', compact('course', 'chapitres', 'matieres'));
+        return view('teacher.courses.show', compact('course', 'chapitres', 'matieres') + [
+            'modules' => $modules->all(),
+            'ecole' => DB::table('ecole')->select('nom', 'logo')->first() ?: (object) ['nom' => 'Ecole', 'logo' => 'novaskol.png'],
+            'userPermissions' => [],
+            'activeModule' => 'teacher_courses',
+        ]);
     }
 
     public function update(Request $request, int $id)

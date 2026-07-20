@@ -21,6 +21,8 @@ class TeacherWorkspaceController extends Controller
             ->orderBy('c.nom')
             ->get();
 
+        $this->ensureClassGroups($teacher, $classes);
+
         $lessons = DB::table('teacher_lessons as l')
             ->leftJoin('classes as c', 'c.id', '=', 'l.classe_id')
             ->leftJoin('matieres as m', 'm.id', '=', 'l.matiere_id')
@@ -49,7 +51,7 @@ class TeacherWorkspaceController extends Controller
         $teacherAttendance = $this->teacherAttendance((int) $teacher->id, $calMonth, $calYear);
 
         return view('teacher.workspace', [
-            'activeModule' => '',
+            'activeModule' => 'teacher_workspace',
             'modules' => $modules->all(),
             'userPermissions' => $this->userPermissions(),
             'ecole' => $this->school(),
@@ -170,6 +172,56 @@ class TeacherWorkspaceController extends Controller
         ]);
 
         return back()->with('success', $done ? 'Tache terminee.' : 'Tache remise en cours.');
+    }
+
+    private function ensureClassGroups(object $teacher, $classes): void
+    {
+        $userId = (int) DB::table('utilisateurs')->where('email', $teacher->email ?? '')->value('id');
+        if (!$userId) return;
+
+        foreach ($classes as $classe) {
+            $groupName = 'Classe ' . $classe->nom;
+            $existing = DB::table('conversations')
+                ->where('type', 'group')
+                ->where('name', $groupName)
+                ->where('creator_id', $userId)
+                ->first();
+
+            if ($existing) continue;
+
+            $groupId = DB::table('conversations')->insertGetId([
+                'type' => 'group',
+                'name' => $groupName,
+                'creator_id' => $userId,
+                'avatar' => null,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+
+            DB::table('conversation_participants')->insert([
+                'conversation_id' => $groupId,
+                'user_type' => 'enseignant',
+                'user_id' => $userId,
+                'joined_at' => now(),
+            ]);
+
+            $students = DB::table('eleves')
+                ->where('id_classe', $classe->id)
+                ->where('annee_scolaire', $teacher->annee_scolaire ?? $this->currentYear())
+                ->get();
+
+            foreach ($students as $student) {
+                $studentUserId = (int) DB::table('utilisateurs')->where('email', $student->email ?? '')->value('id');
+                if (!$studentUserId) continue;
+
+                DB::table('conversation_participants')->insert([
+                    'conversation_id' => $groupId,
+                    'user_type' => 'eleve',
+                    'user_id' => $studentUserId,
+                    'joined_at' => now(),
+                ]);
+            }
+        }
     }
 
     private function teacherAttendance(int $teacherId, int $month, int $year): array

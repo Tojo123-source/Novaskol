@@ -164,13 +164,16 @@
     @endif
     @if ($currentRole === 'enseignant')
         @php
-            $teacherSectionActive = in_array($activeModule ?? '', ['teacher_courses', 'teacher_exercices']);
+            $teacherSectionActive = in_array($activeModule ?? '', ['teacher_workspace', 'teacher_courses', 'teacher_exercices']);
         @endphp
         <div class="parent-menu" onclick="toggleSub(this)">
-            <span><i class="fa fa-graduation-cap"></i> Cours &amp; Exercices en ligne</span>
+            <span><i class="fa fa-graduation-cap"></i> Enseignant en ligne</span>
             <i class="fa fa-chevron-down arrow"></i>
         </div>
         <div class="sub-menu" style="display:{{ $teacherSectionActive ? 'block' : 'none' }};">
+            <a href="{{ route('teacher.workspace') }}" @class(['active' => ($activeModule ?? '') === 'teacher_workspace'])>
+                <i class="fa fa-book-open"></i> <span>Journal pedagogique</span>
+            </a>
             <a href="{{ route('teacher.courses.index') }}" @class(['active' => ($activeModule ?? '') === 'teacher_courses'])>
                 <i class="fa fa-book"></i> <span>Mes cours</span>
             </a>

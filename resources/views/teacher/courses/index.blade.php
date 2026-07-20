@@ -9,10 +9,9 @@
     @include('modules.professeur.bulletin.partials.styles')
     <style>
         * { box-sizing: border-box; }
-        body { margin: 0; font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
         .wrap { max-width: 1200px; margin: 0 auto; padding: 24px 16px; }
-        .header { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 24px; flex-wrap: wrap; }
-        .header h1 { margin: 0; font-size: 1.5rem; display: flex; align-items: center; gap: 10px; color: var(--text); }
+        .page-header { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 24px; flex-wrap: wrap; }
+        .page-header h1 { margin: 0; font-size: 1.5rem; display: flex; align-items: center; gap: 10px; color: var(--text); }
         .btn { display: inline-flex; align-items: center; gap: 6px; padding: 10px 18px; border-radius: 10px; font-weight: 600; font-size: .88rem; border: 0; cursor: pointer; text-decoration: none; transition: all .18s; }
         .btn-primary { background: var(--primary); color: #fff; box-shadow: 0 4px 12px rgba(0,200,83,.25); }
         .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(0,200,83,.35); }
@@ -52,10 +51,7 @@
         .modal input, .modal select, .modal textarea { width: 100%; padding: 11px; border: 1px solid var(--border); border-radius: 10px; background: var(--surface); color: var(--text); font-size: .9rem; }
         .modal textarea { min-height: 80px; resize: vertical; }
         .modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; }
-        .back-link { display: inline-flex; align-items: center; gap: 6px; color: var(--text-sec); text-decoration: none; font-size: .9rem; margin-bottom: 16px; transition: color .15s; }
-        .back-link:hover { color: var(--primary); }
-
-        @media(max-width:760px) { .grid { grid-template-columns: 1fr; } .header { flex-direction: column; align-items: flex-start; } .card-actions { flex-wrap: wrap; } }
+        @media(max-width:760px) { .grid { grid-template-columns: 1fr; } .page-header { flex-direction: column; align-items: flex-start; } .card-actions { flex-wrap: wrap; } }
         :root.light .card { background: #fff !important; color: var(--text) !important; border-color: var(--border) !important; }
         :root.light .modal { background: #fff !important; }
         :root.light .filtres { background: #fff !important; }
@@ -64,16 +60,24 @@
     </style>
 </head>
 <body>
+@include('modules.professeur.bulletin.partials.shell', ['activeModule' => 'teacher_courses'])
+<header>
+    <div class="header-left">
+        <button class="burger-menu" onclick="toggleSidebar()"><i class="fa fa-bars"></i></button>
+        <button id="fullscreen-btn" onclick="toggleFullscreen()"><i class="fa fa-expand"></i></button>
+    </div>
+    <div class="header-center">Mes cours</div>
+</header>
+<main>
 <div class="wrap">
-    <a href="{{ route('teacher.workspace') }}" class="back-link"><i class="fa fa-arrow-left"></i> Espace enseignant</a>
-
     @if (session('success'))
         <div class="flash flash-success"><i class="fa fa-check-circle"></i> {{ session('success') }}</div>
     @endif
 
-    <div class="header">
+    <div class="page-header">
         <h1><i class="fa fa-book" style="color:var(--primary)"></i> Mes cours</h1>
         <div style="display:flex;gap:8px">
+            <a href="{{ route('teacher.workspace') }}" class="btn btn-outline btn-sm"><i class="fa fa-book-open"></i> Journal</a>
             <a href="{{ route('teacher.exercices.index') }}" class="btn btn-outline btn-sm"><i class="fa fa-puzzle-piece"></i> Exercices</a>
             <button class="btn btn-primary btn-sm" onclick="openModal('courseModal')"><i class="fa fa-plus"></i> Nouveau cours</button>
         </div>
@@ -194,8 +198,11 @@
         </form>
     </div>
 </div>
-
+</main>
 <script>
+function toggleSub(e){const s=e.nextElementSibling,a=e.querySelector('.arrow');s.style.display=s.style.display==='block'?'none':'block';a.classList.toggle('fa-chevron-down');a.classList.toggle('fa-chevron-up')}
+function toggleSidebar(){document.getElementById('sidebar').classList.toggle('active')}
+function toggleFullscreen(){document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen()}
 function openModal(id){document.getElementById(id).classList.add('active')}
 function closeModal(id){document.getElementById(id).classList.remove('active')}
 function openEditCourse(id, titre, desc, matiereId, niveau, statut){
