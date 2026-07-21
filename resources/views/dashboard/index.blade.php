@@ -911,7 +911,7 @@
         'students' => route('modules.inscription'),
         'teachers' => route('modules.enseignants'),
         'staff' => route('modules.staff'),
-        'teacherPresence' => route('modules.presence'),
+        'teacherPresence' => route('modules.pointage'),
         'paymentDetails' => route('modules.detail-paiement'),
         'notes' => route('modules.notes'),
         'studentPresence' => route('modules.presence-etudiant'),

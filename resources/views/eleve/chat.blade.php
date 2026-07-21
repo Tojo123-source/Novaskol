@@ -63,15 +63,42 @@
         <button class="burger-menu" onclick="toggleSidebar()"><i class="fa fa-bars"></i></button>
         <button id="fullscreen-btn" onclick="toggleFullscreen()"><i class="fa fa-expand"></i></button>
     </div>
-    <div class="header-center">Messagerie</div>
+    <div class="header-center">Chat prive</div>
 </header>
 
 <main class="eleve-chat">
     <aside class="chat-card contacts-wrap">
-        @if($classmates->isNotEmpty())
+        <div class="section-title" style="margin-top:0"><i class="fa fa-lock"></i> Chat prive</div>
+
+        <form method="GET" action="{{ route('eleve.portal.chat') }}" style="margin-bottom:10px">
+            <div style="display:flex;gap:6px">
+                <input type="text" name="q" placeholder="Chercher un eleve..." value="{{ $search ?? '' }}"
+                       style="flex:1;padding:8px 10px;border-radius:6px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-size:.8rem">
+                <button type="submit" style="padding:8px 10px;border-radius:6px;border:1px solid var(--border);background:var(--surface);color:var(--text);cursor:pointer"><i class="fa fa-search"></i></button>
+            </div>
+        </form>
+
+        @if($search && $searchResults->isNotEmpty())
+            <div class="section-title" style="font-size:.78rem;margin-top:6px"><i class="fa fa-search"></i> Resultats pour "{{ $search }}"</div>
+            <div class="contact-list" style="max-height:140px">
+                @foreach($searchResults as $sr)
+                    @php $initial = mb_substr($sr->prenom ?? $sr->nom, 0, 1); @endphp
+                    <a class="contact-link"
+                       href="{{ route('eleve.portal.chat', ['with' => 'classmate', 'id' => $sr->id]) }}">
+                        <div class="avatar">{{ $initial }}</div>
+                        <span style="flex:1"><strong>{{ $sr->prenom }} {{ $sr->nom }}</strong><small>{{ $sr->nom_classe ?? 'Eleve' }}</small></span>
+                        <span style="font-size:.7rem;color:var(--primary);font-weight:600;white-space:nowrap">Discuter</span>
+                    </a>
+                @endforeach
+            </div>
+        @elseif($search && $searchResults->isEmpty())
+            <div class="empty-state" style="padding:8px;font-size:.78rem">Aucun eleve trouve.</div>
+        @endif
+
+        @if($classmateUsers->isNotEmpty())
             <div class="section-title"><i class="fa fa-users"></i> Ma classe : {{ $classe->nom ?? '' }}</div>
             <div class="contact-list">
-                @foreach($classmates as $cm)
+                @foreach($classmateUsers as $cm)
                     @php $initial = mb_substr($cm->prenom ?? $cm->nom, 0, 1); @endphp
                     <a class="contact-link {{ $contact && (int) $contact->id === (int) $cm->id && $contactType === 'classmate' ? 'active' : '' }}"
                        href="{{ route('eleve.portal.chat', ['with' => 'classmate', 'id' => $cm->id]) }}">
@@ -110,7 +137,7 @@
             @endforelse
         </div>
 
-        <div class="section-title"><i class="fa fa-users"></i> Chat Groupe</div>
+        <div class="section-title"><i class="fa fa-users"></i> Chat groupe</div>
         <div class="contact-list" style="max-height:160px">
             @forelse($groupConversations as $g)
                 <a class="contact-link {{ $contact && (int) $conversationId === (int) $g->id && $contactType === 'group' ? 'active' : '' }}"
@@ -119,7 +146,7 @@
                     <span><strong>{{ $g->name }}</strong><small>Groupe</small></span>
                 </a>
             @empty
-                <div class="empty-state" style="padding:12px">Aucun groupe. Creez-en un !</div>
+                <div class="empty-state" style="padding:12px">Aucun groupe.</div>
             @endforelse
             <button onclick="document.getElementById('createGroupModal').style.display='flex'" class="contact-link" style="border-style:dashed;justify-content:center;color:var(--primary)">
                 <i class="fa fa-plus-circle"></i> <strong>Creer un groupe</strong>

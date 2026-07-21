@@ -464,6 +464,7 @@ async function loadMessages(){
     initialMessagesLoaded = true;
     clearActiveUnreadBadge();
     if(typeof novaskolRefreshUnreadMessages === 'function') novaskolRefreshUnreadMessages();
+    if(typeof refreshContacts === 'function') refreshContacts();
     renderTyping(data.typing_users || []);
 }
 

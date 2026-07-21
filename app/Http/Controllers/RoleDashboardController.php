@@ -26,7 +26,7 @@ class RoleDashboardController extends Controller
         $eleveModules = function () {
             return collect([
                 ['key' => 'eleve_portal', 'label' => 'Mon espace', 'icon' => 'fa-th-large', 'route' => 'eleve.portal', 'access' => 'lecture'],
-                ['key' => 'eleve_chat', 'label' => 'Messagerie', 'icon' => 'fa-comments', 'route' => 'eleve.portal.chat', 'access' => 'lecture'],
+                ['key' => 'eleve_chat', 'label' => 'Chat prive', 'icon' => 'fa-comments', 'route' => 'eleve.portal.chat', 'access' => 'lecture'],
                 ['key' => 'eleve_rapport', 'label' => 'Mon rapport', 'icon' => 'fa-chart-line', 'route' => 'eleve.rapport', 'access' => 'lecture'],
                 ['key' => 'eleve_courses', 'label' => 'Bibliotheque', 'icon' => 'fa-book', 'route' => 'eleve.courses', 'access' => 'lecture'],
                 ['key' => 'eleve_historique', 'label' => 'Historique', 'icon' => 'fa-history', 'route' => 'eleve.historique', 'access' => 'lecture'],
@@ -78,6 +78,7 @@ class RoleDashboardController extends Controller
             'calMonth' => $calMonth,
             'calYear' => $calYear,
             'staffAttendance' => $role === 'staff' ? $this->staffAttendanceCalendar((int) $user['id'], $calMonth, $calYear) : [],
+            'studentAttendance' => $role === 'eleve' ? $this->studentAttendanceCalendar($user, $calMonth, $calYear) : [],
             'latestNotifications' => DB::table('notifications')
                 ->when(DB::getSchemaBuilder()->hasColumn('notifications', 'destinataire_id'), fn ($q) => $q->where(function ($n) use ($user) {
                     if (($user['role'] ?? '') === 'parent') {
@@ -444,6 +445,51 @@ class RoleDashboardController extends Controller
             }
         }
 
+        return $days;
+    }
+
+    private function studentAttendanceCalendar(array $user, int $month, int $year): array
+    {
+        $eleve = DB::table('eleves')->where('email', $user['email'] ?? '')->first();
+        if (! $eleve || ! Schema::hasTable('presence_eleves')) return [];
+
+        $records = DB::table('presence_eleves')
+            ->where('eleve_id', $eleve->id)
+            ->whereYear('date_jour', $year)
+            ->whereMonth('date_jour', $month)
+            ->select('date_jour', 'session_jour', 'presence', 'retard', 'type_scan', 'heure_entree', 'heure_sortie', 'commentaire', 'scan_mode')
+            ->orderBy('date_jour')
+            ->orderBy('session_jour')
+            ->get();
+
+        $days = [];
+        $first = \Carbon\Carbon::create($year, $month, 1);
+        $daysInMonth = $first->daysInMonth;
+
+        for ($d = 1; $d <= $daysInMonth; $d++) {
+            $dayRecords = $records->filter(fn ($r) => (int) \Carbon\Carbon::parse($r->date_jour)->format('d') === $d);
+            if ($dayRecords->isNotEmpty()) {
+                $status = 'absent';
+                $details = [];
+                foreach ($dayRecords as $r) {
+                    $s = $r->presence ? ($r->retard ? 'retard' : 'present') : 'absent';
+                    if ($s === 'retard' || ($s === 'present' && $status !== 'retard')) $status = $s;
+                    $details[] = [
+                        'session' => $r->session_jour,
+                        'type_scan' => $r->type_scan,
+                        'statut' => $s,
+                        'heure' => $r->heure_entree ?? '',
+                        'commentaire' => $r->commentaire,
+                        'scan_mode' => $r->scan_mode,
+                        'heure_entree' => $r->heure_entree,
+                        'heure_sortie' => $r->heure_sortie,
+                    ];
+                }
+                $days[$d] = ['status' => $status, 'details' => $details];
+            } else {
+                $days[$d] = ['status' => null, 'details' => []];
+            }
+        }
         return $days;
     }
 }

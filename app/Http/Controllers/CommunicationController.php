@@ -43,6 +43,7 @@ class CommunicationController extends Controller
         $this->ensureSession();
         $this->touchActivity();
         $this->ensureAnnouncementGroup();
+        if ($this->userRole() === 'enseignant') $this->syncTeacherClassGroups();
         $selectedGroupId = (int) $request->query('group', 0);
         $permissions = $this->userPermissions();
         $canWriteChatGroup = $this->userRole() === 'admin' || (($permissions['chat_group'] ?? '') === 'ecriture');
@@ -341,10 +342,10 @@ class CommunicationController extends Controller
             ->get();
         $unread = DB::table('conversations as c')
             ->join('conversation_participants as mine', function ($join) {
-                $join->on('mine.conversation_id', '=', 'c.id')->where('mine.user_id', '=', $this->userId());
+                $join->on('mine.conversation_id', '=', 'c.id')->where('mine.user_id', '=', $this->userId())->where('mine.user_type', '=', $this->userRole());
             })
             ->join('conversation_participants as other', function ($join) {
-                $join->on('other.conversation_id', '=', 'c.id')->where('other.user_id', '!=', $this->userId());
+                $join->on('other.conversation_id', '=', 'c.id')->where('other.user_id', '!=', $this->userId())->where('other.user_type', '!=', $this->userRole());
             })
             ->leftJoin('messages as m', function ($join) {
                 $join->on('m.conversation_id', '=', 'c.id')->where('m.sender_id', '!=', $this->userId())->where('m.is_read', '=', 0);
@@ -732,5 +733,88 @@ class CommunicationController extends Controller
     private function school(): object
     {
         return DB::table('ecole')->select('nom', 'logo')->first() ?: (object) ['nom' => 'Ecole', 'logo' => 'novaskol.png'];
+    }
+
+    private function syncTeacherClassGroups(): void
+    {
+        $teacher = DB::table('professeurs')->where('email', session('utilisateur.email') ?? '')->first();
+        if (!$teacher) return;
+        $userId = $this->userId();
+        $classes = DB::table('professeurs_classes as pc')
+            ->join('classes as c', 'c.id', '=', 'pc.classe_id')
+            ->where('pc.professeur_id', $teacher->id)
+            ->select('c.id', 'c.nom')
+            ->get();
+        $anneeScolaire = $teacher->annee_scolaire ?? now()->year.'-'.(now()->year + 1);
+
+        foreach ($classes as $classe) {
+            $groupName = 'Classe ' . $classe->nom;
+            $existing = DB::table('conversations')
+                ->where('type', 'group')
+                ->where('name', $groupName)
+                ->where('creator_id', $userId)
+                ->first();
+            $groupId = $existing ? $existing->id : DB::table('conversations')->insertGetId([
+                'type' => 'group',
+                'name' => $groupName,
+                'creator_id' => $userId,
+                'avatar' => null,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+            if (!$existing) {
+                DB::table('conversation_participants')->insert([
+                    'conversation_id' => $groupId,
+                    'user_type' => 'enseignant',
+                    'user_id' => $userId,
+                    'joined_at' => now(),
+                ]);
+            }
+            $this->syncGroupStudents($groupId, (int) $classe->id, $anneeScolaire);
+        }
+    }
+
+    private function syncGroupStudents(int $groupId, int $classeId, string $anneeScolaire): void
+    {
+        $existingIds = DB::table('conversation_participants')
+            ->where('conversation_id', $groupId)
+            ->where('user_type', 'eleve')
+            ->pluck('user_id')
+            ->map(fn ($id) => (int) $id)
+            ->all();
+
+        $students = DB::table('eleves')
+            ->where('id_classe', $classeId)
+            ->where('annee_scolaire', $anneeScolaire)
+            ->get();
+
+        foreach ($students as $student) {
+            $studentUserId = (int) DB::table('utilisateurs')
+                ->where('email', $student->email ?? '')
+                ->where('role', 'eleve')
+                ->value('id');
+            if (!$studentUserId && ($student->nom ?? '') && ($student->prenom ?? '')) {
+                $studentUserId = (int) DB::table('utilisateurs')
+                    ->where('nom', $student->nom)
+                    ->where('prenom', $student->prenom)
+                    ->where('role', 'eleve')
+                    ->value('id');
+            }
+            if (!$studentUserId && ($student->nom ?? '')) {
+                $studentUserId = (int) DB::table('utilisateurs')
+                    ->where('nom', $student->nom)
+                    ->where('role', 'eleve')
+                    ->value('id');
+            }
+            if (!$studentUserId) continue;
+            if (in_array($studentUserId, $existingIds, true)) continue;
+
+            DB::table('conversation_participants')->insert([
+                'conversation_id' => $groupId,
+                'user_type' => 'eleve',
+                'user_id' => $studentUserId,
+                'joined_at' => now(),
+            ]);
+        }
     }
 }

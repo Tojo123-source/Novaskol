@@ -199,6 +199,14 @@ class StudentPortalController extends Controller
             ->orderBy('nom')->orderBy('prenom')
             ->get();
 
+        $classmateUsers = DB::table('eleves')
+            ->where('id_classe', $eleve->id_classe)
+            ->where('id', '!=', $eleve->id)
+            ->whereNotNull('email')
+            ->whereExists(fn ($q) => $q->select(DB::raw(1))->from('utilisateurs')->whereColumn('utilisateurs.email', 'eleves.email'))
+            ->orderBy('nom')->orderBy('prenom')
+            ->get();
+
         $teacherIds = DB::table('professeurs_classes')->where('classe_id', $eleve->id_classe)->pluck('professeur_id');
         $teachers = DB::table('professeurs')
             ->whereIn('id', $teacherIds)
@@ -209,6 +217,40 @@ class StudentPortalController extends Controller
             ->where('role', 'staff')
             ->orderBy('nom')
             ->get();
+
+        $search = $request->query('q');
+        $searchResults = collect();
+        if ($search) {
+            $searchResults = DB::table('eleves')
+                ->leftJoin('classes', 'classes.id', '=', 'eleves.id_classe')
+                ->where(function ($q) use ($search) {
+                    $q->where('eleves.nom', 'like', "%{$search}%")->orWhere('eleves.prenom', 'like', "%{$search}%");
+                })
+                ->whereNotNull('eleves.email')
+                ->whereExists(fn ($q) => $q->select(DB::raw(1))->from('utilisateurs')->whereColumn('utilisateurs.email', 'eleves.email'))
+                ->select('eleves.*', 'classes.nom as nom_classe')
+                ->limit(20)->get();
+        }
+
+        $schoolGeneral = DB::table('conversations')->where('type', 'group')
+            ->where(function ($q) {
+                $q->where('name', 'General')->orWhere('name', 'Tous');
+            })
+            ->first();
+        if ($schoolGeneral) {
+            $alreadyIn = DB::table('conversation_participants')
+                ->where('conversation_id', $schoolGeneral->id)
+                ->where('user_id', (int) $user['id'])->where('user_type', 'eleve')
+                ->exists();
+            if (!$alreadyIn) {
+                DB::table('conversation_participants')->insert([
+                    'conversation_id' => $schoolGeneral->id,
+                    'user_type' => 'eleve',
+                    'user_id' => (int) $user['id'],
+                    'joined_at' => now(),
+                ]);
+            }
+        }
 
         $groupConversations = DB::table('conversations as c')
             ->join('conversation_participants as cp', 'cp.conversation_id', '=', 'c.id')
@@ -227,8 +269,11 @@ class StudentPortalController extends Controller
             'eleve' => $eleve,
             'classe' => $classe,
             'classmates' => $classmates,
+            'classmateUsers' => $classmateUsers,
             'teachers' => $teachers,
             'staff' => $staff,
+            'searchResults' => $searchResults,
+            'search' => $search,
             'groupConversations' => $groupConversations,
             'contact' => $contact,
             'contactType' => $contactType,

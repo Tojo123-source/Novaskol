@@ -63,7 +63,7 @@ class StudentCourseController extends Controller
 
         foreach ($courses as $c) {
             $chIds = DB::table('course_chapitres')->where('course_id', $c->id)->pluck('id');
-            $c->exercices_count = DB::table('exercices')->whereIn('chapitre_id', $chIds)->where('publie', true)->count();
+            $c->exercices_count = DB::table('exercices')->whereIn('chapitre_id', $chIds)->count();
             $c->fichiers_count = DB::table('course_fichiers')->whereIn('chapitre_id', $chIds)->count();
         }
 

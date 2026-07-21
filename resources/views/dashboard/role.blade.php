@@ -194,20 +194,32 @@
         @endif
     </section>
     <aside class="panel">
-        <h2>Dernieres notifications</h2>
-        @forelse($latestNotifications as $notification)
-            <div class="notice">
-                <strong>{{ ucfirst($notification->type ?? 'Notification') }}</strong>
-                <div>{{ $notification->message ?? '' }}</div>
-                <small>{{ ! empty($notification->date_creation) ? \Carbon\Carbon::parse($notification->date_creation)->format('d/m/Y H:i') : '' }}</small>
-            </div>
-        @empty
-            <div class="empty-state">Aucune notification recente.</div>
-        @endforelse
+        @if(($user['role'] ?? '') !== 'eleve' && ($user['role'] ?? '') !== 'parent')
+            <h2>Dernieres notifications</h2>
+            @forelse($latestNotifications as $notification)
+                <div class="notice">
+                    <strong>{{ ucfirst($notification->type ?? 'Notification') }}</strong>
+                    <div>{{ $notification->message ?? '' }}</div>
+                    <small>{{ ! empty($notification->date_creation) ? \Carbon\Carbon::parse($notification->date_creation)->format('d/m/Y H:i') : '' }}</small>
+                </div>
+            @empty
+                <div class="empty-state">Aucune notification recente.</div>
+            @endforelse
+        @endif
         @if(($user['role'] ?? '') === 'staff')
             <h2 style="margin-top:16px"><i class="fa fa-calendar-check-o"></i> Ma presence</h2>
             @include('partials.presence-calendar', [
                 'attendance' => $staffAttendance,
+                'month' => $calMonth,
+                'year' => $calYear,
+                'baseUrl' => route('role.dashboard'),
+                'label' => 'Presence',
+            ])
+        @endif
+        @if(($user['role'] ?? '') === 'eleve')
+            <h2 style="margin-top:0"><i class="fa fa-calendar-check-o"></i> Ma presence</h2>
+            @include('partials.presence-calendar', [
+                'attendance' => $studentAttendance,
                 'month' => $calMonth,
                 'year' => $calYear,
                 'baseUrl' => route('role.dashboard'),

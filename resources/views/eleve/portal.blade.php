@@ -92,7 +92,7 @@
         <p>{{ $eleve->classe_nom ?? '' }} - {{ $eleve->matricule ?? $eleve->id }}</p>
         <div class="quick-links">
             <a href="{{ route('eleve.courses') }}"><i class="fa fa-book"></i> Bibliotheque</a>
-            <a href="{{ route('eleve.portal.chat') }}"><i class="fa fa-comments"></i> Messagerie</a>
+            <a href="{{ route('eleve.portal.chat') }}"><i class="fa fa-comments"></i> Chat prive</a>
             <a href="{{ route('eleve.historique') }}"><i class="fa fa-history"></i> Historique</a>
             <a href="{{ route('eleve.rapport') }}"><i class="fa fa-chart-line"></i> Mon rapport</a>
         </div>
@@ -200,7 +200,7 @@
                         $done = $prog ? $prog->done : 0;
                         $pct = $total > 0 ? round(($done / $total) * 100) : 0;
                         $chIds = DB::table('course_chapitres')->where('course_id', $c->id)->pluck('id');
-                        $exCount = DB::table('exercices')->whereIn('chapitre_id', $chIds)->where('publie', true)->count();
+                        $exCount = DB::table('exercices')->whereIn('chapitre_id', $chIds)->count();
                         $ficCount = DB::table('course_fichiers')->whereIn('chapitre_id', $chIds)->count();
                     @endphp
                         <a href="{{ route('eleve.course.show', $c->id) }}" class="course-card">

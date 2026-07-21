@@ -232,6 +232,14 @@ class TeacherWorkspaceController extends Controller
                 ->where('role', 'eleve')
                 ->value('id');
 
+            if (!$studentUserId && ($student->nom ?? '') && ($student->prenom ?? '')) {
+                $studentUserId = (int) DB::table('utilisateurs')
+                    ->where('nom', $student->nom)
+                    ->where('prenom', $student->prenom)
+                    ->where('role', 'eleve')
+                    ->value('id');
+            }
+
             if (!$studentUserId && ($student->nom ?? '')) {
                 $studentUserId = (int) DB::table('utilisateurs')
                     ->where('nom', $student->nom)
