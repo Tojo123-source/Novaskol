@@ -1,0 +1,25 @@
+app = "novaskol"
+primary_region = "fra"
+
+[build]
+  dockerfile = "Dockerfile"
+
+[http_service]
+  internal_port = 80
+  force_https = true
+  auto_stop_machines = false
+  auto_start_machines = true
+  min_machines_running = 1
+
+[[mounts]]
+  source = "novaskol_data"
+  destination = "/var/www/html/storage"
+  auto_delete_mount_on_stop = false
+
+[env]
+  APP_ENV = "production"
+  APP_DEBUG = "false"
+  DB_CONNECTION = "sqlite"
+  SESSION_DRIVER = "file"
+  QUEUE_CONNECTION = "sync"
+  CACHE_STORE = "file"
