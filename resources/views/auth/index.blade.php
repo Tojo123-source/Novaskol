@@ -6,7 +6,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Novaskol - Systeme de gestion scolaire pour chaque ecole</title>
+  <title>Novaskol - Système de gestion scolaire pour chaque école</title>
   <link rel="icon" type="image/png" href="{{ asset('novaskol-icon.png') }}">
   <link rel="stylesheet" href="{{ asset('legacy/assets/fontawesome/css/all.min.css') }}">
   <script src="{{ asset('legacy/js/jquery-3.6.0.min.js') }}"></script>
@@ -380,15 +380,15 @@
   <section id="hero" class="hero">
     <div class="hero-glow"></div>
     <div class="fade-in visible">
-      <h1><span>Novaskol</span><br>pour chaque ecole</h1>
-      <p>Un systeme de gestion scolaire moderne : installable en local, partageable ecole par ecole, et pret a etre heberge en ligne quand l'etablissement le souhaite.</p>
+      <h1><span>Novaskol</span><br>pour chaque école</h1>
+      <p>Un système de gestion scolaire moderne : installable en local, partageable école par école, et prêt à être hébergé en ligne quand l'établissement le souhaite.</p>
       <div class="btn-group">
         <a href="#auth" class="btn btn-lg">Commencer maintenant</a>
-        <a href="#contact" class="btn btn-outline btn-lg">Demander une demo</a>
+        <a href="#contact" class="btn btn-outline btn-lg">Demander une démo</a>
       </div>
       <div class="stats">
-        <div class="stat"><span class="stat-number" data-count="120">0</span>+<span class="stat-label">Etablissements</span></div>
-        <div class="stat"><span class="stat-number" data-count="8500">0</span>+<span class="stat-label">Eleves connectes</span></div>
+        <div class="stat"><span class="stat-number" data-count="120">0</span>+<span class="stat-label">Établissements</span></div>
+        <div class="stat"><span class="stat-number" data-count="8500">0</span>+<span class="stat-label">Élèves connectés</span></div>
         <div class="stat"><span class="stat-number" data-count="94">0</span>%<span class="stat-label">Satisfaction</span></div>
       </div>
     </div>
@@ -397,87 +397,87 @@
   <section id="about">
     <h2 class="fade-in">Qui sommes-nous ?</h2>
     <p class="section-sub fade-in stagger-1">
-      Creee a Antananarivo, Novaskol repond a un besoin simple : permettre aux ecoles de gerer leurs donnees elles-memes, meme sans connexion permanente.
+      Créée à Antananarivo, Novaskol répond à un besoin simple : permettre aux écoles de gérer leurs données elles-mêmes, même sans connexion permanente.
     </p>
     <div class="features-grid">
       <div class="feature-card fade-in stagger-1">
         <div class="feature-icon"><i class="fas fa-heart"></i></div>
-        <div class="feature-title">Pensee pour les ecoles modernes</div>
-        <p>Fonctionnement local, sauvegardes, paiements echelonnes, calendriers scolaires et modules adaptes aux realites des etablissements.</p>
+        <div class="feature-title">Pensée pour les écoles modernes</div>
+        <p>Fonctionnement local, sauvegardes, paiements échelonnés, calendriers scolaires et modules adaptés aux réalités des établissements.</p>
       </div>
       <div class="feature-card fade-in stagger-2">
         <div class="feature-icon"><i class="fas fa-rocket"></i></div>
         <div class="feature-title">Ultra-moderne</div>
-        <p>Interface fluide, notifications, bulletins automatiques, chat prive, canal officiel d'annonces et espaces par role.</p>
+        <p>Interface fluide, notifications, bulletins automatiques, chat privé, canal officiel d'annonces et espaces par rôle.</p>
       </div>
       <div class="feature-card fade-in stagger-3">
         <div class="feature-icon"><i class="fas fa-shield-alt"></i></div>
-        <div class="feature-title">Securisee & fiable</div>
-        <p>Permissions par module, comptes admin/staff/enseignant/parent, sauvegardes SQL et donnees sous la responsabilite de chaque ecole.</p>
+        <div class="feature-title">Sécurisée & fiable</div>
+        <p>Permissions par module, comptes admin/staff/enseignant/parent, sauvegardes SQL et données sous la responsabilité de chaque école.</p>
       </div>
     </div>
   </section>
 
   <section id="espaces">
     <h2 class="fade-in">5 espaces, un seul logiciel</h2>
-    <p class="section-sub fade-in stagger-1">Chaque acteur de l'etablissement dispose d'un espace dedie avec les outils adaptes a son role.</p>
+    <p class="section-sub fade-in stagger-1">Chaque acteur de l'établissement dispose d'un espace dédié avec les outils adaptés à son rôle.</p>
     <div class="role-grid">
       <div class="role-card fade-in-scale stagger-1">
         <span class="role-icon">👨‍💼</span>
-        <div class="role-name">Chef d'etablissement</div>
-        <div class="role-desc">Tableau de bord 360°, gestion des permissions, rapports comptables et pedagogiques.</div>
+        <div class="role-name">Chef d'établissement</div>
+        <div class="role-desc">Tableau de bord 360°, gestion des permissions, rapports comptables et pédagogiques.</div>
       </div>
       <div class="role-card fade-in-scale stagger-2">
         <span class="role-icon">👨‍🏫</span>
         <div class="role-name">Enseignant</div>
-        <div class="role-desc">Saisie des notes, pointage de presence, consultation emploi du temps, espace de travail.</div>
+        <div class="role-desc">Saisie des notes, pointage de présence, consultation emploi du temps, espace de travail.</div>
       </div>
       <div class="role-card fade-in-scale stagger-3">
         <span class="role-icon">👥</span>
         <div class="role-name">Personnel (Staff)</div>
-        <div class="role-desc">RH, comptabilite, gestion des ressources, pointage et suivi administratif.</div>
+        <div class="role-desc">RH, comptabilité, gestion des ressources, pointage et suivi administratif.</div>
       </div>
       <div class="role-card fade-in-scale stagger-4">
         <span class="role-icon">👨‍👩‍👧</span>
         <div class="role-name">Parent</div>
-        <div class="role-desc">Suivi des eleves, messagerie, notifications, consultation des notes et paiements.</div>
+        <div class="role-desc">Suivi des élèves, messagerie, notifications, consultation des notes et paiements.</div>
       </div>
       <div class="role-card fade-in-scale stagger-5">
         <span class="role-icon">🎓</span>
-        <div class="role-name">Eleve</div>
-        <div class="role-desc">Acces aux notes, emploi du temps, communications et suivi de la scolarite.</div>
+        <div class="role-name">Élève</div>
+        <div class="role-desc">Accès aux notes, emploi du temps, communications et suivi de la scolarité.</div>
       </div>
     </div>
     <div class="cta-section fade-in">
-      <h3>Pret a passer a la vitesse superieure ?</h3>
-      <p>Decouvrez comment Novaskol peut transformer la gestion de votre etablissement.</p>
-      <a href="#auth" class="btn btn-lg">Reservez votre demo</a>
+      <h3>Prêt à passer à la vitesse supérieure ?</h3>
+      <p>Découvrez comment Novaskol peut transformer la gestion de votre établissement.</p>
+      <a href="#auth" class="btn btn-lg">Réservez votre démo</a>
     </div>
   </section>
 
   <section id="features">
     <h2 class="fade-in">Ce que Novaskol vous apporte</h2>
-    <p class="section-sub fade-in stagger-1">Une solution complete pour la gestion scolaire, de l'inscription a la comptabilite.</p>
+    <p class="section-sub fade-in stagger-1">Une solution complète pour la gestion scolaire, de l'inscription à la comptabilité.</p>
     <div class="features-grid">
       <div class="feature-card fade-in stagger-1">
         <div class="feature-icon"><i class="fas fa-tachometer-alt"></i></div>
         <div class="feature-title">Tableau de bord complet</div>
-        <p>Vue 360° : presences, paiements, notes, effectifs, notifications et indicateurs importants.</p>
+        <p>Vue 360° : présences, paiements, notes, effectifs, notifications et indicateurs importants.</p>
       </div>
       <div class="feature-card fade-in stagger-2">
         <div class="feature-icon"><i class="fas fa-file-alt"></i></div>
-        <div class="feature-title">Bulletins & notes automatises</div>
-        <p>Saisie rapide, calculs instantanes, bulletins trimestriels, annuels, resultats et examens blancs.</p>
+        <div class="feature-title">Bulletins & notes automatisés</div>
+        <p>Saisie rapide, calculs instantanés, bulletins trimestriels, annuels, résultats et examens blancs.</p>
       </div>
       <div class="feature-card fade-in stagger-3">
         <div class="feature-icon"><i class="fas fa-comments"></i></div>
-        <div class="feature-title">Communication integree</div>
-        <p>Chat prive, groupes, canal d'annonces de l'ecole et acces parent encadre.</p>
+        <div class="feature-title">Communication intégrée</div>
+        <p>Chat privé, groupes, canal d'annonces de l'école et accès parent encadré.</p>
       </div>
       <div class="feature-card fade-in stagger-1">
         <div class="feature-icon"><i class="fas fa-wallet"></i></div>
-        <div class="feature-title">Comptabilite simplifiee</div>
-        <p>Suivi des paiements, factures, recus, revenus, depenses et rapports imprimables.</p>
+        <div class="feature-title">Comptabilité simplifiée</div>
+        <p>Suivi des paiements, factures, reçus, revenus, dépenses et rapports imprimables.</p>
       </div>
       <div class="feature-card fade-in stagger-2">
         <div class="feature-icon"><i class="fas fa-calendar-alt"></i></div>
@@ -486,7 +486,7 @@
       </div>
       <div class="feature-card fade-in stagger-3">
         <div class="feature-icon"><i class="fas fa-user-check"></i></div>
-        <div class="feature-title">Presences numeriques</div>
+        <div class="feature-title">Présences numériques</div>
         <p>Fiches digitales, rapports, alertes absences et pointage par QR code.</p>
       </div>
     </div>
@@ -494,8 +494,8 @@
 
   <div class="cta-section fade-in">
     <h3>Vous voulez en savoir plus ?</h3>
-    <p>Contactez-nous pour une demonstration personnalisee de Novaskol.</p>
-    <a href="#contact" class="btn btn-lg btn-outline">Demander une demo</a>
+    <p>Contactez-nous pour une démonstration personnalisée de Novaskol.</p>
+    <a href="#contact" class="btn btn-lg btn-outline">Demander une démo</a>
   </div>
 
   <section id="auth" class="auth-section fade-in">
@@ -509,12 +509,12 @@
         <div class="form-group"><input type="email" name="email" placeholder="Email" required></div>
         <div class="form-group">
           <select name="role" required>
-            <option value="">Votre role</option>
+            <option value="">Votre rôle</option>
             <option value="admin">Administrateur</option>
             <option value="enseignant">Enseignant</option>
             <option value="staff">Personnel</option>
             <option value="parent">Parent</option>
-            <option value="eleve">Eleve</option>
+            <option value="eleve">Élève</option>
           </select>
         </div>
         <div class="form-group"><input type="password" name="password" placeholder="Mot de passe" required></div>
@@ -526,8 +526,8 @@
   <section id="contact">
     <h2 class="fade-in">Contactez Novaskol</h2>
     <p class="section-sub fade-in stagger-1">
-      Une question ? Une demo ? Un partenariat ?<br>
-      Nous repondons sous 24h.
+      Une question ? Une démo ? Un partenariat ?<br>
+      Nous répondons sous 24h.
     </p>
 
     @include('auth.partials.contact-status')
@@ -545,11 +545,11 @@
     </div>
 
     <div class="fade-in" style="text-align:center;margin:4rem auto;max-width:760px">
-      <h3 style="color:var(--primary);margin-bottom:1.5rem">Couverture actuelle a Antananarivo et environs</h3>
+      <h3 style="color:var(--primary);margin-bottom:1.5rem">Couverture actuelle à Antananarivo et environs</h3>
       <div style="background:rgba(13,17,23,0.7);border:1px solid var(--border);border-radius:16px;padding:1.2rem;box-shadow:0 10px 40px rgba(0,0,0,0.4)">
-        <img src="{{ asset('legacy/images/radar-antananarivo.jpg') }}" alt="Couverture reseau / radar Antananarivo"
+        <img src="{{ asset('legacy/images/radar-antananarivo.jpg') }}" alt="Couverture réseau / radar Antananarivo"
              style="width:100%;max-width:680px;border-radius:12px;border:1px solid rgba(0,200,83,0.3)">
-        <p style="margin-top:1.2rem;font-size:0.95rem;opacity:0.8">Zone couverte : Antananarivo + peripherie (mise a jour reguliere)</p>
+        <p style="margin-top:1.2rem;font-size:0.95rem;opacity:0.8">Zone couverte : Antananarivo + périphérie (mise à jour régulière)</p>
       </div>
     </div>
   </section>
@@ -564,20 +564,20 @@
   <div class="footer-grid">
     <div class="footer-col">
       <h4>Novaskol</h4>
-      <p>Solution de gestion scolaire moderne, installable en local et hebergeable en ligne.</p>
+      <p>Solution de gestion scolaire moderne, installable en local et hébergeable en ligne.</p>
     </div>
     <div class="footer-col">
       <h4>Liens</h4>
       <a href="#hero">Accueil</a>
-      <a href="#about">A propos</a>
+      <a href="#about">À propos</a>
       <a href="#espaces">Espaces</a>
-      <a href="#features">Fonctionnalites</a>
+      <a href="#features">Fonctionnalités</a>
       <a href="#contact">Contact</a>
     </div>
     <div class="footer-col">
-      <h4>Legal</h4>
-      <a href="{{ route('public.mentions-legales') }}">Mentions legales</a>
-      <a href="{{ route('public.confidentialite') }}">Confidentialite</a>
+      <h4>Légal</h4>
+      <a href="{{ route('public.mentions-legales') }}">Mentions légales</a>
+      <a href="{{ route('public.confidentialite') }}">Confidentialité</a>
       <a href="{{ route('public.cgu') }}">CGU</a>
       <a href="{{ route('public.cookies') }}">Cookies</a>
     </div>
@@ -589,7 +589,7 @@
     </div>
   </div>
   <div style="border-top:1px solid var(--border);padding-top:1.5rem;margin-top:1rem">
-    &copy; {{ date('Y') }} Novaskol - Solution scolaire moderne - Developpe par RANDRIAMIFALY Tojo Nambinina
+    &copy; {{ date('Y') }} Novaskol - Solution scolaire moderne - Développé par RANDRIAMIFALY Tojo Nambinina
   </div>
 </footer>
 

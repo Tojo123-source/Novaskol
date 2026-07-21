@@ -40,8 +40,6 @@ return [
         'enseignants' => ['label' => 'Enseignants', 'route' => 'modules.enseignants', 'legacy_url' => 'enseignants.php', 'icon' => 'fa-user', 'migrated' => true],
         'staff' => ['label' => 'Staff', 'route' => 'modules.staff', 'legacy_url' => 'staff.php', 'icon' => 'fa-users', 'migrated' => true],
         'pointage' => ['label' => 'Pointage unifie', 'route' => 'modules.pointage', 'icon' => 'fa-qrcode', 'migrated' => true],
-        'presence' => ['label' => 'Presence enseignants', 'route' => 'modules.presence', 'icon' => 'fa-calendar-check', 'migrated' => true],
-        'presence_staff' => ['label' => 'Presence staff', 'route' => 'modules.presence-staff', 'icon' => 'fa-calendar-check', 'migrated' => true],
         'permissions' => ['label' => 'Permissions', 'route' => 'modules.permissions', 'legacy_url' => 'permission.php', 'icon' => 'fa-shield', 'migrated' => true],
         'gestion_ressource' => ['label' => 'Gestion des ressources', 'route' => 'modules.gestion-ressource', 'legacy_url' => 'gestion_ressource.php', 'icon' => 'fa-cubes', 'migrated' => true],
 

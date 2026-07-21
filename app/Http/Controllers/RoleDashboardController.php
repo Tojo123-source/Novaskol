@@ -16,7 +16,9 @@ class RoleDashboardController extends Controller
             return redirect()->route('login');
         }
 
-        if (($user['role'] ?? '') === 'admin') {
+        $role = $user['role'] ?? '';
+
+        if ($role === 'admin') {
             return redirect()->route('dashboard');
         }
 
@@ -44,7 +46,6 @@ class RoleDashboardController extends Controller
                 ])
                 ->values();
 
-        $role = $user['role'] ?? '';
         $ecole = $this->school();
         $calMonth = (int) $request->query('mois', now()->month);
         $calYear = (int) $request->query('annee', now()->year);

@@ -6,127 +6,249 @@
     <title>Generation de cartes</title>
     <link rel="stylesheet" href="{{ asset('legacy/assets/fontawesome/css/all.min.css') }}">
     @include('modules.professeur.bulletin.partials.styles')
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <script src="{{ asset('legacy/vendor/qrcode.min.js') }}"></script>
     <style>
-        :root { --nv-primary: #0f2942; --nv-gold: #c9a84c; --nv-white: #ffffff; --nv-text: #1e293b; --nv-muted: #64748b; }
+        :root {
+            --card-bg: linear-gradient(145deg, #0f1a2e 0%, #1a2a44 100%);
+            --card-bg-fallback: #0f1a2e;
+            --card-border: rgba(201, 168, 76, 0.3);
+            --card-text: #f0f4ff;
+            --card-text-sec: #a0b4d0;
+            --card-gold: #c9a84c;
+            --card-accent-etudiant: #3b82f6;
+            --card-accent-enseignant: #0ea5e9;
+            --card-accent-staff: #10b981;
+        }
         body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; }
         .card-toolbar { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; margin-bottom: 20px; }
         .card-toolbar .kaly { font-family: 'Inter', sans-serif; }
-        .cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 16px; margin-top: 20px; }
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+            padding: 10px;
+        }
         .id-card {
-            position: relative; display: flex; background: var(--nv-white); color: var(--nv-text);
-            border-radius: 12px; overflow: hidden; border: 1px solid #e2e8f0;
-            box-shadow: 0 2px 12px rgba(15,41,66,.06);
-            transition: transform .15s, box-shadow .15s; font-family: 'Inter', sans-serif; min-height: 130px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            background: var(--card-bg-fallback);
+            background: var(--card-bg);
+            color: var(--card-text);
+            border-radius: 12px;
+            border: 1px solid var(--card-border);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.25), 0 1px 3px rgba(0,0,0,0.15);
+            overflow: hidden;
+            font-family: 'Inter', sans-serif;
+            transition: transform .2s, box-shadow .2s;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
         }
-        .id-card:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(15,41,66,.1); }
+        .id-card:hover { transform: translateY(-3px); box-shadow: 0 8px 32px rgba(0,0,0,0.35); }
         .id-card::before {
-            content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: var(--nv-gold);
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            background: var(--card-gold);
         }
-        .id-card.type-enseignant::before { background: #0ea5e9; }
-        .id-card.type-staff::before { background: #10b981; }
+        .id-card.type-enseignant::before { background: var(--card-accent-enseignant); }
+        .id-card.type-staff::before { background: var(--card-accent-staff); }
+        .id-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 12px 6px;
+        }
+        .id-card-header .logo-mark {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: .7rem;
+            font-weight: 800;
+            color: var(--card-gold);
+            letter-spacing: .5px;
+            text-transform: uppercase;
+        }
+        .id-card-header .logo-mark i { font-size: .82rem; }
+        .id-card-header .school-name {
+            font-size: .55rem;
+            font-weight: 700;
+            color: var(--card-text-sec);
+            text-align: right;
+            line-height: 1.25;
+            text-transform: uppercase;
+            letter-spacing: .3px;
+        }
+        .id-photo-section {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 4px 12px 2px;
+        }
         .id-photo-wrap {
-            flex: 0 0 108px; display: flex; align-items: center; justify-content: center;
-            padding: 12px 0 12px 12px;
+            position: relative;
+            width: 68px;
+            height: 68px;
+            border-radius: 50%;
+            border: 2.5px solid var(--card-gold);
+            overflow: hidden;
+            background: rgba(255,255,255,0.08);
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
+        .id-card.type-enseignant .id-photo-wrap { border-color: var(--card-accent-enseignant); }
+        .id-card.type-staff .id-photo-wrap { border-color: var(--card-accent-staff); }
         .id-photo {
-            width: 94px; height: 120px; object-fit: cover; border-radius: 8px;
-            border: 2px solid #e2e8f0; background: #f1f5f9; display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
         }
-        .id-body {
-            flex: 1; padding: 12px 10px; display: flex; flex-direction: column;
-            justify-content: center; min-width: 0;
+        .id-badge-wrap {
+            display: flex;
+            justify-content: center;
+            padding: 3px 12px 2px;
         }
         .id-badge {
-            display: inline-block; background: var(--nv-primary); color: var(--nv-white);
-            border-radius: 4px; padding: 3px 12px;
-            font-size: .65rem; font-weight: 700; text-transform: uppercase;
-            letter-spacing: .5px; margin-bottom: 5px; width: fit-content;
+            display: inline-block;
+            background: var(--card-gold);
+            color: #0f1a2e;
+            border-radius: 20px;
+            padding: 2px 14px;
+            font-size: .55rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: .8px;
         }
-        .id-card.type-enseignant .id-badge { background: #0ea5e9; }
-        .id-card.type-staff .id-badge { background: #10b981; }
+        .id-card.type-enseignant .id-badge { background: var(--card-accent-enseignant); color: #fff; }
+        .id-card.type-staff .id-badge { background: var(--card-accent-staff); color: #fff; }
+        .id-body {
+            flex: 1;
+            padding: 4px 12px 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
         .id-name {
-            color: var(--nv-primary) !important; margin: 0 0 2px 0;
-            font-size: .9rem; font-weight: 700; line-height: 1.25;
-            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+            color: #fff !important;
+            margin: 0 0 1px 0;
+            font-size: .82rem;
+            font-weight: 700;
+            line-height: 1.2;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            max-width: 100%;
         }
-        .id-meta { font-size: .7rem; color: var(--nv-muted); line-height: 1.55; margin: 0; }
-        .id-meta strong { color: var(--nv-primary); font-weight: 600; }
+        .id-meta {
+            font-size: .6rem;
+            color: var(--card-text-sec);
+            line-height: 1.5;
+            margin: 0;
+            text-align: center;
+        }
+        .id-meta strong { color: var(--card-gold); font-weight: 600; }
+        .id-card.type-enseignant .id-meta strong { color: var(--card-accent-enseignant); }
+        .id-card.type-staff .id-meta strong { color: var(--card-accent-staff); }
         .id-school {
-            display: block; margin-top: 4px; font-size: .65rem; color: var(--nv-gold);
-            font-weight: 700; border-top: 1px solid #e2e8f0; padding-top: 4px;
-            letter-spacing: .3px; text-transform: uppercase; line-height: 1.2;
+            display: block;
+            margin-top: 3px;
+            font-size: .5rem;
+            color: var(--card-text-sec);
+            font-weight: 600;
+            letter-spacing: .5px;
+            text-transform: uppercase;
+            line-height: 1.2;
+            opacity: .7;
         }
-        .id-qr-wrap {
-            flex: 0 0 138px; display: flex; align-items: center; justify-content: center;
-            padding: 8px; background: #f8fafc; border-left: 1px solid #e2e8f0;
+        .id-footer {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            padding: 4px 10px 8px;
+            border-top: 1px solid rgba(255,255,255,0.06);
+            margin-top: auto;
+        }
+        .id-signature {
+            font-size: .45rem;
+            color: var(--card-text-sec);
+            opacity: .6;
+            text-align: left;
+            font-style: italic;
+        }
+        .id-qr-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
         .id-qr-box {
-            display: grid; place-items: center;
-            width: 120px; height: 120px; border-radius: 8px; background: var(--nv-white);
+            width: 44px;
+            height: 44px;
+            border-radius: 4px;
+            background: rgba(255,255,255,0.95);
+            display: grid;
+            place-items: center;
         }
-        .id-qr-box canvas, .id-qr-box img { width: 110px !important; height: 110px !important; }
-        .id-expiry { font-size: .55rem; color: var(--nv-muted); text-align: center; margin-top: 3px; }
+        .id-qr-box canvas, .id-qr-box img { width: 40px !important; height: 40px !important; }
+        .id-expiry {
+            font-size: .4rem;
+            color: var(--card-text-sec);
+            opacity: .7;
+            margin-top: 1px;
+            text-align: center;
+        }
         @media print {
             @page { size: A4 portrait; margin: 10mm; }
             *,*::before,*::after { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-            body { background: #fff !important; margin: 0 !important; padding: 0 !important; font-family: 'Inter', sans-serif !important; }
-            nav, header, footer, .novaskol-global-actions, .global-dropdown, .novaskol-loader,
-            .card-toolbar, .filters-grid, .actions, .kaly { display: none !important; }
+            body { background: #fff !important; margin: 0 !important; padding: 0 !important; }
+            nav, header, footer, .card-toolbar, .filters-grid, .kaly, .no-print { display: none !important; }
             main { padding: 0 !important; margin: 0 !important; max-width: none !important; width: auto !important; }
             .form-container { background: none !important; border: 0 !important; box-shadow: none !important; padding: 0 !important; margin: 0 !important; display: block !important; }
             .form-container > form { display: none !important; }
             .cards-grid {
                 display: grid !important;
                 grid-template-columns: repeat(3, 54mm) !important;
-                gap: 3mm !important;
-                margin: 0 !important;
+                gap: 20px !important;
+                margin: 0 auto !important;
                 padding: 0 !important;
                 justify-content: center !important;
-                width: 100% !important;
+                width: fit-content !important;
             }
             .id-card {
-                break-inside: avoid !important; page-break-inside: avoid !important;
-                border: 0.5mm solid #bcbcbc !important; box-shadow: none !important;
-                border-radius: 2.5mm !important; min-height: 0 !important;
-                width: 54mm !important; height: 85.6mm !important;
-                font-family: 'Inter', sans-serif !important;
-                flex-direction: column !important;
-            }
-            .id-card::before { width: 1mm !important; }
-            .id-photo-wrap {
-                flex: 0 0 auto !important;
-                padding: 2mm 2mm 0 2mm !important;
-                display: flex !important;
-                align-items: center !important;
-                justify-content: center !important;
-            }
-            .id-photo { width: 24mm !important; height: 31mm !important; border-radius: 1.5mm !important; border-width: 0.3mm !important; }
-            .id-body {
-                flex: 1 !important;
-                padding: 1.5mm 2mm !important;
+                break-inside: avoid !important;
+                page-break-inside: avoid !important;
+                border: 0.3mm solid rgba(201,168,76,0.4) !important;
+                box-shadow: none !important;
+                border-radius: 2.5mm !important;
+                width: 54mm !important;
+                height: 85.6mm !important;
+                background: linear-gradient(145deg, #0f1a2e 0%, #1a2a44 100%) !important;
                 display: flex !important;
                 flex-direction: column !important;
-                justify-content: center !important;
             }
-            .id-badge { font-size: 5pt !important; padding: 0.3mm 2mm !important; border-radius: 0.8mm !important; margin-bottom: 0.5mm !important; }
-            .id-name { font-size: 7pt !important; margin-bottom: 0.2mm !important; white-space: normal !important; overflow: visible !important; text-overflow: clip !important; }
-            .id-meta { font-size: 5.5pt !important; line-height: 1.4 !important; }
-            .id-school { font-size: 5pt !important; margin-top: 0.5mm !important; padding-top: 0.5mm !important; border-top-width: 0.3mm !important; }
-            .id-qr-wrap {
-                flex: 0 0 auto !important;
-                padding: 1mm 2mm 2mm 2mm !important;
-                display: flex !important;
-                align-items: center !important;
-                justify-content: center !important;
-                border-left: none !important;
-                border-top: 0.3mm solid #e2e8f0 !important;
-                background: #f8fafc !important;
-            }
-            .id-qr-box { width: 24mm !important; height: 24mm !important; border-radius: 1mm !important; }
-            .id-qr-box canvas, .id-qr-box img { width: 22mm !important; height: 22mm !important; }
-            .id-expiry { font-size: 4.5pt !important; margin-top: 0.3mm !important; }
+            .id-card::before { height: 0.5mm !important; }
+            .id-card-header { padding: 2.5mm 2.5mm 1.5mm !important; }
+            .id-card-header .logo-mark { font-size: 5pt !important; }
+            .id-card-header .logo-mark i { font-size: 6pt !important; }
+            .id-card-header .school-name { font-size: 4pt !important; }
+            .id-photo-section { padding: 1.5mm 2.5mm 1mm !important; }
+            .id-photo-wrap { width: 16mm !important; height: 16mm !important; border-width: 0.5mm !important; border-radius: 50% !important; }
+            .id-badge-wrap { padding: 1mm 2.5mm 0.5mm !important; }
+            .id-badge { font-size: 4.5pt !important; padding: 0.3mm 3mm !important; border-radius: 3mm !important; }
+            .id-body { padding: 1.5mm 2.5mm 2mm !important; }
+            .id-name { font-size: 6.5pt !important; white-space: normal !important; overflow: visible !important; text-overflow: clip !important; }
+            .id-meta { font-size: 5pt !important; line-height: 1.4 !important; }
+            .id-school { font-size: 4pt !important; margin-top: 0.5mm !important; }
+            .id-footer { padding: 1.5mm 2.5mm 2mm !important; border-top-width: 0.3mm !important; }
+            .id-signature { font-size: 4pt !important; }
+            .id-qr-box { width: 12mm !important; height: 12mm !important; border-radius: 0.5mm !important; }
+            .id-qr-box canvas, .id-qr-box img { width: 10.5mm !important; height: 10.5mm !important; }
+            .id-expiry { font-size: 3.5pt !important; }
             .cards-grid > :nth-child(9n) { page-break-after: always !important; break-after: page !important; }
         }
     </style>
@@ -186,6 +308,7 @@
                     $qrToken = $person->qr_token ?? '';
                     $typeClass = $selectedType;
                     $statusLabel = $selectedType === 'etudiant' ? 'Eleve' : ucfirst($selectedType);
+                    $statusPrint = $selectedType === 'etudiant' ? 'ELEVE' : strtoupper($selectedType);
                     $deptInfo = '';
                     $deptLabel = '';
                     if ($selectedType === 'etudiant') {
@@ -201,26 +324,37 @@
                     $expiryDate = now()->addYear()->format('d/m/Y');
                 @endphp
                 <article class="id-card type-{{ $typeClass }}">
-                    <div class="id-photo-wrap">
-                        <img class="id-photo" src="{{ asset('legacy/'.ltrim($photo,'/')) }}" alt="" loading="lazy">
+                    <div class="id-card-header">
+                        <div class="logo-mark"><i class="fa fa-graduation-cap"></i> Novaskol</div>
+                        <div class="school-name">{{ $ecole->nom ?? 'LYCEE NOVASKOL' }}</div>
+                    </div>
+                    <div class="id-photo-section">
+                        <div class="id-photo-wrap">
+                            <img class="id-photo" src="{{ asset('legacy/'.ltrim($photo,'/')) }}" alt="" loading="lazy">
+                        </div>
+                    </div>
+                    <div class="id-badge-wrap">
+                        <span class="id-badge">{{ $statusPrint }}</span>
                     </div>
                     <div class="id-body">
-                        <span class="id-badge">{{ $statusLabel }}</span>
                         <h3 class="id-name" title="{{ $person->nom }} {{ $person->prenom }}">{{ $person->nom }} {{ $person->prenom }}</h3>
                         <p class="id-meta">
                             <strong>ID :</strong> {{ $person->matricule ?? $person->id }}<br>
                             @if($deptInfo)<strong>{{ $deptLabel }} :</strong> {{ $deptInfo }}<br>@endif
-                            <strong>Annee :</strong> {{ $person->annee_scolaire }}
+                            <strong>Annee :</strong> {{ $person->annee_scolaire ?? $selectedAnnee }}
                         </p>
                         <span class="id-school">{{ $ecole->nom ?? 'NOVASKOL' }}</span>
                     </div>
-                    <div class="id-qr-wrap">
-                        @if($qrToken)
-                            <div>
+                    <div class="id-footer">
+                        <div class="id-signature">Signature</div>
+                        <div class="id-qr-section">
+                            @if($qrToken)
                                 <div class="id-qr-box" id="qr-{{ $person->id }}" data-qr="novaskol:qr:v1:{{ $qrToken }}"></div>
                                 <div class="id-expiry">Exp: {{ $expiryDate }}</div>
-                            </div>
-                        @endif
+                            @else
+                                <div style="font-size:.45rem;color:var(--card-text-sec);opacity:.6">QR non disp.</div>
+                            @endif
+                        </div>
                     </div>
                 </article>
             @endforeach
@@ -241,7 +375,7 @@ document.addEventListener('DOMContentLoaded',()=>{
     if(s){s.style.display='block';s.previousElementSibling?.querySelector('.arrow')?.classList.replace('fa-chevron-down','fa-chevron-up')}
     document.querySelectorAll('.id-qr-box').forEach(function(q){
         const u=q.getAttribute('data-qr');
-        if(u&&window.QRCode)new QRCode(q,{text:u,width:240,height:240,colorDark:'#0f2942',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.H})
+        if(u&&window.QRCode)new QRCode(q,{text:u,width:80,height:80,colorDark:'#ffffff',colorLight:'transparent',correctLevel:QRCode.CorrectLevel.H})
     })
 })
 </script>

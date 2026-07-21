@@ -146,7 +146,7 @@ class AccountingController extends Controller
             'nom_type' => ['required', 'string', 'max:100'],
             'montant' => ['required', 'numeric', 'min:0'],
             'mois' => ['required', 'array'],
-            'classe' => ['required', 'integer'],
+            'classe' => $request->input('type_selection') === 'etudiant' ? ['required', 'integer'] : ['nullable', 'integer'],
             'date_debut' => ['required', 'date'],
             'date_fin' => ['required', 'date'],
             'annee_scolaire' => ['required', 'string', 'max:20'],
@@ -154,7 +154,7 @@ class AccountingController extends Controller
         ]);
 
         DB::transaction(function () use ($data) {
-            $classeNom = (string) DB::table('classes')->where('id', $data['classe'])->value('nom');
+            $classeNom = $data['type_selection'] === 'etudiant' ? (string) DB::table('classes')->where('id', $data['classe'])->value('nom') : ($data['type_selection'] === 'enseignant' ? 'Enseignant' : 'Staff');
             $typeId = DB::table('types_paiements')->insertGetId([
                 'nom' => $data['nom_type'],
                 'montant' => $data['montant'],
@@ -164,7 +164,7 @@ class AccountingController extends Controller
                 'classe' => $classeNom,
                 'date_debut' => $data['date_debut'],
                 'date_fin' => $data['date_fin'],
-                'id_classe' => $data['classe'],
+                'id_classe' => $data['type_selection'] === 'etudiant' ? $data['classe'] : null,
             ]);
             $montant = (float) $data['montant'];
 
@@ -219,7 +219,7 @@ class AccountingController extends Controller
             }
         });
 
-        return redirect()->route('modules.detail-paiement', ['type_selection' => $data['type_selection'], 'annee_scolaire' => $data['annee_scolaire'], 'classe_id' => $data['classe']])->with('accounting_msg', ['type' => 'success', 'text' => 'Type de paiement ajoute et assigne.']);
+        return redirect()->route('modules.detail-paiement', ['type_selection' => $data['type_selection'], 'annee_scolaire' => $data['annee_scolaire'], 'classe_id' => $data['classe'] ?? 0])->with('accounting_msg', ['type' => 'success', 'text' => 'Type de paiement ajoute et assigne.']);
     }
 
     public function assignSalaryMonths(Request $request)

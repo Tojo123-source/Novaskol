@@ -190,20 +190,6 @@ Route::middleware('module.access:pointage')->group(function () {
     Route::get('/pointage', [HumanResourceController::class, 'unifiedPresence'])->name('modules.pointage');
 });
 
-Route::middleware('module.access:presence')->group(function () {
-    Route::get('/presence', [HumanResourceController::class, 'teacherPresence'])->name('modules.presence');
-    Route::post('/presence', [HumanResourceController::class, 'storeTeacherPresence'])->name('modules.presence.store');
-    Route::put('/presence/{id}', [HumanResourceController::class, 'updateTeacherPresence'])->name('modules.presence.update');
-    Route::delete('/presence/{id}', [HumanResourceController::class, 'deleteTeacherPresence'])->name('modules.presence.delete');
-});
-
-Route::middleware('module.access:presence_staff')->group(function () {
-    Route::get('/presence-staff', [HumanResourceController::class, 'staffPresence'])->name('modules.presence-staff');
-    Route::post('/presence-staff', [HumanResourceController::class, 'storeStaffPresence'])->name('modules.presence-staff.store');
-    Route::put('/presence-staff/{id}', [HumanResourceController::class, 'updateStaffPresence'])->name('modules.presence-staff.update');
-    Route::delete('/presence-staff/{id}', [HumanResourceController::class, 'deleteStaffPresence'])->name('modules.presence-staff.delete');
-});
-
 Route::middleware('module.access:permissions')->group(function () {
     Route::get('/permissions', [HumanResourceController::class, 'permissions'])->name('modules.permissions');
     Route::post('/permissions', [HumanResourceController::class, 'updatePermissions'])->name('modules.permissions.update');

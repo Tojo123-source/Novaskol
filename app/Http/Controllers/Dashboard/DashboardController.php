@@ -83,7 +83,7 @@ class DashboardController extends Controller
                     $q->whereNull('poste')->orWhere('poste', '!=', 'Enseignant');
                 })
                 ->count(), 0),
-            'presenceToday' => $this->safeQuery('presence_personnels', fn () => round((float) (DB::table('presence_personnels')->whereDate('date_jour', today())->avg('presence') ?? 0) * 100, 1), 0),
+            'presenceToday' => (Schema::hasColumn('presence_personnels', 'presence') && Schema::hasColumn('presence_personnels', 'date_jour')) ? $this->safeQuery('presence_personnels', fn () => round((float) (DB::table('presence_personnels')->whereDate('date_jour', today())->avg('presence') ?? 0) * 100, 1), 0) : 0,
             'impayeCount' => $this->safeQuery('paiements', fn () => DB::table('paiements')->where('statut', '!=', 'complet')->where('annee_scolaire', $anneeScolaire)->count(), 0),
             'revenuMois' => $hasRevenus ? (float) DB::table('revenus')
                 ->where('annee_scolaire', $anneeScolaire)

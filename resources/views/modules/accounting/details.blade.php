@@ -45,7 +45,7 @@
         <div><label>Nom</label><input name="nom_type" required></div>
         <div><label>Montant</label><input type="number" step="0.01" name="montant" required></div>
         <div style="grid-column:1/-1"><label>Mois concernes</label><div class="month-pills">@foreach($months as $m)<label><input type="checkbox" name="mois[]" value="{{ $m }}"> {{ $m }}</label>@endforeach</div></div>
-        <div><label>Classe</label><select name="classe" required>@foreach($classes as $classe)<option value="{{ $classe->id }}">{{ $classe->nom }}</option>@endforeach</select></div>
+        @if($selectedType === 'etudiant')<div><label>Classe</label><select name="classe" required>@foreach($classes as $classe)<option value="{{ $classe->id }}">{{ $classe->nom }}</option>@endforeach</select></div>@endif
         <div><label>Annee</label><input name="annee_scolaire" value="{{ $selectedAnnee }}" required></div>
         <div><label>Date debut</label><input type="date" name="date_debut" required></div>
         <div><label>Date fin</label><input type="date" name="date_fin" required></div>
