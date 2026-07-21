@@ -1178,19 +1178,44 @@ class SettingsController extends Controller
 
     private function databaseDump(): string
     {
-        $dump = "-- Sauvegarde Novaskol\n-- Date: ".date('Y-m-d H:i:s')."\n\n";
-        foreach (DB::select("SELECT name FROM sqlite_master WHERE type='table' ORDER BY name") as $row) {
-            $table = $row->name;
-            if ($table === 'sqlite_sequence') continue;
-            $create = DB::selectOne("SELECT sql FROM sqlite_master WHERE name='$table' AND type='table'");
-            $dump .= "\nDROP TABLE IF EXISTS \"$table\";\n";
-            if ($create && $create->sql) $dump .= $create->sql.";\n\n";
-            foreach (DB::table($table)->get() as $record) {
-                $values = collect((array) $record)->map(fn ($value) => $value === null ? 'NULL' : DB::getPdo()->quote((string) $value))->implode(',');
-                $dump .= "INSERT INTO \"$table\" VALUES ($values);\n";
+        $driver = DB::connection()->getDriverName();
+        $dump = "-- Sauvegarde Novaskol\n-- Date: ".date('Y-m-d H:i:s')."\n-- Driver: $driver\n\n";
+
+        if ($driver === 'sqlite') {
+            foreach (DB::select("SELECT name FROM sqlite_master WHERE type='table' ORDER BY name") as $row) {
+                $table = $row->name;
+                if ($table === 'sqlite_sequence') continue;
+                $create = DB::selectOne("SELECT sql FROM sqlite_master WHERE name='$table' AND type='table'");
+                $dump .= "\nDROP TABLE IF EXISTS \"$table\";\n";
+                if ($create && $create->sql) $dump .= $create->sql.";\n\n";
+                foreach (DB::table($table)->get() as $record) {
+                    $values = collect((array) $record)->map(fn ($value) => $value === null ? 'NULL' : DB::getPdo()->quote((string) $value))->implode(',');
+                    $dump .= "INSERT INTO \"$table\" VALUES ($values);\n";
+                }
+                $dump .= "\n";
             }
-            $dump .= "\n";
+        } else {
+            $dbName = DB::connection()->getDatabaseName();
+            $tables = DB::select("SELECT TABLE_NAME FROM information_schema.TABLES WHERE TABLE_SCHEMA = ? AND TABLE_TYPE = 'BASE TABLE'", [$dbName]);
+            foreach ($tables as $row) {
+                $table = $row->TABLE_NAME;
+                $createResult = DB::selectOne("SHOW CREATE TABLE `$table`");
+                $dump .= "\nDROP TABLE IF EXISTS `$table`;\n";
+                if ($createResult) {
+                    $createKey = 'Create Table';
+                    $dump .= $createResult->$createKey.";\n\n";
+                }
+                $records = DB::table($table)->get();
+                if ($records->isNotEmpty()) {
+                    foreach ($records as $record) {
+                        $values = collect((array) $record)->map(fn ($value) => $value === null ? 'NULL' : DB::getPdo()->quote((string) $value))->implode(',');
+                        $dump .= "INSERT INTO `$table` VALUES ($values);\n";
+                    }
+                    $dump .= "\n";
+                }
+            }
         }
+
         return $dump;
     }
 

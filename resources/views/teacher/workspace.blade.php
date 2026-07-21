@@ -74,6 +74,7 @@
         :root.light input,:root.light select,:root.light textarea,:root.light .btn-home{background:#fff!important;color:#111827!important;border-color:var(--border)!important}
         :root.light .progress{background:#e5e7eb!important}
         :root.light .empty,:root.light .meta,:root.light .class-pill small,:root.light .teacher-card span,.teacher-hero p{color:var(--text-sec)!important}
+        table th{background:var(--surface);color:var(--text);border-bottom:2px solid var(--border)}table td{color:var(--text)}.modal-overlay{display:none}:root.light table td,:root.light table th{background:transparent!important;color:#111827!important}:root.light .modal-overlay>div{background:#fff!important;border-color:var(--border)!important}:root.light table td{color:#111827!important}
         @media(max-width:1180px){.teacher-hero,.teacher-grid,.workspace,.espace-cards{margin-left:16px;margin-right:16px}.teacher-hero{margin-top:98px}.teacher-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.workspace{grid-template-columns:1fr}.lesson-head{flex-direction:column}.task{grid-template-columns:auto 1fr}.espace-cards{grid-template-columns:1fr}}
         @media(max-width:700px){.teacher-hero{margin-top:122px;padding:18px}.teacher-hero h1{font-size:1.28rem}.teacher-grid{grid-template-columns:1fr}.btn-home{padding:8px 10px;font-size:.88rem}}
     </style>
@@ -131,61 +132,105 @@
 
 <main class="workspace">
     <section class="panel">
-        <h2>Journal des lecons</h2>
+        <h2 style="display:flex;align-items:center;justify-content:space-between;cursor:pointer" onclick="toggleJournalForm()">
+            <span>Journal des lecons</span>
+            <i class="fa fa-chevron-down" id="journalFormArrow"></i>
+        </h2>
+
         <form method="GET" class="filter-row">
             <div><label>Annee</label><input name="annee_scolaire" value="{{ $annee }}"></div>
             <div><label>Classe</label><select name="classe_id"><option value="0">Toutes</option>@foreach($classes as $classe)<option value="{{ $classe->id }}" @selected($selectedClasse===$classe->id)>{{ $classe->nom }}</option>@endforeach</select></div>
             <button class="btn btn-primary">Filtrer</button>
         </form>
 
-        <form method="POST" action="{{ route('teacher.lessons.store') }}">
-            @csrf
-            <input type="hidden" name="annee_scolaire" value="{{ $annee }}">
-            <div class="form-grid">
-                <div><label>Titre de la lecon</label><input name="titre" required></div>
-                <div><label>Rubrique / chapitre</label><input name="rubrique"></div>
-                <div><label>Classe</label><select name="classe_id"><option value="">General</option>@foreach($classes as $classe)<option value="{{ $classe->id }}">{{ $classe->nom }}</option>@endforeach</select></div>
-                <div><label>Date prevue</label><input type="date" name="date_prevue"></div>
-                <div><label>Statut</label><select name="statut"><option value="a_preparer">A preparer</option><option value="planifie">Planifie</option><option value="en_cours">En cours</option><option value="termine">Termine</option></select></div>
-                <div><label>Progression %</label><input type="number" name="progression" min="0" max="100" value="0"></div>
-            </div>
-            <div class="form-grid">
-                <div><label>Objectifs</label><textarea name="objectifs"></textarea></div>
-                <div><label>Notes pedagogiques</label><textarea name="notes"></textarea></div>
-            </div>
-            <button class="btn btn-primary"><i class="fa fa-plus"></i> Ajouter au journal</button>
-        </form>
-
-        <div class="lesson-list" style="margin-top:14px">
-            @forelse($lessons as $lesson)
-                <article class="lesson">
-                    <div class="lesson-head">
-                        <div>
-                            <h3>{{ $lesson->titre }}</h3>
-                            <div class="meta"><span>{{ $lesson->classe_nom ?? 'General' }}</span><span>{{ $lesson->rubrique ?: 'Sans rubrique' }}</span><span>{{ $lesson->date_prevue ? \Carbon\Carbon::parse($lesson->date_prevue)->format('d/m/Y') : 'Date libre' }}</span></div>
-                        </div>
-                        <span class="badge">{{ str_replace('_',' ', $lesson->statut) }}</span>
-                    </div>
-                    <div class="progress"><span style="width:{{ (int) $lesson->progression }}%"></span></div>
-                    <form method="POST" action="{{ route('teacher.lessons.update', $lesson->id) }}">
-                        @csrf @method('PUT')
-                        <div class="form-grid">
-                            <input name="titre" value="{{ $lesson->titre }}" required>
-                            <input name="rubrique" value="{{ $lesson->rubrique }}">
-                            <select name="classe_id"><option value="">General</option>@foreach($classes as $classe)<option value="{{ $classe->id }}" @selected((int)$lesson->classe_id===(int)$classe->id)>{{ $classe->nom }}</option>@endforeach</select>
-                            <input type="date" name="date_prevue" value="{{ $lesson->date_prevue }}">
-                            <select name="statut">@foreach(['a_preparer'=>'A preparer','planifie'=>'Planifie','en_cours'=>'En cours','termine'=>'Termine'] as $value=>$label)<option value="{{ $value }}" @selected($lesson->statut===$value)>{{ $label }}</option>@endforeach</select>
-                            <input type="number" name="progression" min="0" max="100" value="{{ $lesson->progression }}">
-                        </div>
-                        <div class="form-grid"><textarea name="objectifs">{{ $lesson->objectifs }}</textarea><textarea name="notes">{{ $lesson->notes }}</textarea></div>
-                        <button class="btn btn-primary">Mettre a jour</button>
-                    </form>
-                    <form method="POST" action="{{ route('teacher.lessons.delete', $lesson->id) }}" class="js-confirm-submit" data-confirm-title="Supprimer cette lecon ?" style="margin-top:8px">@csrf @method('DELETE')<button class="btn btn-danger">Supprimer</button></form>
-                </article>
-            @empty
-                <div class="empty">Aucune lecon pour ce filtre.</div>
-            @endforelse
+        <div id="journalForm" style="display:none;margin-bottom:16px;padding:16px;border:1px solid var(--border);border-radius:8px;background:var(--surface)">
+            <h3 style="margin:0 0 12px;color:var(--primary);font-size:.95rem"><i class="fa fa-plus-circle"></i> Ajouter une lecon</h3>
+            <form method="POST" action="{{ route('teacher.lessons.store') }}">
+                @csrf
+                <input type="hidden" name="annee_scolaire" value="{{ $annee }}">
+                <div class="form-grid">
+                    <div><label>Titre de la lecon</label><input name="titre" required></div>
+                    <div><label>Rubrique / chapitre</label><input name="rubrique"></div>
+                    <div><label>Classe</label><select name="classe_id"><option value="">General</option>@foreach($classes as $classe)<option value="{{ $classe->id }}">{{ $classe->nom }}</option>@endforeach</select></div>
+                    <div><label>Date prevue</label><input type="date" name="date_prevue"></div>
+                    <div><label>Statut</label><select name="statut"><option value="a_preparer">A preparer</option><option value="planifie">Planifie</option><option value="en_cours">En cours</option><option value="termine">Termine</option></select></div>
+                    <div><label>Progression %</label><input type="number" name="progression" min="0" max="100" value="0"></div>
+                </div>
+                <div class="form-grid">
+                    <div><label>Objectifs</label><textarea name="objectifs"></textarea></div>
+                    <div><label>Notes pedagogiques</label><textarea name="notes"></textarea></div>
+                </div>
+                <button class="btn btn-primary"><i class="fa fa-plus"></i> Ajouter au journal</button>
+            </form>
         </div>
+
+        <div style="overflow-x:auto;margin-top:14px">
+            <table style="width:100%;border-collapse:collapse;font-size:.88rem">
+                <thead>
+                    <tr style="background:var(--surface);border-bottom:2px solid var(--border)">
+                        <th style="padding:10px 8px;text-align:left;font-weight:700">Titre</th>
+                        <th style="padding:10px 8px;text-align:left;font-weight:700">Classe</th>
+                        <th style="padding:10px 8px;text-align:left;font-weight:700">Rubrique</th>
+                        <th style="padding:10px 8px;text-align:left;font-weight:700">Date</th>
+                        <th style="padding:10px 8px;text-align:center;font-weight:700">Progression</th>
+                        <th style="padding:10px 8px;text-align:center;font-weight:700">Statut</th>
+                        <th style="padding:10px 8px;text-align:center;font-weight:700">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($lessons as $lesson)
+                    <tr style="border-bottom:1px solid var(--border)">
+                        <td style="padding:10px 8px;font-weight:600">{{ $lesson->titre }}</td>
+                        <td style="padding:10px 8px;color:var(--text-sec)">{{ $lesson->classe_nom ?? 'General' }}</td>
+                        <td style="padding:10px 8px;color:var(--text-sec)">{{ $lesson->rubrique ?: '-' }}</td>
+                        <td style="padding:10px 8px;color:var(--text-sec)">{{ $lesson->date_prevue ? \Carbon\Carbon::parse($lesson->date_prevue)->format('d/m/Y') : '-' }}</td>
+                        <td style="padding:10px 8px;text-align:center">
+                            <div style="display:flex;align-items:center;gap:6px;justify-content:center">
+                                <div style="width:60px;height:6px;border-radius:999px;background:rgba(255,255,255,.1);overflow:hidden"><div style="width:{{ (int) $lesson->progression }}%;height:100%;background:var(--primary)"></div></div>
+                                <span style="font-size:.78rem;color:var(--text-sec)">{{ (int) $lesson->progression }}%</span>
+                            </div>
+                        </td>
+                        <td style="padding:10px 8px;text-align:center"><span class="badge">{{ str_replace('_',' ', $lesson->statut) }}</span></td>
+                        <td style="padding:10px 8px;text-align:center">
+                            <div style="display:flex;gap:4px;justify-content:center">
+                                <button class="btn btn-sm" style="background:var(--surface);border:1px solid var(--border);padding:5px 10px;border-radius:6px;cursor:pointer;color:var(--text)" onclick="openEditLesson({{ $lesson->id }})" title="Modifier"><i class="fa fa-edit"></i></button>
+                                <form method="POST" action="{{ route('teacher.lessons.delete', $lesson->id) }}" class="js-confirm-submit" data-confirm-title="Supprimer cette lecon ?" style="display:inline">@csrf @method('DELETE')<button class="btn btn-sm" style="background:transparent;border:1px solid #dc2626;padding:5px 10px;border-radius:6px;cursor:pointer;color:#dc2626" title="Supprimer"><i class="fa fa-trash"></i></button></form>
+                            </div>
+                        </td>
+                    </tr>
+                    @empty
+                    <tr><td colspan="7" style="padding:20px;text-align:center;color:var(--text-sec)">Aucune lecon pour ce filtre.</td></tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+
+        @foreach($lessons as $lesson)
+        <div id="editLessonModal{{ $lesson->id }}" class="modal-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:20000;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px)" onclick="if(event.target===this)closeEditLesson({{ $lesson->id }})">
+            <div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;width:100%;max-width:560px;box-shadow:0 24px 60px rgba(0,0,0,.4)">
+                <h3 style="margin:0 0 16px;color:var(--primary);font-size:1.05rem"><i class="fa fa-edit"></i> Modifier la lecon</h3>
+                <form method="POST" action="{{ route('teacher.lessons.update', $lesson->id) }}">
+                    @csrf @method('PUT')
+                    <div class="form-grid">
+                        <div><label>Titre</label><input name="titre" value="{{ $lesson->titre }}" required></div>
+                        <div><label>Rubrique</label><input name="rubrique" value="{{ $lesson->rubrique }}"></div>
+                        <div><label>Classe</label><select name="classe_id"><option value="">General</option>@foreach($classes as $classe)<option value="{{ $classe->id }}" @selected((int)$lesson->classe_id===(int)$classe->id)>{{ $classe->nom }}</option>@endforeach</select></div>
+                        <div><label>Date prevue</label><input type="date" name="date_prevue" value="{{ $lesson->date_prevue }}"></div>
+                        <div><label>Statut</label><select name="statut">@foreach(['a_preparer'=>'A preparer','planifie'=>'Planifie','en_cours'=>'En cours','termine'=>'Termine'] as $v=>$l)<option value="{{ $v }}" @selected($lesson->statut===$v)>{{ $l }}</option>@endforeach</select></div>
+                        <div><label>Progression %</label><input type="number" name="progression" min="0" max="100" value="{{ $lesson->progression }}"></div>
+                    </div>
+                    <div class="form-grid">
+                        <div><label>Objectifs</label><textarea name="objectifs">{{ $lesson->objectifs }}</textarea></div>
+                        <div><label>Notes</label><textarea name="notes">{{ $lesson->notes }}</textarea></div>
+                    </div>
+                    <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:16px">
+                        <button type="button" class="btn" style="background:transparent;border:1px solid var(--border);padding:10px 14px;border-radius:8px;cursor:pointer;color:var(--text)" onclick="closeEditLesson({{ $lesson->id }})">Annuler</button>
+                        <button class="btn btn-primary" style="padding:10px 14px"><i class="fa fa-save"></i> Enregistrer</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        @endforeach
     </section>
 
     <aside class="panel">
@@ -231,6 +276,22 @@
     </aside>
 </main>
 <script>
+function toggleJournalForm(){
+    const f=document.getElementById('journalForm'),a=document.getElementById('journalFormArrow');
+    if(!f)return;
+    const open=f.style.display!=='none';
+    f.style.display=open?'none':'block';
+    a.classList.toggle('fa-chevron-down',open);
+    a.classList.toggle('fa-chevron-up',!open);
+}
+function openEditLesson(id){
+    const m=document.getElementById('editLessonModal'+id);
+    if(m)m.style.display='flex';
+}
+function closeEditLesson(id){
+    const m=document.getElementById('editLessonModal'+id);
+    if(m)m.style.display='none';
+}
 document.addEventListener('DOMContentLoaded',()=>{
     document.querySelectorAll('.id-qr-box').forEach(function(q){
         const u=q.getAttribute('data-qr');

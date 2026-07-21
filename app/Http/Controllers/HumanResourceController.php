@@ -593,16 +593,22 @@ class HumanResourceController extends Controller
         $this->ensurePresenceIndexes();
         $canManagePresence = $this->canManagePresenceRecords();
         $table = $type === 'teacher' ? 'presence_personnels' : 'presence_staff';
-        $defaultAnnee = DB::table($table)
-            ->whereNotNull('annee_scolaire')
-            ->where('annee_scolaire', '!=', '')
-            ->orderByDesc('annee_scolaire')
-            ->value('annee_scolaire');
-        if (!$defaultAnnee) {
-            $y = (int) now()->format('Y');
-            $m = (int) now()->format('n');
-            $defaultAnnee = ($m >= 9 ? $y : ($y - 1)) . '-' . ($m >= 9 ? ($y + 1) : $y);
+        $peopleTable = $type === 'teacher' ? 'professeurs' : 'staff';
+        $active = $type === 'teacher' ? 'presence' : 'presence_staff';
+        $routePrefix = $type === 'teacher' ? 'modules.presence' : 'modules.presence-staff';
+
+        $y = (int) now()->format('Y');
+        $m = (int) now()->format('n');
+        $defaultAnnee = ($m >= 9 ? $y : ($y - 1)) . '-' . ($m >= 9 ? ($y + 1) : $y);
+
+        if (Schema::hasTable($table)) {
+            $defaultAnnee = DB::table($table)
+                ->whereNotNull('annee_scolaire')
+                ->where('annee_scolaire', '!=', '')
+                ->orderByDesc('annee_scolaire')
+                ->value('annee_scolaire') ?: $defaultAnnee;
         }
+
         $annee = (string) $request->query('annee_scolaire', $defaultAnnee);
         $mois = (string) $request->query('mois', now()->format('m'));
         $jour = (string) $request->query('jour', now()->toDateString());
@@ -610,38 +616,43 @@ class HumanResourceController extends Controller
             $jour = now()->format('Y-m-').str_pad($jour, 2, '0', STR_PAD_LEFT);
         }
 
-        $peopleTable = $type === 'teacher' ? 'professeurs' : 'staff';
-        $active = $type === 'teacher' ? 'presence' : 'presence_staff';
-        $routePrefix = $type === 'teacher' ? 'modules.presence' : 'modules.presence-staff';
+        $records = $people = $todayScans = collect();
+        $annees = collect([$annee]);
 
-        $records = DB::table("$table as ps")
-            ->leftJoin("$peopleTable as p", 'p.id', '=', 'ps.personne_id')
-            ->select('ps.*', 'p.nom', 'p.prenom')
-            ->where('ps.annee_scolaire', $annee)
-            ->where(DB::raw('CAST(ps.mois AS UNSIGNED)'), (int) $mois)
-            ->whereDate('ps.date_jour', $jour)
-            ->orderBy('p.nom')
-            ->when(! $canManagePresence, fn ($q) => $q->whereRaw('1 = 0'))
-            ->paginate(20)
-            ->withQueryString();
+        if (Schema::hasTable($table) && Schema::hasTable($peopleTable)) {
+            $people = DB::table($peopleTable)->select('id', 'nom', 'prenom')->when($type === 'staff', fn ($q) => $q->where('poste', '!=', 'Enseignant'))->orderBy('nom')->orderBy('prenom')->get();
 
-        $todayScans = DB::table("$table as ps")
-            ->leftJoin("$peopleTable as p", 'p.id', '=', 'ps.personne_id')
-            ->select('ps.*', 'p.nom', 'p.prenom', 'p.photo')
-            ->whereDate('ps.date_jour', now()->toDateString())
-            ->orderBy('ps.created_at', 'desc')
-            ->get();
+            $records = DB::table("$table as ps")
+                ->leftJoin("$peopleTable as p", 'p.id', '=', 'ps.personne_id')
+                ->select('ps.*', 'p.nom', 'p.prenom')
+                ->where('ps.annee_scolaire', $annee)
+                ->where(DB::raw('CAST(ps.mois AS UNSIGNED)'), (int) $mois)
+                ->whereDate('ps.date_jour', $jour)
+                ->orderBy('p.nom')
+                ->when(! $canManagePresence, fn ($q) => $q->whereRaw('1 = 0'))
+                ->paginate(20)
+                ->withQueryString();
+
+            $todayScans = DB::table("$table as ps")
+                ->leftJoin("$peopleTable as p", 'p.id', '=', 'ps.personne_id')
+                ->select('ps.*', 'p.nom', 'p.prenom', 'p.photo')
+                ->whereDate('ps.date_jour', now()->toDateString())
+                ->orderBy('ps.created_at', 'desc')
+                ->get();
+
+            $annees = collect([$annee])->merge($this->schoolYearsFrom($peopleTable))->unique()->values();
+        }
 
         return $this->view('modules.rh.presence', $modules, $active, [
             'type' => $type,
             'title' => $type === 'teacher' ? 'Presence des enseignants' : 'Presence du staff',
-            'people' => DB::table($peopleTable)->select('id', 'nom', 'prenom')->when($type === 'staff', fn ($q) => $q->where('poste', '!=', 'Enseignant'))->orderBy('nom')->orderBy('prenom')->get(),
+            'people' => $people,
             'records' => $records,
             'annee' => $annee,
             'mois' => $mois,
             'jour' => $jour,
             'routePrefix' => $routePrefix,
-            'annees' => collect([$annee])->merge($this->schoolYearsFrom($peopleTable))->unique()->values(),
+            'annees' => $annees,
             'canManagePresence' => $canManagePresence,
             'todayScans' => $todayScans,
         ]);

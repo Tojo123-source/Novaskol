@@ -61,6 +61,12 @@ class StudentCourseController extends Controller
             ->orderByDesc('created_at')
             ->paginate(12);
 
+        foreach ($courses as $c) {
+            $chIds = DB::table('course_chapitres')->where('course_id', $c->id)->pluck('id');
+            $c->exercices_count = DB::table('exercices')->whereIn('chapitre_id', $chIds)->where('publie', true)->count();
+            $c->fichiers_count = DB::table('course_fichiers')->whereIn('chapitre_id', $chIds)->count();
+        }
+
         $favIds = DB::table('course_favoris')->where('eleve_id', $eleve->id)->pluck('course_id')->toArray();
         $matieres = DB::table('matieres')->orderBy('nom')->get();
 
@@ -157,7 +163,9 @@ class StudentCourseController extends Controller
         $eleve = $this->student();
         $userId = session('utilisateur.id');
 
-        $totalCourses = DB::table('courses')->where('statut', 'publie')->count();
+        $coursesList = DB::table('courses')->where('statut', 'publie')->orderBy('titre')->get(['id', 'titre', 'matiere_id', 'description']);
+        $totalCourses = $coursesList->count();
+
         $chapitreIds = DB::table('course_chapitres')->where('statut', 'publie')->pluck('id');
         $totalChapitres = $chapitreIds->count();
         $completedChapitres = DB::table('course_progression')
@@ -179,6 +187,16 @@ class StudentCourseController extends Controller
         $notes = DB::table('notes')->where('eleve_id', $eleve->id)->get();
         $moyenneNotes = $notes->avg('note') ?: 0;
 
+        // Per-course progress detail
+        $progressionDetails = DB::table('course_progression')
+            ->join('course_chapitres', 'course_chapitres.id', '=', 'course_progression.chapitre_id')
+            ->join('courses', 'courses.id', '=', 'course_chapitres.course_id')
+            ->where('course_progression.eleve_id', $eleve->id)
+            ->select('courses.id as course_id', 'courses.titre as course_titre', DB::raw('COUNT(*) as total_chapitres'), DB::raw('SUM(course_progression.termine) as termines'))
+            ->groupBy('courses.id', 'courses.titre')
+            ->get()
+            ->keyBy('course_id');
+
         // Monthly evolution
         $evolution = DB::table('exercice_soumissions')
             ->where('eleve_id', $eleve->id)
@@ -188,7 +206,7 @@ class StudentCourseController extends Controller
             ->orderBy('mois')
             ->get();
 
-        return view('eleve.rapport', compact('eleve', 'totalCourses', 'totalChapitres', 'completedChapitres', 'avgScore', 'parMatiere', 'moyenneNotes', 'evolution') + [
+        return view('eleve.rapport', compact('eleve', 'coursesList', 'totalCourses', 'totalChapitres', 'completedChapitres', 'avgScore', 'parMatiere', 'moyenneNotes', 'evolution', 'progressionDetails') + [
             'modules' => app(\App\Services\Novaskol\ModuleRegistry::class)->all(),
             'ecole' => DB::table('ecole')->select('nom', 'logo')->first() ?: (object) ['nom' => 'Ecole', 'logo' => 'novaskol.png'],
             'userPermissions' => [],

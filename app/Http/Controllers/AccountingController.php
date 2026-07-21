@@ -20,39 +20,57 @@ class AccountingController extends Controller
         $createdReminders = $this->createDuePaymentReminders($annee, $reminderStats);
 
         $studentTypes = collect();
-        if ($type === 'etudiant') {
+        if (in_array($type, ['etudiant', 'enseignant', 'staff'], true)) {
             $studentTypes = DB::table('types_paiements')
                 ->where('annee_scolaire', $annee)
-                ->when($classeId > 0, fn ($q) => $q->where('id_classe', $classeId))
+                ->when($classeId > 0 && $type === 'etudiant', fn ($q) => $q->where('id_classe', $classeId))
                 ->orderByDesc('id')
                 ->get()
-                ->map(function ($item) use ($annee) {
-                    $assigned = DB::table('paiements_assignes as pa')
-                        ->join('eleves as e', 'e.id', '=', 'pa.eleve_id')
-                        ->leftJoin('classes as c', 'c.id', '=', 'e.id_classe')
-                        ->where('pa.type_id', $item->id)
-                        ->select('e.id', 'e.nom', 'e.prenom', 'c.nom as classe')
-                        ->orderBy('e.nom')
-                        ->get();
+                ->map(function ($item) use ($annee, $type) {
+                    if ($type === 'etudiant') {
+                        $assigned = DB::table('paiements_assignes as pa')
+                            ->join('eleves as e', 'e.id', '=', 'pa.eleve_id')
+                            ->leftJoin('classes as c', 'c.id', '=', 'e.id_classe')
+                            ->where('pa.type_id', $item->id)
+                            ->select('e.id', 'e.nom', 'e.prenom', 'c.nom as classe')
+                            ->orderBy('e.nom')
+                            ->get();
+                    } elseif ($type === 'enseignant') {
+                        $assigned = DB::table('paiements_assignes as pa')
+                            ->join('professeurs as p', 'p.id', '=', 'pa.professeur_id')
+                            ->where('pa.type_id', $item->id)
+                            ->select('p.id', 'p.nom', 'p.prenom', DB::raw("'' as classe"))
+                            ->orderBy('p.nom')
+                            ->get();
+                    } else {
+                        $assigned = DB::table('paiements_assignes as pa')
+                            ->join('staff as s', 's.id', '=', 'pa.person_id')
+                            ->where('pa.type_id', $item->id)
+                            ->where('pa.type_personne', 'staff')
+                            ->select('s.id', 's.nom', 's.prenom', DB::raw("'' as classe"))
+                            ->orderBy('s.nom')
+                            ->get();
+                    }
                     $item->total_assignes = $assigned->count();
                     $item->total_complet = 0;
                     $item->total_partiel = 0;
                     $item->total_non_paye = 0;
-                    $item->unpaid = $assigned->map(function ($student) use ($item, $annee) {
+                    $item->unpaid = $assigned->map(function ($person) use ($item, $annee, $type) {
                         $paidAmount = (float) DB::table('revenus')
                             ->where('type_id', $item->id)
-                            ->where('personne_id', $student->id)
+                            ->where('personne_id', $person->id)
+                            ->where('type_personne', $type === 'etudiant' ? 'eleve' : ($type === 'enseignant' ? 'professeur' : 'staff'))
                             ->where('annee_scolaire', $annee)
                             ->sum('montant');
                         $remaining = max(0, (float) $item->montant - $paidAmount);
                         $status = $paidAmount >= (float) $item->montant && (float) $item->montant > 0
                             ? 'complet'
                             : ($paidAmount > 0 ? 'partiel' : 'non_paye');
-                        $student->montant_paye = $paidAmount;
-                        $student->montant_restant = $remaining;
-                        $student->payment_status = $status;
-                        return $student;
-                    })->filter(fn ($student) => $student->payment_status !== 'complet')->values();
+                        $person->montant_paye = $paidAmount;
+                        $person->montant_restant = $remaining;
+                        $person->payment_status = $status;
+                        return $person;
+                    })->filter(fn ($person) => $person->payment_status !== 'complet')->values();
                     $item->total_partiel = $item->unpaid->where('payment_status', 'partiel')->count();
                     $item->total_non_paye = $item->unpaid->where('payment_status', 'non_paye')->count();
                     $item->total_complet = $item->total_assignes - $item->total_partiel - $item->total_non_paye;
@@ -132,6 +150,7 @@ class AccountingController extends Controller
             'date_debut' => ['required', 'date'],
             'date_fin' => ['required', 'date'],
             'annee_scolaire' => ['required', 'string', 'max:20'],
+            'type_selection' => ['required', 'in:etudiant,enseignant,staff'],
         ]);
 
         DB::transaction(function () use ($data) {
@@ -148,21 +167,59 @@ class AccountingController extends Controller
                 'id_classe' => $data['classe'],
             ]);
             $montant = (float) $data['montant'];
-            $students = DB::table('eleves')->where('id_classe', $data['classe'])->where('annee_scolaire', $data['annee_scolaire'])->pluck('id');
-            foreach ($students as $studentId) {
-                $paiementId = DB::table('paiements')->insertGetId([
-                    'type_id' => $typeId,
-                    'annee_scolaire' => $data['annee_scolaire'],
-                    'montant' => $montant,
-                    'categorie' => $data['nom_type'],
-                    'statut' => 'non_paye',
-                    'mois' => json_encode($data['mois'], JSON_UNESCAPED_UNICODE),
-                ]);
-                DB::table('paiements_assignes')->updateOrInsert(['type_id' => $typeId, 'eleve_id' => $studentId], ['paiement_id' => $paiementId, 'montant' => $montant, 'statut' => 'non_paye']);
+
+            if ($data['type_selection'] === 'etudiant') {
+                $personIds = DB::table('eleves')->where('id_classe', $data['classe'])->where('annee_scolaire', $data['annee_scolaire'])->pluck('id');
+                foreach ($personIds as $personId) {
+                    $paiementId = DB::table('paiements')->insertGetId([
+                        'type_id' => $typeId,
+                        'annee_scolaire' => $data['annee_scolaire'],
+                        'montant' => $montant,
+                        'categorie' => $data['nom_type'],
+                        'statut' => 'non_paye',
+                        'mois' => json_encode($data['mois'], JSON_UNESCAPED_UNICODE),
+                    ]);
+                    DB::table('paiements_assignes')->updateOrInsert(
+                        ['type_id' => $typeId, 'eleve_id' => $personId],
+                        ['paiement_id' => $paiementId, 'montant' => $montant, 'statut' => 'non_paye']
+                    );
+                }
+            } elseif ($data['type_selection'] === 'enseignant') {
+                $personIds = DB::table('professeurs')->where('annee_scolaire', $data['annee_scolaire'])->pluck('id');
+                foreach ($personIds as $personId) {
+                    $paiementId = DB::table('paiements')->insertGetId([
+                        'type_id' => $typeId,
+                        'annee_scolaire' => $data['annee_scolaire'],
+                        'montant' => $montant,
+                        'categorie' => $data['nom_type'],
+                        'statut' => 'non_paye',
+                        'mois' => json_encode($data['mois'], JSON_UNESCAPED_UNICODE),
+                    ]);
+                    DB::table('paiements_assignes')->updateOrInsert(
+                        ['type_id' => $typeId, 'professeur_id' => $personId],
+                        ['paiement_id' => $paiementId, 'montant' => $montant, 'statut' => 'non_paye']
+                    );
+                }
+            } else {
+                $personIds = DB::table('staff')->where('annee_scolaire', $data['annee_scolaire'])->pluck('id');
+                foreach ($personIds as $personId) {
+                    $paiementId = DB::table('paiements')->insertGetId([
+                        'type_id' => $typeId,
+                        'annee_scolaire' => $data['annee_scolaire'],
+                        'montant' => $montant,
+                        'categorie' => $data['nom_type'],
+                        'statut' => 'non_paye',
+                        'mois' => json_encode($data['mois'], JSON_UNESCAPED_UNICODE),
+                    ]);
+                    DB::table('paiements_assignes')->updateOrInsert(
+                        ['type_id' => $typeId, 'person_id' => $personId, 'type_personne' => 'staff'],
+                        ['paiement_id' => $paiementId, 'montant' => $montant, 'statut' => 'non_paye']
+                    );
+                }
             }
         });
 
-        return redirect()->route('modules.detail-paiement', ['type_selection' => 'etudiant', 'annee_scolaire' => $data['annee_scolaire'], 'classe_id' => $data['classe']])->with('accounting_msg', ['type' => 'success', 'text' => 'Type de paiement ajoute et assigne.']);
+        return redirect()->route('modules.detail-paiement', ['type_selection' => $data['type_selection'], 'annee_scolaire' => $data['annee_scolaire'], 'classe_id' => $data['classe']])->with('accounting_msg', ['type' => 'success', 'text' => 'Type de paiement ajoute et assigne.']);
     }
 
     public function assignSalaryMonths(Request $request)
@@ -215,6 +272,7 @@ class AccountingController extends Controller
                 'personne_id' => (int) $request->query('personne_id', 0),
                 'type_personne' => (string) $request->query('type_personne', ''),
                 'mois' => (string) $request->query('mois', ''),
+                'montant' => (float) $request->query('montant', 0),
             ],
         ]);
     }
@@ -224,14 +282,45 @@ class AccountingController extends Controller
         $this->ensureSession();
         $kind = (string) $request->input('kind');
         if ($kind === 'ecolage') {
-            $data = $request->validate(['eleve_id' => ['required', 'integer'], 'type_id' => ['required', 'integer'], 'mois' => ['required', 'string'], 'annee_scolaire' => ['required', 'string'], 'montant' => ['required', 'numeric'], 'description' => ['nullable', 'string'], 'mode_paiement' => ['required', 'string'], 'statut' => ['required', 'in:complet,partiel'], 'categorie' => ['required', 'string']]);
-            $student = DB::table('eleves as e')->leftJoin('classes as c', 'c.id', '=', 'e.id_classe')->select('e.*', 'c.nom as classe')->where('e.id', $data['eleve_id'])->first();
-            abort_unless($student, 404);
-            DB::table('revenus')->insert(['type_id' => $data['type_id'], 'personne_id' => $student->id, 'type_personne' => 'eleve', 'classes' => $student->classe, 'mois' => $data['mois'], 'annee_scolaire' => $data['annee_scolaire'], 'montant' => $data['montant'], 'description' => $data['description'] ?? '', 'mode_paiement' => $data['mode_paiement'], 'statut' => $data['statut'], 'categorie' => $data['categorie'], 'nom_personne' => trim($student->nom.' '.$student->prenom), 'date_enregistrement' => now(), 'source' => 'ecolage']);
-            if ($data['statut'] === 'complet') {
-                DB::table('paiements_assignes')->where('type_id', $data['type_id'])->where('eleve_id', $student->id)->update(['statut' => 'paye']);
+            $baseRules = ['type_id' => ['required', 'integer'], 'mois' => ['required', 'string'], 'annee_scolaire' => ['required', 'string'], 'montant' => ['required', 'numeric'], 'description' => ['nullable', 'string'], 'mode_paiement' => ['required', 'string'], 'statut' => ['required', 'in:complet,partiel'], 'categorie' => ['required', 'string']];
+            if ($request->has('personne_id') && $request->has('type_personne')) {
+                $data = $request->validate(array_merge($baseRules, ['personne_id' => ['required', 'integer'], 'type_personne' => ['required', 'in:professeur,staff']]));
+                $personTable = $data['type_personne'] === 'professeur' ? 'professeurs' : 'staff';
+                $person = DB::table($personTable)->where('id', $data['personne_id'])->first();
+                abort_unless($person, 404);
+                DB::table('revenus')->insert(['type_id' => $data['type_id'], 'personne_id' => $person->id, 'type_personne' => $data['type_personne'], 'mois' => $data['mois'], 'annee_scolaire' => $data['annee_scolaire'], 'montant' => $data['montant'], 'description' => $data['description'] ?? '', 'mode_paiement' => $data['mode_paiement'], 'statut' => $data['statut'], 'categorie' => $data['categorie'], 'nom_personne' => trim($person->nom.' '.$person->prenom), 'date_enregistrement' => now(), 'source' => 'ecolage']);
+                if ($data['statut'] === 'complet') {
+                    if ($data['type_personne'] === 'professeur') {
+                        DB::table('paiements_assignes')->where('type_id', $data['type_id'])->where('professeur_id', $person->id)->update(['statut' => 'paye']);
+                    } else {
+                        DB::table('paiements_assignes')->where('type_id', $data['type_id'])->where('person_id', $person->id)->where('type_personne', 'staff')->update(['statut' => 'paye']);
+                    }
+                }
+                $this->notify('Paiement', 'Paiement ecolage enregistre pour '.trim($person->nom.' '.$person->prenom).'.');
+            } else {
+                $data = $request->validate(array_merge($baseRules, ['eleve_id' => ['required', 'integer']]));
+                $student = DB::table('eleves as e')->leftJoin('classes as c', 'c.id', '=', 'e.id_classe')->select('e.*', 'c.nom as classe')->where('e.id', $data['eleve_id'])->first();
+                abort_unless($student, 404);
+                DB::table('revenus')->insert(['type_id' => $data['type_id'], 'personne_id' => $student->id, 'type_personne' => 'eleve', 'classes' => $student->classe, 'mois' => $data['mois'], 'annee_scolaire' => $data['annee_scolaire'], 'montant' => $data['montant'], 'description' => $data['description'] ?? '', 'mode_paiement' => $data['mode_paiement'], 'statut' => $data['statut'], 'categorie' => $data['categorie'], 'nom_personne' => trim($student->nom.' '.$student->prenom), 'date_enregistrement' => now(), 'source' => 'ecolage']);
+                if ($data['statut'] === 'complet') {
+                    DB::table('paiements_assignes')->where('type_id', $data['type_id'])->where('eleve_id', $student->id)->update(['statut' => 'paye']);
+                }
+                $this->notify('Paiement', 'Paiement ecolage enregistre pour '.trim($student->nom.' '.$student->prenom).'.');
             }
-            $this->notify('Paiement', 'Paiement ecolage enregistre pour '.trim($student->nom.' '.$student->prenom).'.');
+        } elseif ($kind === 'type_paiement') {
+            $data = $request->validate(['personne_id' => ['required', 'integer'], 'type_personne' => ['required', 'in:professeur,staff'], 'type_id' => ['required', 'integer'], 'mois' => ['required', 'string'], 'annee_scolaire' => ['required', 'string'], 'montant' => ['required', 'numeric'], 'description' => ['nullable', 'string'], 'mode_paiement' => ['required', 'string'], 'statut' => ['required', 'in:complet,partiel'], 'categorie' => ['required', 'string']]);
+            $personTable = $data['type_personne'] === 'professeur' ? 'professeurs' : 'staff';
+            $person = DB::table($personTable)->where('id', $data['personne_id'])->first();
+            abort_unless($person, 404);
+            DB::table('revenus')->insert(['type_id' => $data['type_id'], 'personne_id' => $person->id, 'type_personne' => $data['type_personne'], 'mois' => $data['mois'], 'annee_scolaire' => $data['annee_scolaire'], 'montant' => $data['montant'], 'description' => $data['description'] ?? '', 'mode_paiement' => $data['mode_paiement'], 'statut' => $data['statut'], 'categorie' => $data['categorie'], 'nom_personne' => trim($person->nom.' '.$person->prenom), 'date_enregistrement' => now(), 'source' => 'type_paiement']);
+            if ($data['statut'] === 'complet') {
+                if ($data['type_personne'] === 'professeur') {
+                    DB::table('paiements_assignes')->where('type_id', $data['type_id'])->where('professeur_id', $person->id)->update(['statut' => 'paye']);
+                } else {
+                    DB::table('paiements_assignes')->where('type_id', $data['type_id'])->where('person_id', $person->id)->where('type_personne', 'staff')->update(['statut' => 'paye']);
+                }
+            }
+            $this->notify('Paiement', 'Paiement type enregistre pour '.trim($person->nom.' '.$person->prenom).'.');
         } elseif ($kind === 'salaire') {
             $data = $request->validate(['personne_id' => ['required', 'integer'], 'type_personne' => ['required', 'in:professeur,staff'], 'mois' => ['required', 'string'], 'annee_scolaire' => ['required', 'string'], 'montant' => ['required', 'numeric'], 'description' => ['nullable', 'string'], 'mode_paiement' => ['required', 'string'], 'statut' => ['required', 'in:complet,partiel'], 'categorie' => ['required', 'string']]);
             $person = DB::table($data['type_personne'] === 'professeur' ? 'professeurs' : 'staff')->where('id', $data['personne_id'])->first();

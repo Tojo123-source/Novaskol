@@ -49,13 +49,6 @@ class StudentPortalController extends Controller
             'calMonth' => $month,
             'calYear' => $year,
             'attendance' => $this->attendanceCalendar((int) $eleve->id, $eleve->id_classe, $month, $year),
-            'notifications' => DB::table('notifications')
-                ->where(function ($n) use ($user) {
-                    $n->whereNull('destinataire_id')->orWhere('destinataire_id', (int) $user['id']);
-                })
-                ->orderByDesc('date_creation')
-                ->limit(5)
-                ->get(),
         ]);
     }
 
@@ -157,11 +150,25 @@ class StudentPortalController extends Controller
 
         $with = $request->query('with');
         $id = (int) $request->query('id', 0);
+        $groupId = (int) $request->query('group', 0);
         $contact = null;
         $contactType = null;
         $conversationId = 0;
 
-        if ($with && $id) {
+        if ($groupId > 0) {
+            $conv = DB::table('conversations')->where('id', $groupId)->where('type', 'group')->first();
+            if ($conv) {
+                $participant = DB::table('conversation_participants')
+                    ->where('conversation_id', $groupId)
+                    ->where('user_id', (int) $user['id'])->where('user_type', 'eleve')
+                    ->first();
+                if ($participant) {
+                    $conversationId = $groupId;
+                    $contact = (object) ['nom' => $conv->name, 'prenom' => ''];
+                    $contactType = 'group';
+                }
+            }
+        } elseif ($with && $id) {
             if ($with === 'classmate') {
                 $contact = DB::table('eleves')->where('id', $id)->first();
                 $contactType = 'classmate';
@@ -177,9 +184,9 @@ class StudentPortalController extends Controller
                         $conversationId = $this->privateConversationWith((int) $teacherUser->id);
                     }
                 }
-            } elseif ($with === 'admin') {
+            } elseif ($with === 'staff') {
                 $contact = DB::table('utilisateurs')->where('id', $id)->first();
-                $contactType = 'admin';
+                $contactType = 'staff';
                 if ($contact) {
                     $conversationId = $this->privateConversationWith((int) $contact->id);
                 }
@@ -198,7 +205,18 @@ class StudentPortalController extends Controller
             ->orderBy('nom')->orderBy('prenom')
             ->get();
 
-        $admins = DB::table('utilisateurs')->where('role', 'admin')->orderBy('nom')->get();
+        $staff = DB::table('utilisateurs')
+            ->where('role', 'staff')
+            ->orderBy('nom')
+            ->get();
+
+        $groupConversations = DB::table('conversations as c')
+            ->join('conversation_participants as cp', 'cp.conversation_id', '=', 'c.id')
+            ->where('cp.user_id', (int) $user['id'])
+            ->where('cp.user_type', 'eleve')
+            ->where('c.type', 'group')
+            ->select('c.id', 'c.name', 'c.created_at')
+            ->get();
 
         return view('eleve.chat', [
             'activeModule' => 'eleve_chat',
@@ -210,11 +228,52 @@ class StudentPortalController extends Controller
             'classe' => $classe,
             'classmates' => $classmates,
             'teachers' => $teachers,
-            'admins' => $admins,
+            'staff' => $staff,
+            'groupConversations' => $groupConversations,
             'contact' => $contact,
             'contactType' => $contactType,
             'conversationId' => $conversationId,
         ]);
+    }
+
+    public function createGroup(Request $request)
+    {
+        $user = session('utilisateur');
+        abort_unless($user && ($user['role'] ?? '') === 'eleve', 403);
+
+        $eleve = DB::table('eleves')->where('email', $user['email'])->first();
+        abort_unless($eleve, 404);
+
+        $data = $request->validate([
+            'name' => 'required|string|max:100',
+            'members' => 'required|array|min:1',
+            'members.*' => 'integer|exists:eleves,id',
+        ]);
+
+        $convId = DB::transaction(function () use ($data, $eleve, $user) {
+            $id = DB::table('conversations')->insertGetId([
+                'type' => 'group', 'name' => $data['name'],
+                'created_at' => now(), 'updated_at' => now(),
+            ]);
+
+            DB::table('conversation_participants')->insert([
+                'conversation_id' => $id, 'user_type' => 'eleve', 'user_id' => (int) $user['id'], 'joined_at' => now(),
+            ]);
+
+            foreach ($data['members'] as $memberId) {
+                $memberUser = DB::table('eleves')->where('id', $memberId)->value('email');
+                $memberUserId = DB::table('utilisateurs')->where('email', $memberUser)->value('id');
+                if ($memberUserId && (int) $memberUserId !== (int) $user['id']) {
+                    DB::table('conversation_participants')->insert([
+                        'conversation_id' => $id, 'user_type' => 'eleve', 'user_id' => $memberUserId, 'joined_at' => now(),
+                    ]);
+                }
+            }
+
+            return $id;
+        });
+
+        return redirect()->route('eleve.portal.chat', ['group' => $convId])->with('success', 'Groupe cree.');
     }
 
     public function anonymous(Request $request)

@@ -35,6 +35,39 @@
         <div class="kpi"><span>Progression</span><strong>{{ $progPct }}%</strong></div>
     </section>
 
+    @if ($coursesList->isNotEmpty())
+    <section class="report-panel">
+        <h2>Cours disponibles</h2>
+        <div class="report-table-wrap">
+            <table class="report-table">
+                <thead><tr><th>Cours</th><th>Progression</th><th>Statut</th></tr></thead>
+                <tbody>
+                @foreach ($coursesList as $c)
+                    @php
+                        $prog = $progressionDetails->get($c->id);
+                        $totalCh = DB::table('course_chapitres')->where('course_id', $c->id)->where('statut', 'publie')->count();
+                        $doneCh = $prog ? (int) $prog->termines : 0;
+                        $pct = $totalCh > 0 ? round(($doneCh / $totalCh) * 100) : 0;
+                    @endphp
+                    <tr>
+                        <td><strong>{{ $c->titre }}</strong></td>
+                        <td>{{ $doneCh }}/{{ $totalCh }} chapitres</td>
+                        <td>
+                            <div style="display:flex;align-items:center;gap:6px">
+                                <div style="flex:1;max-width:100px;height:6px;background:var(--border);border-radius:3px;overflow:hidden">
+                                    <div style="height:100%;width:{{ $pct }}%;background:{{ $pct >= 100 ? 'var(--success)' : 'var(--primary)' }};border-radius:3px"></div>
+                                </div>
+                                <span style="font-size:.8rem;color:var(--text-sec)">{{ $pct }}%</span>
+                            </div>
+                        </td>
+                    </tr>
+                @endforeach
+                </tbody>
+            </table>
+        </div>
+    </section>
+    @endif
+
     @if ($parMatiere->isNotEmpty())
     <section class="report-panel">
         <h2>Performance par matiere</h2>

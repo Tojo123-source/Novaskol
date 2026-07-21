@@ -93,7 +93,6 @@
         <div class="quick-links">
             <a href="{{ route('eleve.courses') }}"><i class="fa fa-book"></i> Bibliotheque</a>
             <a href="{{ route('eleve.portal.chat') }}"><i class="fa fa-comments"></i> Messagerie</a>
-            <a href="{{ route('eleve.portal.anonymous') }}"><i class="fa fa-user-secret"></i> Message anonyme</a>
             <a href="{{ route('eleve.historique') }}"><i class="fa fa-history"></i> Historique</a>
             <a href="{{ route('eleve.rapport') }}"><i class="fa fa-chart-line"></i> Mon rapport</a>
         </div>
@@ -195,18 +194,25 @@
             @if($courses->isNotEmpty())
                 <div class="course-grid">
                     @foreach($courses as $c)
-                        @php
-                            $prog = $progressions->get($c->id);
-                            $total = $prog ? $prog->total : 0;
-                            $done = $prog ? $prog->done : 0;
-                            $pct = $total > 0 ? round(($done / $total) * 100) : 0;
-                        @endphp
+                    @php
+                        $prog = $progressions->get($c->id);
+                        $total = $prog ? $prog->total : 0;
+                        $done = $prog ? $prog->done : 0;
+                        $pct = $total > 0 ? round(($done / $total) * 100) : 0;
+                        $chIds = DB::table('course_chapitres')->where('course_id', $c->id)->pluck('id');
+                        $exCount = DB::table('exercices')->whereIn('chapitre_id', $chIds)->where('publie', true)->count();
+                        $ficCount = DB::table('course_fichiers')->whereIn('chapitre_id', $chIds)->count();
+                    @endphp
                         <a href="{{ route('eleve.course.show', $c->id) }}" class="course-card">
                             <div class="meta">
                                 <span>{{ DB::table('matieres')->where('id', $c->matiere_id)->value('nom') ?? 'General' }}</span>
                                 @if ($pct > 0) <span>{{ $pct }}%</span> @endif
                             </div>
                             <h3>{{ $c->titre }}</h3>
+                            <div class="meta" style="margin-top:4px">
+                                <span><i class="fa fa-puzzle-piece"></i> {{ $exCount }} ex.</span>
+                                <span><i class="fa fa-file"></i> {{ $ficCount }} fich.</span>
+                            </div>
                             @if ($total > 0)
                                 <div class="progress-bar"><div class="fill" style="width:{{ $pct }}%"></div></div>
                             @endif
@@ -219,21 +225,6 @@
             @else
                 <div class="empty-state">Aucun cours disponible pour le moment.</div>
             @endif
-        </div>
-
-        <div class="portal-card">
-            <h2><i class="fa fa-bell"></i> Notifications</h2>
-            <div class="side-list">
-                @forelse($notifications as $n)
-                    <div class="side-item">
-                        <strong>{{ ucfirst($n->type ?? 'Notification') }}</strong>
-                        <div class="msg">{{ $n->message ?? '' }}</div>
-                        <small>{{ !empty($n->date_creation) ? \Carbon\Carbon::parse($n->date_creation)->format('d/m/Y H:i') : '' }}</small>
-                    </div>
-                @empty
-                    <div class="empty-state">Aucune notification.</div>
-                @endforelse
-            </div>
         </div>
 
         <div class="portal-card">

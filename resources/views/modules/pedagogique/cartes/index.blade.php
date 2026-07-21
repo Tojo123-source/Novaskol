@@ -69,7 +69,7 @@
         .id-qr-box canvas, .id-qr-box img { width: 110px !important; height: 110px !important; }
         .id-expiry { font-size: .55rem; color: var(--nv-muted); text-align: center; margin-top: 3px; }
         @media print {
-            @page { size: A4 landscape; margin: 8mm; }
+            @page { size: A4 portrait; margin: 10mm; }
             *,*::before,*::after { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
             body { background: #fff !important; margin: 0 !important; padding: 0 !important; font-family: 'Inter', sans-serif !important; }
             nav, header, footer, .novaskol-global-actions, .global-dropdown, .novaskol-loader,
@@ -79,29 +79,53 @@
             .form-container > form { display: none !important; }
             .cards-grid {
                 display: grid !important;
-                grid-template-columns: repeat(3, 1fr) !important;
+                grid-template-columns: repeat(3, 54mm) !important;
                 gap: 3mm !important;
                 margin: 0 !important;
                 padding: 0 !important;
+                justify-content: center !important;
                 width: 100% !important;
             }
             .id-card {
                 break-inside: avoid !important; page-break-inside: avoid !important;
                 border: 0.5mm solid #bcbcbc !important; box-shadow: none !important;
                 border-radius: 2.5mm !important; min-height: 0 !important;
-                width: auto !important; font-family: 'Inter', sans-serif !important;
+                width: 54mm !important; height: 85.6mm !important;
+                font-family: 'Inter', sans-serif !important;
+                flex-direction: column !important;
             }
             .id-card::before { width: 1mm !important; }
-            .id-photo-wrap { flex: 0 0 24mm !important; padding: 1.5mm 0 1.5mm 1.5mm !important; }
-            .id-photo { width: 21mm !important; height: 27mm !important; border-radius: 1.5mm !important; border-width: 0.3mm !important; }
-            .id-body { padding: 1.5mm 1mm !important; }
+            .id-photo-wrap {
+                flex: 0 0 auto !important;
+                padding: 2mm 2mm 0 2mm !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+            }
+            .id-photo { width: 24mm !important; height: 31mm !important; border-radius: 1.5mm !important; border-width: 0.3mm !important; }
+            .id-body {
+                flex: 1 !important;
+                padding: 1.5mm 2mm !important;
+                display: flex !important;
+                flex-direction: column !important;
+                justify-content: center !important;
+            }
             .id-badge { font-size: 5pt !important; padding: 0.3mm 2mm !important; border-radius: 0.8mm !important; margin-bottom: 0.5mm !important; }
-            .id-name { font-size: 7pt !important; margin-bottom: 0.2mm !important; }
+            .id-name { font-size: 7pt !important; margin-bottom: 0.2mm !important; white-space: normal !important; overflow: visible !important; text-overflow: clip !important; }
             .id-meta { font-size: 5.5pt !important; line-height: 1.4 !important; }
             .id-school { font-size: 5pt !important; margin-top: 0.5mm !important; padding-top: 0.5mm !important; border-top-width: 0.3mm !important; }
-            .id-qr-wrap { flex: 0 0 30mm !important; padding: 1.5mm !important; border-left-width: 0.3mm !important; }
-            .id-qr-box { width: 26mm !important; height: 26mm !important; border-radius: 1mm !important; }
-            .id-qr-box canvas, .id-qr-box img { width: 24mm !important; height: 24mm !important; }
+            .id-qr-wrap {
+                flex: 0 0 auto !important;
+                padding: 1mm 2mm 2mm 2mm !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                border-left: none !important;
+                border-top: 0.3mm solid #e2e8f0 !important;
+                background: #f8fafc !important;
+            }
+            .id-qr-box { width: 24mm !important; height: 24mm !important; border-radius: 1mm !important; }
+            .id-qr-box canvas, .id-qr-box img { width: 22mm !important; height: 22mm !important; }
             .id-expiry { font-size: 4.5pt !important; margin-top: 0.3mm !important; }
             .cards-grid > :nth-child(9n) { page-break-after: always !important; break-after: page !important; }
         }
@@ -217,7 +241,7 @@ document.addEventListener('DOMContentLoaded',()=>{
     if(s){s.style.display='block';s.previousElementSibling?.querySelector('.arrow')?.classList.replace('fa-chevron-down','fa-chevron-up')}
     document.querySelectorAll('.id-qr-box').forEach(function(q){
         const u=q.getAttribute('data-qr');
-        if(u&&window.QRCode)new QRCode(q,{text:u,width:96,height:96,colorDark:'#0f2942',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.H})
+        if(u&&window.QRCode)new QRCode(q,{text:u,width:240,height:240,colorDark:'#0f2942',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.H})
     })
 })
 </script>

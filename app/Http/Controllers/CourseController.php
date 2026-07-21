@@ -92,7 +92,7 @@ class CourseController extends Controller
         ]);
         DB::table('courses')->where('id', $id)->update([
             'titre' => $data['titre'], 'description' => $data['description'] ?? '',
-            'matiere_id' => $data['matiere_id'], 'niveau' => $data['niveau'],
+            'matiere_id' => $data['matiere_id'] ?? null, 'niveau' => $data['niveau'] ?? null,
             'statut' => $data['statut'], 'updated_at' => now(),
         ]);
         ActivityLogger::log('course.update', 'courses', 'courses', $id, ['titre' => $data['titre']]);

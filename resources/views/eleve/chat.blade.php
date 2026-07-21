@@ -96,18 +96,34 @@
             @endforelse
         </div>
 
-        <div class="section-title"><i class="fa fa-user-tie"></i> Administration</div>
+        <div class="section-title"><i class="fa fa-user-tie"></i> Staff</div>
         <div class="contact-list" style="max-height:160px">
-            @forelse($admins as $a)
-                @php $initial = mb_substr($a->nom, 0, 1); @endphp
-                <a class="contact-link {{ $contact && (int) $contact->id === (int) $a->id && $contactType === 'admin' ? 'active' : '' }}"
-                   href="{{ route('eleve.portal.chat', ['with' => 'admin', 'id' => $a->id]) }}">
+            @forelse($staff as $s)
+                @php $initial = mb_substr($s->nom, 0, 1); @endphp
+                <a class="contact-link {{ $contact && (int) $contact->id === (int) $s->id && $contactType === 'staff' ? 'active' : '' }}"
+                   href="{{ route('eleve.portal.chat', ['with' => 'staff', 'id' => $s->id]) }}">
                     <div class="avatar">{{ $initial }}</div>
-                    <span><strong>{{ $a->nom }}</strong><small><span class="status-dot"></span> Admin</small></span>
+                    <span><strong>{{ $s->nom }}</strong><small><span class="status-dot"></span> Staff</small></span>
                 </a>
             @empty
-                <div class="empty-state" style="padding:12px">Aucun administrateur</div>
+                <div class="empty-state" style="padding:12px">Aucun membre du staff</div>
             @endforelse
+        </div>
+
+        <div class="section-title"><i class="fa fa-users"></i> Chat Groupe</div>
+        <div class="contact-list" style="max-height:160px">
+            @forelse($groupConversations as $g)
+                <a class="contact-link {{ $contact && (int) $conversationId === (int) $g->id && $contactType === 'group' ? 'active' : '' }}"
+                   href="{{ route('eleve.portal.chat', ['group' => $g->id]) }}">
+                    <div class="avatar"><i class="fa fa-users" style="font-size:.8rem"></i></div>
+                    <span><strong>{{ $g->name }}</strong><small>Groupe</small></span>
+                </a>
+            @empty
+                <div class="empty-state" style="padding:12px">Aucun groupe. Creez-en un !</div>
+            @endforelse
+            <button onclick="document.getElementById('createGroupModal').style.display='flex'" class="contact-link" style="border-style:dashed;justify-content:center;color:var(--primary)">
+                <i class="fa fa-plus-circle"></i> <strong>Creer un groupe</strong>
+            </button>
         </div>
     </aside>
 
@@ -117,7 +133,7 @@
                 <div class="avatar">{{ mb_substr($contact->prenom ?? $contact->nom, 0, 1) }}</div>
                 <div>
                     <strong>{{ $contact->prenom ?? '' }} {{ $contact->nom }}</strong>
-                    <small>{{ $contactType === 'teacher' ? 'Enseignant' : ($contactType === 'admin' ? 'Administrateur' : 'Camarade') }}</small>
+                    <small>{{ $contactType === 'teacher' ? 'Enseignant' : ($contactType === 'staff' ? 'Staff' : ($contactType === 'group' ? 'Groupe' : 'Camarade')) }}</small>
                 </div>
             </div>
             <div class="messages" id="messages"></div>
@@ -136,6 +152,30 @@
         @endif
     </section>
 </main>
+
+<div id="createGroupModal" style="display:none;position:fixed;inset:0;z-index:30000;background:rgba(0,0,0,.6);align-items:center;justify-content:center" onclick="if(event.target===this)this.style.display='none'">
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px;width:min(420px,calc(100vw - 32px));max-height:80vh;overflow:auto">
+        <h2 style="margin:0 0 16px;font-size:1.1rem;color:var(--primary)"><i class="fa fa-users"></i> Creer un groupe</h2>
+        <form method="POST" action="{{ route('eleve.portal.chat.create-group') }}">
+            @csrf
+            <label style="display:block;font-size:.82rem;color:var(--text-sec);margin-bottom:4px">Nom du groupe</label>
+            <input type="text" name="name" required maxlength="100" style="width:100%;padding:9px 12px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text);margin-bottom:14px">
+            <label style="display:block;font-size:.82rem;color:var(--text-sec);margin-bottom:6px">Ajouter des camarades</label>
+            <div style="display:grid;gap:6px;max-height:240px;overflow:auto;margin-bottom:14px">
+                @foreach($classmates as $cm)
+                    <label style="display:flex;align-items:center;gap:8px;padding:7px 10px;border:1px solid var(--border);border-radius:8px;background:var(--surface);cursor:pointer;font-size:.85rem">
+                        <input type="checkbox" name="members[]" value="{{ $cm->id }}">
+                        {{ $cm->prenom }} {{ $cm->nom }}
+                    </label>
+                @endforeach
+            </div>
+            <div style="display:flex;gap:8px;justify-content:flex-end">
+                <button type="button" onclick="document.getElementById('createGroupModal').style.display='none'" style="padding:8px 16px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--text);cursor:pointer">Annuler</button>
+                <button type="submit" style="padding:8px 16px;border-radius:8px;border:0;background:var(--primary);color:#fff;font-weight:600;cursor:pointer"><i class="fa fa-check"></i> Creer</button>
+            </div>
+        </form>
+    </div>
+</div>
 
 <script>
 const csrf = document.querySelector('meta[name="csrf-token"]').content;

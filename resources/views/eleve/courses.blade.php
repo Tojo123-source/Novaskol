@@ -54,6 +54,10 @@
                         <span>{{ DB::table('matieres')->where('id', $c->matiere_id)->value('nom') ?? 'General' }}</span>
                         @if ($c->niveau)<span>{{ $c->niveau }}</span>@endif
                     </div>
+                    <div class="meta" style="margin-top:6px">
+                        <span><i class="fa fa-puzzle-piece"></i> {{ $c->exercices_count ?? 0 }} exercices</span>
+                        <span><i class="fa fa-file"></i> {{ $c->fichiers_count ?? 0 }} fichiers</span>
+                    </div>
                 </a>
             @endforeach
         </div>

@@ -162,6 +162,7 @@ Route::middleware('module.access:depot_dossier')->group(function () {
 });
 Route::get('/fpe', [PedagogyController::class, 'fpe'])->middleware('module.access:fpe')->name('modules.fpe');
 Route::get('/liste-assurance', [PedagogyController::class, 'assurance'])->middleware('module.access:liste_assurance')->name('modules.liste-assurance');
+Route::post('/liste-assurance/montant', [PedagogyController::class, 'updateAssuranceAmount'])->middleware('module.access:liste_assurance')->name('modules.liste-assurance.montant');
 
 Route::middleware('module.access:liste_classes')->group(function () {
     Route::get('/classes', [ClassroomController::class, 'index'])->name('modules.liste-classes');
@@ -314,7 +315,7 @@ Route::group([], function () {
 Route::prefix('eleve')->name('eleve.')->group(function () {
     Route::get('/accueil', App\Http\Controllers\Eleve\StudentPortalController::class)->name('portal');
     Route::get('/chat', [App\Http\Controllers\Eleve\StudentPortalController::class, 'chat'])->name('portal.chat');
-    Route::match(['get', 'post'], '/anonyme', [App\Http\Controllers\Eleve\StudentPortalController::class, 'anonymous'])->name('portal.anonymous');
+    Route::post('/chat/creer-groupe', [App\Http\Controllers\Eleve\StudentPortalController::class, 'createGroup'])->name('portal.chat.create-group');
     Route::get('/cours', [App\Http\Controllers\Eleve\StudentCourseController::class, 'courses'])->name('courses');
     Route::get('/cours/{id}', [App\Http\Controllers\Eleve\StudentCourseController::class, 'showCourse'])->name('course.show');
     Route::post('/cours/{courseId}/favori', [App\Http\Controllers\Eleve\StudentCourseController::class, 'toggleFavori'])->name('course.favori');

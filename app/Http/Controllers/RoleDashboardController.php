@@ -21,16 +21,28 @@ class RoleDashboardController extends Controller
         }
 
         $permissions = $this->permissions((int) $user['id']);
-        $availableModules = collect($modules->all())
-            ->filter(fn (array $module, string $key) => ! empty($module['icon']) && in_array($permissions[$key] ?? null, ['lecture', 'ecriture'], true))
-            ->map(fn (array $module, string $key) => [
-                'key' => $key,
-                'label' => $module['label'] ?? $key,
-                'icon' => $module['icon'] ?? 'fa-circle',
-                'route' => $module['route'] ?? null,
-                'access' => $permissions[$key] ?? 'lecture',
-            ])
-            ->values();
+        $eleveModules = function () {
+            return collect([
+                ['key' => 'eleve_portal', 'label' => 'Mon espace', 'icon' => 'fa-th-large', 'route' => 'eleve.portal', 'access' => 'lecture'],
+                ['key' => 'eleve_chat', 'label' => 'Messagerie', 'icon' => 'fa-comments', 'route' => 'eleve.portal.chat', 'access' => 'lecture'],
+                ['key' => 'eleve_rapport', 'label' => 'Mon rapport', 'icon' => 'fa-chart-line', 'route' => 'eleve.rapport', 'access' => 'lecture'],
+                ['key' => 'eleve_courses', 'label' => 'Bibliotheque', 'icon' => 'fa-book', 'route' => 'eleve.courses', 'access' => 'lecture'],
+                ['key' => 'eleve_historique', 'label' => 'Historique', 'icon' => 'fa-history', 'route' => 'eleve.historique', 'access' => 'lecture'],
+            ]);
+        };
+
+        $availableModules = ($role === 'eleve')
+            ? $eleveModules()
+            : collect($modules->all())
+                ->filter(fn (array $module, string $key) => ! empty($module['icon']) && in_array($permissions[$key] ?? null, ['lecture', 'ecriture'], true))
+                ->map(fn (array $module, string $key) => [
+                    'key' => $key,
+                    'label' => $module['label'] ?? $key,
+                    'icon' => $module['icon'] ?? 'fa-circle',
+                    'route' => $module['route'] ?? null,
+                    'access' => $permissions[$key] ?? 'lecture',
+                ])
+                ->values();
 
         $role = $user['role'] ?? '';
         $ecole = $this->school();
@@ -136,6 +148,18 @@ class RoleDashboardController extends Controller
             return array_merge([
                 ['label' => 'Enfants rattaches', 'value' => $children, 'icon' => 'fa-child'],
                 ['label' => 'Espace', 'value' => 'Parent', 'icon' => 'fa-users'],
+            ], $base);
+        }
+
+        if ($role === 'eleve') {
+            $eleve = DB::table('eleves')->where('email', $user['email'] ?? '')->first();
+            $courseCount = DB::table('courses')->where('statut', 'publie')->count();
+            $completedChapitres = $eleve ? DB::table('course_progression')->where('eleve_id', $eleve->id)->where('termine', true)->count() : 0;
+
+            return array_merge([
+                ['label' => 'Cours disponibles', 'value' => $courseCount, 'icon' => 'fa-book'],
+                ['label' => 'Chapitres termines', 'value' => $completedChapitres, 'icon' => 'fa-check-circle'],
+                ['label' => 'Espace', 'value' => 'Eleve', 'icon' => 'fa-user'],
             ], $base);
         }
 

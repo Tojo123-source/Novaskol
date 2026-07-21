@@ -38,10 +38,10 @@
         @endforeach
     </div>
 </section>
-@if($selectedType==='etudiant')
 <section class="acc-panel no-print">
-    <h2>Ajouter type paiement etudiant</h2>
+    <h2>Ajouter type paiement</h2>
     <form method="POST" action="{{ route('modules.detail-paiement.type.store') }}" class="acc-grid">@csrf
+        <input type="hidden" name="type_selection" value="{{ $selectedType }}">
         <div><label>Nom</label><input name="nom_type" required></div>
         <div><label>Montant</label><input type="number" step="0.01" name="montant" required></div>
         <div style="grid-column:1/-1"><label>Mois concernes</label><div class="month-pills">@foreach($months as $m)<label><input type="checkbox" name="mois[]" value="{{ $m }}"> {{ $m }}</label>@endforeach</div></div>
@@ -54,7 +54,7 @@
 </section>
 <section class="acc-panel">
     <h2>Types de paiement</h2>
-    <div class="acc-table-wrap"><table class="acc-table"><thead><tr><th>Nom</th><th>Classe</th><th>Mois</th><th>Montant</th><th>Complet</th><th>Partiel</th><th>Non paye</th><th>Action</th></tr></thead><tbody>
+    <div class="acc-table-wrap"><table class="acc-table"><thead><tr><th>Nom</th><th>{{ $selectedType==='etudiant' ? 'Classe' : 'Type' }}</th><th>Mois</th><th>Montant</th><th>Complet</th><th>Partiel</th><th>Non paye</th><th>Action</th></tr></thead><tbody>
     @forelse($studentTypes as $t)
         <tr>
             <td>{{ $t->nom }}</td>
@@ -84,13 +84,20 @@
                         <span>
                             <strong>{{ $u->nom }} {{ $u->prenom }}</strong>
                             <small class="muted">
-                                {{ $u->classe }} - {{ $u->payment_status === 'partiel' ? 'Partiel' : 'Non paye' }}
+                                @if($selectedType==='etudiant')
+                                    {{ $u->classe }} -
+                                @endif
+                                {{ $u->payment_status === 'partiel' ? 'Partiel' : 'Non paye' }}
                                 @if($u->montant_restant > 0)
                                     - Reste {{ number_format((float)$u->montant_restant,0,',',' ') }} {{ novaskol_currency() }}
                                 @endif
                             </small>
                         </span>
-                        <a class="pay-link" href="{{ route('modules.comptable',['kind'=>'ecolage','eleve_id'=>$u->id,'type_id'=>$t->id,'annee_scolaire'=>$selectedAnnee]) }}">Payer</a>
+                        @if($selectedType==='etudiant')
+                            <a class="pay-link" href="{{ route('modules.comptable',['kind'=>'ecolage','eleve_id'=>$u->id,'type_id'=>$t->id,'annee_scolaire'=>$selectedAnnee]) }}">Payer</a>
+                        @else
+                            <a class="pay-link" href="{{ route('modules.comptable',['kind'=>'type_paiement','personne_id'=>$u->id,'type_personne'=>$selectedType==='enseignant'?'professeur':'staff','type_id'=>$t->id,'montant'=>$u->montant_restant,'annee_scolaire'=>$selectedAnnee]) }}">Payer</a>
+                        @endif
                     </div>
                 @empty
                     <div class="muted">Tout le monde a paye pour ce type.</div>
@@ -99,7 +106,7 @@
         </div>
     </div>
 @endforeach
-@else
+@if(in_array($selectedType, ['enseignant', 'staff'], true))
 <section class="acc-panel no-print">
     <h2>Assigner mois salaires</h2>
     <form method="POST" action="{{ route('modules.detail-paiement.salaires') }}" class="acc-grid">@csrf

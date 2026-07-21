@@ -454,10 +454,12 @@ class PedagogyController extends Controller
         if ($classeId > 0) {
             $query->where('e.id_classe', $classeId);
         }
+        $montant = (int) (DB::table('parametres')->where('cle', 'montant_assurance')->value('valeur') ?: 500);
 
         $students = $query->get();
         $grouped = $students->groupBy('classe_nom');
         $privateLevels = $this->classCounts($annee);
+        $total = $students->count() * $montant;
 
         return $this->view('modules.pedagogique.assurance.index', $modules, 'liste_assurance', [
             'annees' => $this->schoolYears(),
@@ -468,10 +470,19 @@ class PedagogyController extends Controller
             'groupedStudents' => $grouped,
             'privateLevels' => $privateLevels,
             'publicLevels' => array_fill_keys(['PS','MS','GS','CP','CE1','CE2','CM1','CM2','6èm','5èm','4èm','3èm','2nde','1ère','Tle'], 0),
-            'totalSomme' => $students->count() * 500,
-            'sommeWords' => ucfirst($this->numberToFrenchWords($students->count() * 500)).' '.(DB::table('parametres')->where('cle', 'devise_nom')->value('valeur') ?: 'Ariary'),
+            'montantAssurance' => $montant,
+            'totalSomme' => $total,
+            'sommeWords' => ucfirst($this->numberToFrenchWords($total)).' '.(DB::table('parametres')->where('cle', 'devise_nom')->value('valeur') ?: 'Ariary'),
             'params' => $this->params(['nom_ecole', 'code_etablissement', 'dren', 'cisco', 'zap', 'tel_etablissement', 'mail_etablissement', 'nb_comment']),
         ]);
+    }
+
+    public function updateAssuranceAmount(Request $request)
+    {
+        $this->ensureSession();
+        $request->validate(['montant' => ['required', 'integer', 'min:0', 'max:9999999']]);
+        DB::table('parametres')->updateOrInsert(['cle' => 'montant_assurance'], ['valeur' => (string) $request->integer('montant')]);
+        return redirect()->route('modules.liste-assurance', $request->query())->with('pedagogy_msg', ['type' => 'success', 'text' => 'Montant assurance mis a jour.']);
     }
 
     private function view(string $name, ModuleRegistry $modules, string $activeModule, array $data = [])

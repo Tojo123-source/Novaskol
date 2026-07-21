@@ -127,6 +127,8 @@
                             <form method="POST" action="{{ route('teacher.courses.update', $c->id) }}" style="display:inline">
                                 @csrf
                                 <input type="hidden" name="titre" value="{{ $c->titre }}">
+                                <input type="hidden" name="description" value="{{ $c->description }}">
+                                <input type="hidden" name="niveau" value="{{ $c->niveau }}">
                                 <input type="hidden" name="statut" value="publie">
                                 <input type="hidden" name="matiere_id" value="{{ $c->matiere_id }}">
                                 <button class="btn btn-success btn-sm"><i class="fa fa-check"></i> Publier</button>

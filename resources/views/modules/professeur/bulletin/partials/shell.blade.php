@@ -147,13 +147,10 @@
     @endif
     @if ($currentRole === 'eleve')
         <a href="{{ route('eleve.portal') }}" @class(['active' => ($activeModule ?? '') === 'eleve_portal'])>
-            <i class="fa fa-th-large"></i> <span>Mon espace</span>
+            <i class="fa fa-th-large"></i> <span>Suivi scolaire</span>
         </a>
         <a href="{{ route('eleve.portal.chat') }}" @class(['active' => ($activeModule ?? '') === 'eleve_chat'])>
             <i class="fa fa-comments"></i> <span>Messagerie</span>
-        </a>
-        <a href="{{ route('eleve.portal.anonymous') }}" @class(['active' => ($activeModule ?? '') === 'eleve_anonymous'])>
-            <i class="fa fa-user-secret"></i> <span>Message anonyme</span>
         </a>
         <a href="{{ route('eleve.rapport') }}" @class(['active' => ($activeModule ?? '') === 'eleve_rapport'])>
             <i class="fa fa-chart-line"></i> <span>Mon rapport</span>

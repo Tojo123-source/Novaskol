@@ -187,7 +187,10 @@ class TeacherWorkspaceController extends Controller
                 ->where('creator_id', $userId)
                 ->first();
 
-            if ($existing) continue;
+            if ($existing) {
+                $this->syncClassStudents((int) $existing->id, (int) $classe->id, $teacher->annee_scolaire ?? $this->currentYear());
+                continue;
+            }
 
             $groupId = DB::table('conversations')->insertGetId([
                 'type' => 'group',
@@ -205,22 +208,46 @@ class TeacherWorkspaceController extends Controller
                 'joined_at' => now(),
             ]);
 
-            $students = DB::table('eleves')
-                ->where('id_classe', $classe->id)
-                ->where('annee_scolaire', $teacher->annee_scolaire ?? $this->currentYear())
-                ->get();
+            $this->syncClassStudents($groupId, (int) $classe->id, $teacher->annee_scolaire ?? $this->currentYear());
+        }
+    }
 
-            foreach ($students as $student) {
-                $studentUserId = (int) DB::table('utilisateurs')->where('email', $student->email ?? '')->value('id');
-                if (!$studentUserId) continue;
+    private function syncClassStudents(int $groupId, int $classeId, string $anneeScolaire): void
+    {
+        $existingIds = DB::table('conversation_participants')
+            ->where('conversation_id', $groupId)
+            ->where('user_type', 'eleve')
+            ->pluck('user_id')
+            ->map(fn ($id) => (int) $id)
+            ->all();
 
-                DB::table('conversation_participants')->insert([
-                    'conversation_id' => $groupId,
-                    'user_type' => 'eleve',
-                    'user_id' => $studentUserId,
-                    'joined_at' => now(),
-                ]);
+        $students = DB::table('eleves')
+            ->where('id_classe', $classeId)
+            ->where('annee_scolaire', $anneeScolaire)
+            ->get();
+
+        foreach ($students as $student) {
+            $studentUserId = (int) DB::table('utilisateurs')
+                ->where('email', $student->email ?? '')
+                ->where('role', 'eleve')
+                ->value('id');
+
+            if (!$studentUserId && ($student->nom ?? '')) {
+                $studentUserId = (int) DB::table('utilisateurs')
+                    ->where('nom', $student->nom)
+                    ->where('role', 'eleve')
+                    ->value('id');
             }
+
+            if (!$studentUserId) continue;
+            if (in_array($studentUserId, $existingIds, true)) continue;
+
+            DB::table('conversation_participants')->insert([
+                'conversation_id' => $groupId,
+                'user_type' => 'eleve',
+                'user_id' => $studentUserId,
+                'joined_at' => now(),
+            ]);
         }
     }
 

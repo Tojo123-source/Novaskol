@@ -152,7 +152,7 @@
     </style>
 </head>
 <body class="{{ $mobileState }}">
-@include('modules.professeur.bulletin.partials.shell')
+@include('modules.professeur.bulletin.partials.shell', ['activeModule' => 'chat_private'])
 <header>
     <div class="header-left">
         <button class="burger-menu" onclick="toggleSidebar()"><i class="fa fa-bars"></i></button>
@@ -463,6 +463,7 @@ async function loadMessages(){
     if((appended && stickToBottom) || !initialMessagesLoaded || document.activeElement === document.getElementById('messageInput')) box.scrollTop = box.scrollHeight;
     initialMessagesLoaded = true;
     clearActiveUnreadBadge();
+    if(typeof novaskolRefreshUnreadMessages === 'function') novaskolRefreshUnreadMessages();
     renderTyping(data.typing_users || []);
 }
 

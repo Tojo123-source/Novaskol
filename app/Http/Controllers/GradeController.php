@@ -189,10 +189,7 @@ class GradeController extends Controller
             ->join('eleves as e', DB::raw('COALESCE(n.eleve_id, n.id_eleve)'), '=', 'e.id')
             ->where('e.id_classe', $classeId)
             ->where('e.annee_scolaire', $annee)
-            ->where(function ($q) use ($periode) {
-                $q->where('n.periode', $periode)
-                  ->orWhere('n.trimestre', match ($periode) { 'T1' => 1, 'T2' => 2, 'T3' => 3, default => 0 });
-            })
+            ->where('n.periode', $periode)
             ->where('n.annee_scolaire', $annee)
             ->select('n.eleve_id', 'n.id_eleve', 'n.id_matiere', 'n.matiere_id', 'n.note', 'n.valeur')
             ->get();
@@ -224,10 +221,7 @@ class GradeController extends Controller
 
         $rows = DB::table('remarques')
             ->where('annee_scolaire', $annee)
-            ->where(function ($q) use ($periode) {
-                $q->where('periode', $periode)
-                  ->orWhere('trimestre', match ($periode) { 'T1' => 1, 'T2' => 2, 'T3' => 3, default => 0 });
-            })
+            ->where('periode', $periode)
             ->where(function ($q) use ($studentIds) {
                 $q->whereIn('id_eleve', $studentIds)
                   ->orWhereIn('eleve_id', $studentIds);
