@@ -276,6 +276,7 @@
     </aside>
 </main>
 <script>
+function toggleSub(e){const s=e.nextElementSibling,a=e.querySelector('.arrow');s.style.display=s.style.display==='block'?'none':'block';a.classList.toggle('fa-chevron-down');a.classList.toggle('fa-chevron-up')}
 function toggleJournalForm(){
     const f=document.getElementById('journalForm'),a=document.getElementById('journalFormArrow');
     if(!f)return;
